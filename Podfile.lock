@@ -1,0 +1,107 @@
+PODS:
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
+    - AFNetworking/NSURLSession
+  - CocoaAsyncSocket (7.6.3)
+  - FLEX (2.1.1)
+  - FMDB (2.7.2):
+    - FMDB/standard (= 2.7.2)
+  - FMDB/standard (2.7.2)
+  - IQKeyboardManager (3.3.7)
+  - LKDBHelper (2.5.1):
+    - LKDBHelper/standard (= 2.5.1)
+  - LKDBHelper/standard (2.5.1):
+    - FMDB
+  - Masonry (1.1.0)
+  - MBProgressHUD (1.1.0)
+  - MJExtension (3.0.15.1)
+  - MJRefresh (3.1.15.3)
+  - ReactiveCocoa (2.5):
+    - ReactiveCocoa/UI (= 2.5)
+  - ReactiveCocoa/Core (2.5):
+    - ReactiveCocoa/no-arc
+  - ReactiveCocoa/no-arc (2.5)
+  - ReactiveCocoa/UI (2.5):
+    - ReactiveCocoa/Core
+  - RegexKitLite (4.0)
+  - SAMKeychain (1.5.3)
+  - SciChart (2.1.0.2037)
+  - SDWebImage (4.4.1):
+    - SDWebImage/Core (= 4.4.1)
+  - SDWebImage/Core (4.4.1)
+  - Shimmer (1.0.2)
+  - WSProgressHUD (1.1.3):
+    - Shimmer
+
+DEPENDENCIES:
+  - AFNetworking (~> 3.1.0)
+  - CocoaAsyncSocket
+  - FLEX (~> 2.1.0)
+  - IQKeyboardManager (~> 3.3.7)
+  - LKDBHelper
+  - Masonry
+  - MBProgressHUD (~> 1.1.0)
+  - MJExtension (~> 3.0.13)
+  - MJRefresh (~> 3.1.12)
+  - ReactiveCocoa (~> 2.5)
+  - RegexKitLite
+  - SAMKeychain
+  - SciChart
+  - SDWebImage
+  - WSProgressHUD
+
+SPEC REPOS:
+  https://github.com/ABTSoftware/PodSpecs.git:
+    - SciChart
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - CocoaAsyncSocket
+    - FLEX
+    - FMDB
+    - IQKeyboardManager
+    - LKDBHelper
+    - Masonry
+    - MBProgressHUD
+    - MJExtension
+    - MJRefresh
+    - ReactiveCocoa
+    - RegexKitLite
+    - SAMKeychain
+    - SDWebImage
+    - Shimmer
+    - WSProgressHUD
+
+SPEC CHECKSUMS:
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
+  FLEX: 27b768fcae23a313a1eb115076d429180ca9b472
+  FMDB: 6198a90e7b6900cfc046e6bc0ef6ebb7be9236aa
+  IQKeyboardManager: 249c3946acf61345c18b038eb50863fe2793e3a8
+  LKDBHelper: 9a276ba51f2e16263d46a9517e16cc9b03472664
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
+  MJRefresh: b48380ae2b927b46c4ef000de9adb8dc748e1df7
+  ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
+  RegexKitLite: c0e4c12e6e7de0769f3a3ed679f0f61604170661
+  SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
+  SciChart: 7ffac3d1242082327e65bafa4067d316278ab573
+  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
+  Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
+  WSProgressHUD: a0902809c8af112fb34b004fdc75c16eb85167a3
+
+PODFILE CHECKSUM: ad6c0b5ab6de3deb3fcdd41f2fbfca68a57e2bcd
+
+COCOAPODS: 1.5.3

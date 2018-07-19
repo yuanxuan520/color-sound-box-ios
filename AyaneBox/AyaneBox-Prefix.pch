@@ -1,0 +1,15 @@
+//
+//  AyaneBox-Prefix.pch
+//  AyaneBox
+//
+//  Created by wenjun on 2018/4/11.
+//  Copyright © 2018年 AyaneBox. All rights reserved.
+//
+
+#ifndef AyaneBox_Prefix_pch
+#define AyaneBox_Prefix_pch
+
+#import "Common_Define.h"
+
+
+#endif /* AyaneBox_Prefix_pch */

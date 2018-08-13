@@ -39,10 +39,10 @@
     
     [self keyboardReturn];
     
-    self.socketServer = [[ABSocketServer alloc] init];
-    self.socketServer.delegate = self;
-    [self.socketServer startUDP];
-    
+//    self.socketServer = [[ABSocketServer alloc] init];
+//    self.socketServer.delegate = self;
+//    [self.socketServer startUDP];
+//
     self.nameTextField.text = [IPDetector currentWifiSSID];
     
     self.textStr = [[NSMutableString alloc] init];
@@ -124,12 +124,12 @@
     NSString *str = noti.object;
     [self.textStr appendString:@"\n"];
     [self.textStr appendString:str];
-    @weakify(self);
-    dispatch_async(GetMainQueue, ^{
-        @strongify(self);
-        self.textView.text = self.textStr;
-        [self.textView scrollToBottomAnimated:YES];
-    });
+//    @weakify(self);
+//    dispatch_async(GetMainQueue, ^{
+//        @strongify(self);
+//        self.textView.text = self.textStr;
+//        [self.textView scrollToBottomAnimated:YES];
+//    });
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -178,75 +178,75 @@
 }
 
 #pragma mark - ABSocketServerDelegate
-- (void)socket:(GCDAsyncSocket *)sock didAcceptAudioNewSocket:(GCDAsyncSocket *)newSocket
-{
-    if (self.dataClientSocket) {
-        [newSocket disconnect];
-        return;
-    }
-    self.dataClientSocket = newSocket;
-    self.amrData = [NSMutableData data];
-}
-
-- (void)socket:(GCDAsyncSocket *)sock didAcceptExplorerNewSocket:(GCDAsyncSocket *)newSocket
-{
-    @weakify(self)
-    dispatch_async(GetMainQueue, ^{
-        @strongify(self);
-        [self.myTableView reloadData];
-    });
-}
-
-- (void)audioSocketDidDisconnect:(GCDAsyncSocket *)sock
-{
-    if (self.dataClientSocket == sock) {
-        self.dataClientSocket = nil;
-        [self writeAmr];
-        return;
-    }
-}
-
-- (void)explorerSocketDidDisconnect:(GCDAsyncSocket *)sock
-{
-    @weakify(self)
-    dispatch_async(GetMainQueue, ^{
-        @strongify(self);
-        [self.myTableView reloadData];
-    });
-}
-
-- (void)socket:(GCDAsyncSocket *)sock didReadAudioData:(NSData *)data
-{
-    if (self.dataClientSocket == sock) {
-        [self.amrData appendData:data];
-        return;
-    }
-}
-
-- (void)socket:(GCDAsyncSocket *)sock didReadExplorerData:(NSData *)data
-{
-    if (data.length>=6) {
-        Byte byte[1024];
-        for (int i = 0; i<1024; i++) {
-            byte[i]=0x00;
-        }
-        
-        NSString *ip = [Util IPAddress];
-        NSArray *ipA = [ip componentsSeparatedByString:@"."];
-        
-        byte[0]=0x7B;
-        byte[1]=[[ipA objectWithIndex:0] intValue];
-        byte[2]=[[ipA objectWithIndex:1] intValue];
-        byte[3]=[[ipA objectWithIndex:2] intValue];
-        byte[4]=[[ipA objectWithIndex:3] intValue];
-        const unsigned char *macBytes = data.bytes;
-        for (int i = 0; i<6; i++) {
-            byte[5+i]=macBytes[i];
-        }
-        NSData *writeData = [NSData dataWithBytes:&byte length:sizeof(byte)];
-        [sock writeData:writeData withTimeout:200 tag:111];
-    }
-}
+//- (void)socket:(GCDAsyncSocket *)sock didAcceptAudioNewSocket:(GCDAsyncSocket *)newSocket
+//{
+//    if (self.dataClientSocket) {
+//        [newSocket disconnect];
+//        return;
+//    }
+//    self.dataClientSocket = newSocket;
+//    self.amrData = [NSMutableData data];
+//}
+//
+//- (void)socket:(GCDAsyncSocket *)sock didAcceptExplorerNewSocket:(GCDAsyncSocket *)newSocket
+//{
+//    @weakify(self)
+//    dispatch_async(GetMainQueue, ^{
+//        @strongify(self);
+//        [self.myTableView reloadData];
+//    });
+//}
+//
+//- (void)audioSocketDidDisconnect:(GCDAsyncSocket *)sock
+//{
+//    if (self.dataClientSocket == sock) {
+//        self.dataClientSocket = nil;
+//        [self writeAmr];
+//        return;
+//    }
+//}
+//
+//- (void)explorerSocketDidDisconnect:(GCDAsyncSocket *)sock
+//{
+//    @weakify(self)
+//    dispatch_async(GetMainQueue, ^{
+//        @strongify(self);
+//        [self.myTableView reloadData];
+//    });
+//}
+//
+//- (void)socket:(GCDAsyncSocket *)sock didReadAudioData:(NSData *)data
+//{
+//    if (self.dataClientSocket == sock) {
+//        [self.amrData appendData:data];
+//        return;
+//    }
+//}
+//
+//- (void)socket:(GCDAsyncSocket *)sock didReadExplorerData:(NSData *)data
+//{
+//    if (data.length>=6) {
+//        Byte byte[1024];
+//        for (int i = 0; i<1024; i++) {
+//            byte[i]=0x00;
+//        }
+//
+//        NSString *ip = [Util IPAddress];
+//        NSArray *ipA = [ip componentsSeparatedByString:@"."];
+//
+//        byte[0]=0x7B;
+//        byte[1]=[[ipA objectWithIndex:0] intValue];
+//        byte[2]=[[ipA objectWithIndex:1] intValue];
+//        byte[3]=[[ipA objectWithIndex:2] intValue];
+//        byte[4]=[[ipA objectWithIndex:3] intValue];
+//        const unsigned char *macBytes = data.bytes;
+//        for (int i = 0; i<6; i++) {
+//            byte[5+i]=macBytes[i];
+//        }
+//        NSData *writeData = [NSData dataWithBytes:&byte length:sizeof(byte)];
+//        [sock writeData:writeData withTimeout:200 tag:111];
+//    }
+//}
 
 
 @end

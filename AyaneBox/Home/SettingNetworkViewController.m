@@ -33,7 +33,7 @@
     self.title = @"设备配外网";
     self.socketServer = [[ABSocketServer alloc] init];
     self.socketServer.delegate = self;
-    [self.socketServer startUDP];
+    [self.socketServer startUDP:6002];
     
 //    //重复发送广播
     

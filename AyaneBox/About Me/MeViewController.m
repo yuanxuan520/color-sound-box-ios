@@ -12,6 +12,7 @@
 //#import "UIButton+WebCache.h"
 #import "UpdatePasswordViewController.h"
 #import "AboutusViewController.h"
+#import "LoginViewController.h"
 
 #define HEADHEIGHT (APPMainViewWidth*0.5)
 @interface MeViewController ()<UITableViewDataSource, UITableViewDelegate>
@@ -212,8 +213,21 @@
 
 - (void)logout:(UIButton *)btn
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"您确认要退出登录吗？" message:nil delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:@"确定",nil];
-    [alert show];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"您确认要退出登录吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        LoginViewController *loginViewControl = [sboard instantiateViewControllerWithIdentifier:@"login"];
+        AppDelegate* appDelagete = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        appDelagete.window.rootViewController = loginViewControl;
+    }];
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 

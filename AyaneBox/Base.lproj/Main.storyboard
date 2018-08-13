@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -274,7 +275,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vkY-QR-eJF">
-                                        <rect key="frame" x="0.0" y="0.0" width="353" height="66"/>
+                                        <rect key="frame" x="193" y="0.0" width="160" height="66"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="配外网">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -316,6 +317,13 @@
                                         <color key="textColor" red="0.73785120729999998" green="0.73785120729999998" blue="0.73785120729999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xe3-dP-PFE">
+                                        <rect key="frame" x="65" y="3" width="30" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <connections>
+                                            <action selector="showTip:" destination="mmd-3w-2jE" eventType="touchUpInside" id="6qE-zl-3fd"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -341,14 +349,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="topflames" borderStyle="roundedRect" placeholder="请输入Wi-Fi SSID信号名称" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hRK-2T-h1k">
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入Wi-Fi SSID信号名称" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hRK-2T-h1k">
                                 <rect key="frame" x="16" y="262" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="yuanxuan" borderStyle="roundedRect" placeholder="请输入WiFi密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oZP-dS-x6O">
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入WiFi密码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oZP-dS-x6O">
                                 <rect key="frame" x="16" y="310" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
@@ -434,6 +442,7 @@
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
+                        <outlet property="delegate" destination="3in-0F-RaE" id="AGx-xU-M6W"/>
                         <segue destination="ImP-uL-Apf" kind="relationship" relationship="viewControllers" id="bP8-i6-KKb"/>
                         <segue destination="zrJ-6f-j0m" kind="relationship" relationship="viewControllers" id="jNl-rK-iBW"/>
                         <segue destination="FfT-Bm-doh" kind="relationship" relationship="viewControllers" id="uJz-ma-dLX"/>
@@ -442,6 +451,7 @@
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
+                <customObject id="3in-0F-RaE" customClass="TabbarControl"/>
             </objects>
             <point key="canvasLocation" x="0.0" y="0.0"/>
         </scene>
@@ -466,17 +476,58 @@
         <scene sceneID="mKN-Fv-xy3">
             <objects>
                 <viewController id="Pwq-SK-QbY" customClass="RecordsViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ojD-YE-7xO">
+                    <view key="view" contentMode="scaleToFill" id="Atw-VR-kTf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="hBK-jj-hJ4"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ylo-Oz-C8J">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="leading" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ljm-0e-vtX">
+                                <rect key="frame" x="16" y="74" width="343" height="29"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="输入信道1"/>
+                                    <segment title="输入信道2"/>
+                                    <segment title="输入信道3"/>
+                                </segments>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ytc-hk-QIf">
+                                <rect key="frame" x="16" y="110" width="117" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="2D图形"/>
+                                    <segment title="3D图形"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPb-vw-RJW">
+                                <rect key="frame" x="164" y="410" width="48" height="48"/>
+                                <state key="normal" image="ic_record_start"/>
+                                <state key="selected" image="ic_record_stop"/>
+                                <state key="highlighted" image="ic_record_stop"/>
+                                <connections>
+                                    <action selector="recordAudio:" destination="Pwq-SK-QbY" eventType="touchUpInside" id="10v-a5-cMk"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.17254901959999999" green="0.19215686269999999" blue="0.20784313730000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="qPb-vw-RJW" firstAttribute="centerX" secondItem="Atw-VR-kTf" secondAttribute="centerX" id="886-Ux-4My"/>
+                            <constraint firstItem="lvY-df-Xzw" firstAttribute="bottom" secondItem="qPb-vw-RJW" secondAttribute="bottom" constant="160" id="g3r-Ov-GZp"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="lvY-df-Xzw"/>
                     </view>
                     <navigationItem key="navigationItem" id="bgY-dm-ELW"/>
+                    <connections>
+                        <outlet property="mainView" destination="ylo-Oz-C8J" id="kti-aV-s23"/>
+                        <outlet property="recordBtn" destination="qPb-vw-RJW" id="u6x-gJ-qM3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="joq-32-9U4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1742" y="151"/>
+            <point key="canvasLocation" x="1741.5999999999999" y="150.67466266866569"/>
         </scene>
         <!--播放-->
         <scene sceneID="DkF-TF-sFv">
@@ -502,19 +553,133 @@
                     <view key="view" contentMode="scaleToFill" id="iMr-2c-ZUF">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aHf-PX-eu2" customClass="SCIChartSurface">
+                                <rect key="frame" x="0.0" y="138" width="375" height="480"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="375" id="D1c-gh-sQm"/>
+                                    <constraint firstAttribute="height" constant="480" id="Yrj-7O-Wjz"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rab-fU-61Z" customClass="SCIChartSurface">
+                                <rect key="frame" x="0.0" y="144" width="375" height="474"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="375" id="iTc-kt-hjs"/>
+                                </constraints>
+                            </view>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kWc-Jb-2Mb">
+                                <rect key="frame" x="16" y="108" width="343" height="29"/>
+                                <segments>
+                                    <segment title="输出信道1"/>
+                                    <segment title="输出信道2"/>
+                                    <segment title="输出信道3"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeOutputChannel:" destination="p0i-2U-XaS" eventType="valueChanged" id="mWY-XZ-EOW"/>
+                                </connections>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OEp-SY-ee1">
+                                <rect key="frame" x="16" y="74" width="81" height="26"/>
+                                <color key="backgroundColor" red="0.088261307574827849" green="0.20494200803346668" blue="0.31218749999999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="选择播放文件">
+                                    <color key="titleColor" red="0.98322265630000005" green="0.98322265630000005" blue="0.98322265630000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="请选择录音文件" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fq9-So-zfg">
+                                <rect key="frame" x="105" y="77" width="186" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5qj-Cl-cct">
+                                <rect key="frame" x="299" y="72" width="60" height="26"/>
+                                <color key="backgroundColor" red="0.088261307570000003" green="0.20494200800000001" blue="0.31218750000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="XXR-Sc-Fcz"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="管理">
+                                    <color key="titleColor" red="0.98322265630000005" green="0.98322265630000005" blue="0.98322265630000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GQ0-W0-Mwq">
+                                <rect key="frame" x="16" y="144" width="125" height="29"/>
+                                <segments>
+                                    <segment title="2D图形"/>
+                                    <segment title="3D图形"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7c-ur-ORH">
+                                <rect key="frame" x="152" y="382" width="71" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="kuC-5W-cJp"/>
+                                </constraints>
+                                <state key="normal" image="ic_play_white"/>
+                                <state key="selected" image="ic_stop_white"/>
+                                <connections>
+                                    <action selector="playAudio:" destination="p0i-2U-XaS" eventType="touchUpInside" id="gOh-w2-8Qw"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="leading" secondItem="OEp-SY-ee1" secondAttribute="leading" id="2wN-7c-vO3"/>
+                            <constraint firstItem="rab-fU-61Z" firstAttribute="centerY" secondItem="iMr-2c-ZUF" secondAttribute="centerY" id="4cn-ld-SAF"/>
+                            <constraint firstItem="5qj-Cl-cct" firstAttribute="top" secondItem="LHS-dK-m6R" secondAttribute="top" constant="8" id="8GT-cp-LWA"/>
+                            <constraint firstItem="aHf-PX-eu2" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" id="ACl-fi-dSd"/>
+                            <constraint firstItem="aHf-PX-eu2" firstAttribute="top" secondItem="LHS-dK-m6R" secondAttribute="top" constant="74" id="CVf-Zx-ZoG"/>
+                            <constraint firstItem="rab-fU-61Z" firstAttribute="leading" secondItem="aHf-PX-eu2" secondAttribute="leading" id="HBX-Qd-aTJ"/>
+                            <constraint firstItem="aHf-PX-eu2" firstAttribute="trailing" secondItem="LHS-dK-m6R" secondAttribute="trailing" id="JIh-qN-Hrj"/>
+                            <constraint firstItem="rab-fU-61Z" firstAttribute="top" secondItem="LHS-dK-m6R" secondAttribute="top" constant="80" id="RwY-bJ-Mw6"/>
+                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="leading" secondItem="GQ0-W0-Mwq" secondAttribute="leading" id="SbS-09-aim"/>
+                            <constraint firstItem="GQ0-W0-Mwq" firstAttribute="top" secondItem="kWc-Jb-2Mb" secondAttribute="bottom" constant="8" symbolic="YES" id="T1O-KT-HaM"/>
+                            <constraint firstItem="rab-fU-61Z" firstAttribute="centerX" secondItem="d7c-ur-ORH" secondAttribute="centerX" id="YnU-FH-yOT"/>
+                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="trailing" secondItem="5qj-Cl-cct" secondAttribute="trailing" id="aLq-Ay-T7h"/>
+                            <constraint firstItem="5qj-Cl-cct" firstAttribute="bottom" secondItem="Fq9-So-zfg" secondAttribute="bottom" id="bUG-x3-CPm"/>
+                            <constraint firstItem="rab-fU-61Z" firstAttribute="centerX" secondItem="kWc-Jb-2Mb" secondAttribute="centerX" id="cWj-ZW-oU2"/>
+                            <constraint firstItem="rab-fU-61Z" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" id="dKH-RA-q9Y"/>
+                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="leading" secondItem="iMr-2c-ZUF" secondAttribute="leadingMargin" id="dME-7W-7F0"/>
+                            <constraint firstItem="5qj-Cl-cct" firstAttribute="leading" secondItem="Fq9-So-zfg" secondAttribute="trailing" constant="8" symbolic="YES" id="gf8-Cf-MFL"/>
+                            <constraint firstItem="aHf-PX-eu2" firstAttribute="top" secondItem="kWc-Jb-2Mb" secondAttribute="bottom" constant="2" id="pRG-TO-Zim"/>
+                            <constraint firstItem="d7c-ur-ORH" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" constant="152" id="qJS-FC-ata"/>
+                            <constraint firstItem="LHS-dK-m6R" firstAttribute="bottom" secondItem="d7c-ur-ORH" secondAttribute="bottom" constant="166" id="sQP-PZ-vDL"/>
+                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="top" secondItem="OEp-SY-ee1" secondAttribute="bottom" constant="8" symbolic="YES" id="yec-SV-Nks"/>
+                            <constraint firstItem="rab-fU-61Z" firstAttribute="trailing" secondItem="LHS-dK-m6R" secondAttribute="trailing" id="zjs-ZF-MrR"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="LHS-dK-m6R"/>
                     </view>
                     <navigationItem key="navigationItem" id="pcK-Uv-sjd"/>
+                    <connections>
+                        <outlet property="audioWaveView" destination="aHf-PX-eu2" id="tu9-FF-hLJ"/>
+                        <outlet property="fileLabel" destination="Fq9-So-zfg" id="ApO-3j-BJF"/>
+                        <outlet property="manageBtn" destination="5qj-Cl-cct" id="6aR-hY-RZ1"/>
+                        <outlet property="outputSegmentControl" destination="kWc-Jb-2Mb" id="OrP-oO-2AP"/>
+                        <outlet property="playBtn" destination="d7c-ur-ORH" id="vND-Cy-dvM"/>
+                        <outlet property="selectFileBtn" destination="OEp-SY-ee1" id="hbL-hm-tMW"/>
+                        <outlet property="spectogramView" destination="rab-fU-61Z" id="tkQ-JO-2GQ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fGM-1e-GMo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1742" y="860"/>
+            <point key="canvasLocation" x="1741.5999999999999" y="859.52023988005999"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="KSo-ji-hKc">
             <objects>
-                <viewController id="29r-8k-EyX" customClass="LoginViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="login" id="29r-8k-EyX" customClass="LoginViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AkH-eM-r74">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -579,7 +744,11 @@
         <image name="first" width="30" height="30"/>
         <image name="ic_device" width="48" height="48"/>
         <image name="ic_home_music" width="496" height="438"/>
+        <image name="ic_play_white" width="48" height="48"/>
         <image name="ic_question" width="48" height="48"/>
+        <image name="ic_record_start" width="48" height="48"/>
+        <image name="ic_record_stop" width="48" height="48"/>
+        <image name="ic_stop_white" width="48" height="48"/>
         <image name="ic_tab_main" width="24" height="24"/>
         <image name="ic_tab_me" width="24" height="24"/>
         <image name="ic_tab_play" width="24" height="24"/>

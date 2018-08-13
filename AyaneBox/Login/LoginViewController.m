@@ -7,6 +7,7 @@
 //
 
 #import "LoginViewController.h"
+#import "PPFileOperate.h"
 
 @interface LoginViewController ()<UITextFieldDelegate>
 @property (nonatomic, strong) UIScrollView *mainView;
@@ -232,9 +233,97 @@
 
 - (void)login:(UIButton *)btn
 {
-    UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UITabBarController *tabbarVc = [sboard instantiateViewControllerWithIdentifier:@"home"];
-    AppDelegate* appDelagete = [UIApplication sharedApplication].delegate;
-    appDelagete.window.rootViewController = tabbarVc;
+    [phoneNumberField resignFirstResponder];
+    [passwordField resignFirstResponder];
+    
+    
+    //show
+    [WSProgressHUD showWithStatus:@"正在登录.." maskType:WSProgressHUDMaskTypeBlack];
+    
+    RequestPostData *request = [[RequestPostData alloc] init];///wap/token //login/mobileVerify
+    [request loginAFRequest:Login userName:phoneNumberField.text password:passwordField.text timeOutSeconds:30 completionBlock:^(NSDictionary *json) {
+        NSLog(@"%@",json);
+        
+        if (![[json objectForKey:@"result"] integerValue]) {
+            //            保存信息
+            NSDictionary *dict = [[NSDictionary alloc] initWithDictionary:json];
+            NSString *userId = [NSString stringWithFormat:@"%@",[[dict objectForKey:@"data"] objectForKey:@"userId"]];
+            //            NSString *account = [NSString stringWithFormat:@"%@",[[dict objectForKey:@"data"] objectForKey:@"account"]];
+            NSString *userName = [NSString stringWithFormat:@"%@",[[dict objectForKey:@"data"] objectForKey:@"userName"]];
+            NSString *userType = [NSString stringWithFormat:@"%@",[[dict objectForKey:@"data"] objectForKey:@"userType"]];
+            //            NSString *avatar = [NSString stringWithFormat:@"%@",[[dict objectForKey:@"data"] objectForKey:@"avatar"]];
+            //            NSString *userAccount = [NSString stringWithFormat:@"%@",[[dict objectForKey:@"data"] objectForKey:@"userAccount"]];
+            //            NSString *mobile = [NSString stringWithFormat:@"%@",[[dict objectForKey:@"data"] objectForKey:@"mobile"]];
+            //            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            //            pasteboard.string = token;
+            
+            //            [USERDEFAULTS setObject:token forKey:@"cooki"];
+            
+            UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UITabBarController *tabbarVc = [sboard instantiateViewControllerWithIdentifier:@"home"];
+            AppDelegate* appDelagete = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            appDelagete.window.rootViewController = tabbarVc;
+            
+            //初始化登录信息类ECLoginInfo实例（ECLoginInfo已经包含在SDK包里，不要用户创建）
+            //默认模式：对AppKey、AppToken和userName鉴权
+            
+            
+            NSLog(@"登录成功");
+//          初始化音频所需要的数据
+            [PCMDataSource sharedData];
+            //保存数据
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:LOGINSUCCESSNOTIFACTION object:nil];  //登录成功
+            //            NSHTTPCookieStorage *cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+            //            NSData *data = nil;
+            //            NSURL *url = [NSURL URLWithString:[PPAPPDataClass sharedappData].severUrl];
+            //            for (NSHTTPCookie *cookie in [cookieJar cookies]) {
+            //                if ([cookie.domain isEqualToString:[url host]]) {
+            //                    data = [NSKeyedArchiver archivedDataWithRootObject:cookie];
+            //                }
+            //            }
+            //
+            //            [USERDEFAULTS setObject:data forKey:kUserDefaultsCookie];
+            //                    [USERDEFAULTS synchronize];
+            
+            [USERDEFAULTS setObject:self.phoneNumberField.text forKey:@"phoneNumber"];
+            [USERDEFAULTS setObject:self.phoneNumberField.text forKey:@"account"];
+            [USERDEFAULTS setObject:self.passwordField.text forKey:@"password"];
+            
+            [USERDEFAULTS setObject:[NSNumber numberWithBool:YES] forKey:@"isLogin"];
+            [USERDEFAULTS setObject:userId forKey:@"userId"];
+            [USERDEFAULTS setObject:userType forKey:@"userNickname"];
+            [USERDEFAULTS setObject:userName forKey:@"userName"];
+            //            [USERDEFAULTS setObject:avatar forKey:@"avatar"];
+            //            [USERDEFAULTS setObject:userAccount forKey:@"userAccount"];
+            //            [USERDEFAULTS setObject:mobile forKey:@"userAccount"];
+            [USERDEFAULTS synchronize];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEMYINFO object:nil];//更新我的图片
+            
+            //登录后创建数据库
+//            [DBoperate createDB];
+            
+            //创建文件夹
+//            PPFileOperate *ppfileop = [[PPFileOperate alloc] init];
+//            NSString *dirName = [NSString stringWithFormat:@"%@",@"wavFile"];
+//            [ppfileop createDownloadDirName:dirName];
+        
+            
+            
+        }else{
+            [WSProgressHUD showShimmeringString:[json objectForKey:@"msg"] maskType:WSProgressHUDMaskTypeClear maskWithout:WSProgressHUDMaskWithoutDefault];
+            [WSProgressHUD autoDismiss:1.5];
+        }
+        
+    } failedBlock:^(NSError *error) {
+        NSLog(@"失败");
+        [WSProgressHUD showShimmeringString:@"网络不通畅，请检查网络后重试." maskType:WSProgressHUDMaskTypeClear maskWithout:WSProgressHUDMaskWithoutDefault];
+        [WSProgressHUD autoDismiss:1.5];
+        //弹出提示框   是否是重新登录还是咋地
+    }];
+    
+    
+    
+    
 }
 @end

@@ -8,6 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		020338932E16B01AE0ACD205 /* Pods_AyaneBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C28A8DCA3BD380381D3CC8D /* Pods_AyaneBox.framework */; };
+		2D03D0B6211B55C7002DF77A /* ch03.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2D03D0B5211B55C7002DF77A /* ch03.wav */; };
+		2D03D0B9211B58A2002DF77A /* EYRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D03D0B8211B58A2002DF77A /* EYRecord.m */; };
+		2D0D370221136B1E002DD181 /* SetPopTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0D370121136B1E002DD181 /* SetPopTextView.m */; };
+		2D0D370521143EE6002DD181 /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0D370421143EE6002DD181 /* FileViewController.m */; };
+		2D0D37082114BB38002DD181 /* FileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0D37072114BB38002DD181 /* FileTableViewCell.m */; };
+		2D12C31D210E21FC00D14202 /* OutAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D12C31C210E21FC00D14202 /* OutAudioPlayer.m */; };
+		2D1A67062109A8E000F24485 /* PCMDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A67052109A8E000F24485 /* PCMDataSource.m */; };
+		2D1A670C210A014E00F24485 /* Pcm2WavUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A670B210A014E00F24485 /* Pcm2WavUtil.m */; };
+		2D36E9A7210F5F1500C4CB33 /* EYAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D36E9A6210F5F1500C4CB33 /* EYAudio.m */; };
+		2D507AD72119D6FB00A84ACC /* PPToolsClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D507AD52119D6FA00A84ACC /* PPToolsClass.m */; };
+		2D5283A4211CAB340014823A /* SCIGenericWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D52839F211CAB330014823A /* SCIGenericWrapper.swift */; };
+		2D5283A5211CAB340014823A /* AudioWaveformSurfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5283A0211CAB330014823A /* AudioWaveformSurfaceController.swift */; };
+		2D5283A6211CAB340014823A /* BaseChartSurfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5283A1211CAB340014823A /* BaseChartSurfaceController.swift */; };
+		2D5283A7211CAB340014823A /* SpectrogramSurfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5283A3211CAB340014823A /* SpectrogramSurfaceController.swift */; };
+		2D69774B211222A10070594B /* PPFileOperate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D69774A211222A00070594B /* PPFileOperate.m */; };
+		2D781A33210DEF3B00E5A5D6 /* SocketObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D781A32210DEF3B00E5A5D6 /* SocketObject.m */; };
+		2D781A36210DF11700E5A5D6 /* DeviceData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D781A35210DF11700E5A5D6 /* DeviceData.m */; };
+		2D781A39210DF51200E5A5D6 /* DeviceObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D781A38210DF51200E5A5D6 /* DeviceObject.m */; };
+		2D781A3C210DFAED00E5A5D6 /* SocketDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D781A3B210DFAED00E5A5D6 /* SocketDataObject.m */; };
+		2D8D69CD210C9CC50090FEDE /* RequestPostData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D69CB210C9CC40090FEDE /* RequestPostData.m */; };
 		2DA5A18820ED0E3900D8D377 /* DeviceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5A18720ED0E3800D8D377 /* DeviceTableViewCell.m */; };
 		2DA5A18B20ED178600D8D377 /* SettingNetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5A18A20ED178600D8D377 /* SettingNetworkViewController.m */; };
 		2DA5A19220ED214200D8D377 /* SettingOutTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5A19020ED214200D8D377 /* SettingOutTableViewCell.m */; };
@@ -19,8 +39,6 @@
 		2DAD1C5E20F5014C00E26221 /* WSProgressHUD+AutoDismiss.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DAD1C5D20F5014C00E26221 /* WSProgressHUD+AutoDismiss.m */; };
 		2DAD1C6020F502BD00E26221 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C5F20F502BD00E26221 /* AFNetworking.framework */; };
 		2DAD1C6220F502BD00E26221 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C6120F502BD00E26221 /* CocoaAsyncSocket.framework */; };
-		2DAD1C6420F502BD00E26221 /* FLEX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C6320F502BD00E26221 /* FLEX.framework */; };
-		2DAD1C6620F502BD00E26221 /* FMDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C6520F502BD00E26221 /* FMDB.framework */; };
 		2DAD1C6820F502BD00E26221 /* IQKeyboardManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C6720F502BD00E26221 /* IQKeyboardManager.framework */; };
 		2DAD1C6A20F502BD00E26221 /* LKDBHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C6920F502BD00E26221 /* LKDBHelper.framework */; };
 		2DAD1C6C20F502BD00E26221 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C6B20F502BD00E26221 /* Masonry.framework */; };
@@ -33,7 +51,7 @@
 		2DAD1C7A20F502BD00E26221 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C7920F502BD00E26221 /* SDWebImage.framework */; };
 		2DAD1C7C20F502BD00E26221 /* Shimmer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C7B20F502BD00E26221 /* Shimmer.framework */; };
 		2DAD1C7E20F502BD00E26221 /* WSProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C7D20F502BD00E26221 /* WSProgressHUD.framework */; };
-		2DC0180020EE54A0001C5C91 /* SciChart.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DC017FF20EE54A0001C5C91 /* SciChart.framework */; };
+		2DBFA1962103A34800BB0697 /* simple-drum-beat.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2DBFA1952103A34700BB0697 /* simple-drum-beat.wav */; };
 		2DC5248C20F25D0500FF2CE9 /* AudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DC5248A20F25D0500FF2CE9 /* AudioRecorder.m */; };
 		2DD4375F20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD4375E20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m */; };
 		2DD4376220F78E980088E4D0 /* SpectrogramSurfaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD4376120F78E980088E4D0 /* SpectrogramSurfaceView.m */; };
@@ -42,6 +60,11 @@
 		2DD567A720E28AAE0001666E /* RecordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD567A620E28AAE0001666E /* RecordsViewController.m */; };
 		2DD567AA20E28AC30001666E /* PlayControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD567A920E28AC30001666E /* PlayControlViewController.m */; };
 		2DD567AD20E28AE20001666E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD567AC20E28AE20001666E /* LoginViewController.m */; };
+		2DD9F1DD21076A2A00B61D7E /* BXAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD9F1DB21076A2900B61D7E /* BXAudioPlayer.m */; };
+		2DD9F1E12107797E00B61D7E /* SettingsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD9F1E02107797E00B61D7E /* SettingsData.m */; };
+		2DD9F1E4210781A600B61D7E /* PCMPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD9F1E3210781A600B61D7E /* PCMPlayer.m */; };
+		2DF7278E2110C9980051BEF3 /* TabbarControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DF7278D2110C9980051BEF3 /* TabbarControl.m */; };
+		2DFCBD3D210977E40059CC19 /* AudioData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DFCBD3C210977E40059CC19 /* AudioData.m */; };
 		7D317417208328A100AFDF64 /* LuYinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D317416208328A100AFDF64 /* LuYinViewController.m */; };
 		7D31741A208328E600AFDF64 /* MeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D317418208328E500AFDF64 /* MeViewController.m */; };
 		7D31743520832D8400AFDF64 /* AudioPlayerBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D31742020832D8400AFDF64 /* AudioPlayerBarBackground.png */; };
@@ -193,6 +216,42 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D03D0B5211B55C7002DF77A /* ch03.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ch03.wav; sourceTree = "<group>"; };
+		2D03D0B7211B58A2002DF77A /* EYRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EYRecord.h; sourceTree = "<group>"; };
+		2D03D0B8211B58A2002DF77A /* EYRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EYRecord.m; sourceTree = "<group>"; };
+		2D0D370021136B1E002DD181 /* SetPopTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetPopTextView.h; sourceTree = "<group>"; };
+		2D0D370121136B1E002DD181 /* SetPopTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetPopTextView.m; sourceTree = "<group>"; };
+		2D0D370321143EE6002DD181 /* FileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileViewController.h; sourceTree = "<group>"; };
+		2D0D370421143EE6002DD181 /* FileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileViewController.m; sourceTree = "<group>"; };
+		2D0D37062114BB38002DD181 /* FileTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileTableViewCell.h; sourceTree = "<group>"; };
+		2D0D37072114BB38002DD181 /* FileTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileTableViewCell.m; sourceTree = "<group>"; };
+		2D12C31B210E21FC00D14202 /* OutAudioPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OutAudioPlayer.h; sourceTree = "<group>"; };
+		2D12C31C210E21FC00D14202 /* OutAudioPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OutAudioPlayer.m; sourceTree = "<group>"; };
+		2D1A67042109A8E000F24485 /* PCMDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCMDataSource.h; sourceTree = "<group>"; };
+		2D1A67052109A8E000F24485 /* PCMDataSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCMDataSource.m; sourceTree = "<group>"; };
+		2D1A670A210A014E00F24485 /* Pcm2WavUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pcm2WavUtil.h; sourceTree = "<group>"; };
+		2D1A670B210A014E00F24485 /* Pcm2WavUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Pcm2WavUtil.m; sourceTree = "<group>"; };
+		2D36E9A5210F5F1500C4CB33 /* EYAudio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EYAudio.h; sourceTree = "<group>"; };
+		2D36E9A6210F5F1500C4CB33 /* EYAudio.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EYAudio.m; sourceTree = "<group>"; };
+		2D507AD52119D6FA00A84ACC /* PPToolsClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPToolsClass.m; sourceTree = "<group>"; };
+		2D507AD62119D6FA00A84ACC /* PPToolsClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPToolsClass.h; sourceTree = "<group>"; };
+		2D52839E211CAB320014823A /* AyaneBox-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AyaneBox-Bridging-Header.h"; sourceTree = "<group>"; };
+		2D52839F211CAB330014823A /* SCIGenericWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCIGenericWrapper.swift; sourceTree = "<group>"; };
+		2D5283A0211CAB330014823A /* AudioWaveformSurfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioWaveformSurfaceController.swift; sourceTree = "<group>"; };
+		2D5283A1211CAB340014823A /* BaseChartSurfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChartSurfaceController.swift; sourceTree = "<group>"; };
+		2D5283A3211CAB340014823A /* SpectrogramSurfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpectrogramSurfaceController.swift; sourceTree = "<group>"; };
+		2D697749211222A00070594B /* PPFileOperate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFileOperate.h; sourceTree = "<group>"; };
+		2D69774A211222A00070594B /* PPFileOperate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPFileOperate.m; sourceTree = "<group>"; };
+		2D781A31210DEF3B00E5A5D6 /* SocketObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocketObject.h; sourceTree = "<group>"; };
+		2D781A32210DEF3B00E5A5D6 /* SocketObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SocketObject.m; sourceTree = "<group>"; };
+		2D781A34210DF11700E5A5D6 /* DeviceData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceData.h; sourceTree = "<group>"; };
+		2D781A35210DF11700E5A5D6 /* DeviceData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceData.m; sourceTree = "<group>"; };
+		2D781A37210DF51200E5A5D6 /* DeviceObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceObject.h; sourceTree = "<group>"; };
+		2D781A38210DF51200E5A5D6 /* DeviceObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceObject.m; sourceTree = "<group>"; };
+		2D781A3A210DFAED00E5A5D6 /* SocketDataObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocketDataObject.h; sourceTree = "<group>"; };
+		2D781A3B210DFAED00E5A5D6 /* SocketDataObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SocketDataObject.m; sourceTree = "<group>"; };
+		2D8D69CB210C9CC40090FEDE /* RequestPostData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestPostData.m; sourceTree = "<group>"; };
+		2D8D69CC210C9CC50090FEDE /* RequestPostData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestPostData.h; sourceTree = "<group>"; };
 		2DA5A18620ED0E3800D8D377 /* DeviceTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceTableViewCell.h; sourceTree = "<group>"; };
 		2DA5A18720ED0E3800D8D377 /* DeviceTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceTableViewCell.m; sourceTree = "<group>"; };
 		2DA5A18920ED178600D8D377 /* SettingNetworkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingNetworkViewController.h; sourceTree = "<group>"; };
@@ -227,7 +286,8 @@
 		2DAD1C7920F502BD00E26221 /* SDWebImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDWebImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DAD1C7B20F502BD00E26221 /* Shimmer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Shimmer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DAD1C7D20F502BD00E26221 /* WSProgressHUD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WSProgressHUD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2DC017FF20EE54A0001C5C91 /* SciChart.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SciChart.framework; sourceTree = "<group>"; };
+		2DB46D2B21061BA000F2B47F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		2DBFA1952103A34700BB0697 /* simple-drum-beat.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "simple-drum-beat.wav"; sourceTree = "<group>"; };
 		2DC5248A20F25D0500FF2CE9 /* AudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecorder.m; sourceTree = "<group>"; };
 		2DC5248B20F25D0500FF2CE9 /* AudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecorder.h; sourceTree = "<group>"; };
 		2DD4375D20F78E7F0088E4D0 /* AudioWaveformSurfaceView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioWaveformSurfaceView.h; sourceTree = "<group>"; };
@@ -244,6 +304,16 @@
 		2DD567A920E28AC30001666E /* PlayControlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayControlViewController.m; sourceTree = "<group>"; };
 		2DD567AB20E28AE20001666E /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		2DD567AC20E28AE20001666E /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		2DD9F1DB21076A2900B61D7E /* BXAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BXAudioPlayer.m; sourceTree = "<group>"; };
+		2DD9F1DC21076A2900B61D7E /* BXAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BXAudioPlayer.h; sourceTree = "<group>"; };
+		2DD9F1DF2107797E00B61D7E /* SettingsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsData.h; sourceTree = "<group>"; };
+		2DD9F1E02107797E00B61D7E /* SettingsData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsData.m; sourceTree = "<group>"; };
+		2DD9F1E2210781A600B61D7E /* PCMPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCMPlayer.h; sourceTree = "<group>"; };
+		2DD9F1E3210781A600B61D7E /* PCMPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCMPlayer.m; sourceTree = "<group>"; };
+		2DF7278C2110C9980051BEF3 /* TabbarControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabbarControl.h; sourceTree = "<group>"; };
+		2DF7278D2110C9980051BEF3 /* TabbarControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabbarControl.m; sourceTree = "<group>"; };
+		2DFCBD3B210977E40059CC19 /* AudioData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioData.h; sourceTree = "<group>"; };
+		2DFCBD3C210977E40059CC19 /* AudioData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioData.m; sourceTree = "<group>"; };
 		6C28A8DCA3BD380381D3CC8D /* Pods_AyaneBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AyaneBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D29F6743749EF26A5775AC /* Pods-AyaneBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AyaneBox.release.xcconfig"; path = "Pods/Target Support Files/Pods-AyaneBox/Pods-AyaneBox.release.xcconfig"; sourceTree = "<group>"; };
 		7D317415208328A100AFDF64 /* LuYinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuYinViewController.h; sourceTree = "<group>"; };
@@ -544,8 +614,6 @@
 			files = (
 				2DAD1C6020F502BD00E26221 /* AFNetworking.framework in Frameworks */,
 				2DAD1C6220F502BD00E26221 /* CocoaAsyncSocket.framework in Frameworks */,
-				2DAD1C6420F502BD00E26221 /* FLEX.framework in Frameworks */,
-				2DAD1C6620F502BD00E26221 /* FMDB.framework in Frameworks */,
 				2DAD1C6820F502BD00E26221 /* IQKeyboardManager.framework in Frameworks */,
 				2DAD1C6A20F502BD00E26221 /* LKDBHelper.framework in Frameworks */,
 				2DAD1C6C20F502BD00E26221 /* Masonry.framework in Frameworks */,
@@ -558,7 +626,6 @@
 				2DAD1C7A20F502BD00E26221 /* SDWebImage.framework in Frameworks */,
 				2DAD1C7C20F502BD00E26221 /* Shimmer.framework in Frameworks */,
 				2DAD1C7E20F502BD00E26221 /* WSProgressHUD.framework in Frameworks */,
-				2DC0180020EE54A0001C5C91 /* SciChart.framework in Frameworks */,
 				020338932E16B01AE0ACD205 /* Pods_AyaneBox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -566,11 +633,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2DC5248920F25AB900FF2CE9 /* View */ = {
+		2D52839D211CAB290014823A /* swift */ = {
 			isa = PBXGroup;
 			children = (
+				2D5283A0211CAB330014823A /* AudioWaveformSurfaceController.swift */,
+				2D5283A1211CAB340014823A /* BaseChartSurfaceController.swift */,
+				2D52839F211CAB330014823A /* SCIGenericWrapper.swift */,
+				2D5283A3211CAB340014823A /* SpectrogramSurfaceController.swift */,
+				2D52839E211CAB320014823A /* AyaneBox-Bridging-Header.h */,
 			);
-			path = View;
+			path = swift;
 			sourceTree = "<group>";
 		};
 		2DD5679920E289B90001666E /* Home */ = {
@@ -603,18 +675,13 @@
 		2DD5679B20E289CB0001666E /* Records */ = {
 			isa = PBXGroup;
 			children = (
+				2D0D370021136B1E002DD181 /* SetPopTextView.h */,
+				2D0D370121136B1E002DD181 /* SetPopTextView.m */,
+				2DD567A520E28AAE0001666E /* RecordsViewController.h */,
+				2DD567A620E28AAE0001666E /* RecordsViewController.m */,
 				2DAD1C5B20F4F67800E26221 /* SciChartBaseViewProtocol.h */,
 				2DAD1C5820F4F63100E26221 /* DashedLineChartView.h */,
 				2DAD1C5920F4F63100E26221 /* DashedLineChartView.m */,
-				2DC5248B20F25D0500FF2CE9 /* AudioRecorder.h */,
-				2DC5248A20F25D0500FF2CE9 /* AudioRecorder.m */,
-				2DC5248920F25AB900FF2CE9 /* View */,
-				2DD567A520E28AAE0001666E /* RecordsViewController.h */,
-				2DD567A620E28AAE0001666E /* RecordsViewController.m */,
-				2DD4375D20F78E7F0088E4D0 /* AudioWaveformSurfaceView.h */,
-				2DD4375E20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m */,
-				2DD4376020F78E980088E4D0 /* SpectrogramSurfaceView.h */,
-				2DD4376120F78E980088E4D0 /* SpectrogramSurfaceView.m */,
 			);
 			path = Records;
 			sourceTree = "<group>";
@@ -622,8 +689,20 @@
 		2DD5679C20E289F50001666E /* Play */ = {
 			isa = PBXGroup;
 			children = (
+				2DD9F1DC21076A2900B61D7E /* BXAudioPlayer.h */,
+				2DD9F1DB21076A2900B61D7E /* BXAudioPlayer.m */,
 				2DD567A820E28AC30001666E /* PlayControlViewController.h */,
 				2DD567A920E28AC30001666E /* PlayControlViewController.m */,
+				2D0D37062114BB38002DD181 /* FileTableViewCell.h */,
+				2D0D37072114BB38002DD181 /* FileTableViewCell.m */,
+				2D0D370321143EE6002DD181 /* FileViewController.h */,
+				2D0D370421143EE6002DD181 /* FileViewController.m */,
+				2D507AD62119D6FA00A84ACC /* PPToolsClass.h */,
+				2D507AD52119D6FA00A84ACC /* PPToolsClass.m */,
+				2DD9F1E2210781A600B61D7E /* PCMPlayer.h */,
+				2DD9F1E3210781A600B61D7E /* PCMPlayer.m */,
+				2D12C31B210E21FC00D14202 /* OutAudioPlayer.h */,
+				2D12C31C210E21FC00D14202 /* OutAudioPlayer.m */,
 			);
 			path = Play;
 			sourceTree = "<group>";
@@ -655,6 +734,7 @@
 		73B2448667C9780FF2CEA5D5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2DB46D2B21061BA000F2B47F /* OpenGLES.framework */,
 				2DAD1C5F20F502BD00E26221 /* AFNetworking.framework */,
 				2DAD1C6120F502BD00E26221 /* CocoaAsyncSocket.framework */,
 				2DAD1C6320F502BD00E26221 /* FLEX.framework */,
@@ -1056,9 +1136,9 @@
 		7D55F551207E4545001E3D19 /* NSData */ = {
 			isa = PBXGroup;
 			children = (
+				7D55F554207E4545001E3D19 /* NSData+APNSToken.h */,
 				7D55F552207E4545001E3D19 /* NSData+APNSToken.m */,
 				7D55F553207E4545001E3D19 /* NSData+Base64.h */,
-				7D55F554207E4545001E3D19 /* NSData+APNSToken.h */,
 				7D55F555207E4545001E3D19 /* NSData+Base64.m */,
 			);
 			path = NSData;
@@ -1078,12 +1158,13 @@
 		7D55F55B207E4545001E3D19 /* NSString */ = {
 			isa = PBXGroup;
 			children = (
+				7D55F571207E4545001E3D19 /* NSString+Hash.h */,
 				7D55F55C207E4545001E3D19 /* NSString+Hash.m */,
 				7D55F55D207E4545001E3D19 /* NSString+MyString.m */,
 				7D55F55E207E4545001E3D19 /* NSString+Contains.h */,
 				7D55F55F207E4545001E3D19 /* NSString+Trims.h */,
 				7D55F560207E4545001E3D19 /* NSString+Score.h */,
-				7D55F561207E4545001E3D19 /* NSString+DictionaryValue.h */,
+				7D55F576207E4545001E3D19 /* NSString+Base64.h */,
 				7D55F562207E4545001E3D19 /* NSString+Base64.m */,
 				7D55F563207E4545001E3D19 /* NSString+RegexCategory.m */,
 				7D55F564207E4545001E3D19 /* NSString+ImageSizeUrl.m */,
@@ -1094,23 +1175,22 @@
 				7D55F569207E4545001E3D19 /* NSString+Regex.h */,
 				7D55F56A207E4545001E3D19 /* NSString+Format.h */,
 				7D55F56B207E4545001E3D19 /* NSString+Size.h */,
+				7D55F57C207E4545001E3D19 /* NSString+RemoveEmoji.h */,
 				7D55F56C207E4545001E3D19 /* NSString+RemoveEmoji.m */,
+				7D55F561207E4545001E3D19 /* NSString+DictionaryValue.h */,
 				7D55F56D207E4545001E3D19 /* NSString+DictionaryValue.m */,
 				7D55F56E207E4545001E3D19 /* NSString+Score.m */,
 				7D55F56F207E4545001E3D19 /* NSString+Contains.m */,
 				7D55F570207E4545001E3D19 /* NSString+Trims.m */,
-				7D55F571207E4545001E3D19 /* NSString+Hash.h */,
 				7D55F572207E4545001E3D19 /* NSString+MyString.h */,
 				7D55F573207E4545001E3D19 /* NSString+UrlEncode.m */,
 				7D55F574207E4545001E3D19 /* NSString+ImageSizeUrl.h */,
 				7D55F575207E4545001E3D19 /* NSString+RegexCategory.h */,
-				7D55F576207E4545001E3D19 /* NSString+Base64.h */,
 				7D55F577207E4545001E3D19 /* NSString+Format.m */,
 				7D55F578207E4545001E3D19 /* NSString+Pinyin.h */,
 				7D55F579207E4545001E3D19 /* NSString+Regex.m */,
 				7D55F57A207E4545001E3D19 /* NSString+Matcher.m */,
 				7D55F57B207E4545001E3D19 /* NSString+UUID.m */,
-				7D55F57C207E4545001E3D19 /* NSString+RemoveEmoji.h */,
 				7D55F57D207E4545001E3D19 /* NSString+Size.m */,
 			);
 			path = NSString;
@@ -1119,10 +1199,10 @@
 		7D55F57E207E4545001E3D19 /* NSArray */ = {
 			isa = PBXGroup;
 			children = (
-				7D55F57F207E4545001E3D19 /* NSArray+SafeAccess.m */,
 				7D55F580207E4545001E3D19 /* NSArray+Block.h */,
 				7D55F581207E4545001E3D19 /* NSArray+Block.m */,
 				7D55F582207E4545001E3D19 /* NSArray+SafeAccess.h */,
+				7D55F57F207E4545001E3D19 /* NSArray+SafeAccess.m */,
 			);
 			path = NSArray;
 			sourceTree = "<group>";
@@ -1130,10 +1210,10 @@
 		7D55F583207E4545001E3D19 /* NSUserDefaults */ = {
 			isa = PBXGroup;
 			children = (
-				7D55F584207E4545001E3D19 /* NSUserDefaults+SafeAccess.m */,
 				7D55F585207E4545001E3D19 /* NSUserDefaults+iCloudSync.h */,
-				7D55F586207E4545001E3D19 /* NSUserDefaults+SafeAccess.h */,
 				7D55F587207E4545001E3D19 /* NSUserDefaults+iCloudSync.m */,
+				7D55F586207E4545001E3D19 /* NSUserDefaults+SafeAccess.h */,
+				7D55F584207E4545001E3D19 /* NSUserDefaults+SafeAccess.m */,
 			);
 			path = NSUserDefaults;
 			sourceTree = "<group>";
@@ -1154,10 +1234,10 @@
 		7D55F58F207E4545001E3D19 /* NSTimer */ = {
 			isa = PBXGroup;
 			children = (
-				7D55F590207E4545001E3D19 /* NSTimer+Addition.h */,
-				7D55F591207E4545001E3D19 /* NSTimer+Blocks.m */,
-				7D55F592207E4545001E3D19 /* NSTimer+Addition.m */,
 				7D55F593207E4545001E3D19 /* NSTimer+Blocks.h */,
+				7D55F591207E4545001E3D19 /* NSTimer+Blocks.m */,
+				7D55F590207E4545001E3D19 /* NSTimer+Addition.h */,
+				7D55F592207E4545001E3D19 /* NSTimer+Addition.m */,
 			);
 			path = NSTimer;
 			sourceTree = "<group>";
@@ -1280,7 +1360,9 @@
 		7D56F075207C6827006C04DD /* AyaneBox */ = {
 			isa = PBXGroup;
 			children = (
-				2DC017FF20EE54A0001C5C91 /* SciChart.framework */,
+				2D52839D211CAB290014823A /* swift */,
+				2DBFA1952103A34700BB0697 /* simple-drum-beat.wav */,
+				2D03D0B5211B55C7002DF77A /* ch03.wav */,
 				7D56F08F207C9B39006C04DD /* About App */,
 				2DD567AE20E28AE60001666E /* Login */,
 				2DD5679920E289B90001666E /* Home */,
@@ -1322,6 +1404,28 @@
 		7D56F090207C9B9C006C04DD /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				2D8D69CC210C9CC50090FEDE /* RequestPostData.h */,
+				2D8D69CB210C9CC40090FEDE /* RequestPostData.m */,
+				2DD9F1DF2107797E00B61D7E /* SettingsData.h */,
+				2DD9F1E02107797E00B61D7E /* SettingsData.m */,
+				2DFCBD3B210977E40059CC19 /* AudioData.h */,
+				2DFCBD3C210977E40059CC19 /* AudioData.m */,
+				2DD4375D20F78E7F0088E4D0 /* AudioWaveformSurfaceView.h */,
+				2DD4375E20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m */,
+				2DD4376020F78E980088E4D0 /* SpectrogramSurfaceView.h */,
+				2DD4376120F78E980088E4D0 /* SpectrogramSurfaceView.m */,
+				2DC5248B20F25D0500FF2CE9 /* AudioRecorder.h */,
+				2DC5248A20F25D0500FF2CE9 /* AudioRecorder.m */,
+				2D36E9A5210F5F1500C4CB33 /* EYAudio.h */,
+				2D36E9A6210F5F1500C4CB33 /* EYAudio.m */,
+				2D03D0B7211B58A2002DF77A /* EYRecord.h */,
+				2D03D0B8211B58A2002DF77A /* EYRecord.m */,
+				2D697749211222A00070594B /* PPFileOperate.h */,
+				2D69774A211222A00070594B /* PPFileOperate.m */,
+				2D1A67042109A8E000F24485 /* PCMDataSource.h */,
+				2D1A67052109A8E000F24485 /* PCMDataSource.m */,
+				2D1A670A210A014E00F24485 /* Pcm2WavUtil.h */,
+				2D1A670B210A014E00F24485 /* Pcm2WavUtil.m */,
 				7D31744920832DC500AFDF64 /* SandboxFile.h */,
 				7D31744A20832DC600AFDF64 /* SandboxFile.m */,
 				7D55F648207E4B30001E3D19 /* HUDManager.h */,
@@ -1332,6 +1436,16 @@
 				7D55F4BF207E1B59001E3D19 /* Util.h */,
 				7D55F4BE207E1B59001E3D19 /* Util.m */,
 				7D56F0B4207CE72B006C04DD /* Socket */,
+				2D781A31210DEF3B00E5A5D6 /* SocketObject.h */,
+				2D781A32210DEF3B00E5A5D6 /* SocketObject.m */,
+				2D781A3A210DFAED00E5A5D6 /* SocketDataObject.h */,
+				2D781A3B210DFAED00E5A5D6 /* SocketDataObject.m */,
+				2D781A34210DF11700E5A5D6 /* DeviceData.h */,
+				2D781A35210DF11700E5A5D6 /* DeviceData.m */,
+				2D781A37210DF51200E5A5D6 /* DeviceObject.h */,
+				2D781A38210DF51200E5A5D6 /* DeviceObject.m */,
+				2DF7278C2110C9980051BEF3 /* TabbarControl.h */,
+				2DF7278D2110C9980051BEF3 /* TabbarControl.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1382,11 +1496,12 @@
 		7D56F06B207C6826006C04DD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = AyaneBox;
 				TargetAttributes = {
 					7D56F072207C6826006C04DD = {
 						CreatedOnToolsVersion = 9.3;
+						LastSwiftMigration = 0940;
 					};
 				};
 			};
@@ -1431,6 +1546,8 @@
 				7D31743F20832D8400AFDF64 /* AudioPlayerPrevTrack.png in Resources */,
 				7D31744220832D8400AFDF64 /* AudioPlayerScrubberLeft.png in Resources */,
 				2DA5A19320ED214200D8D377 /* SettingOutTableViewCell.xib in Resources */,
+				2D03D0B6211B55C7002DF77A /* ch03.wav in Resources */,
+				2DBFA1962103A34800BB0697 /* simple-drum-beat.wav in Resources */,
 				7D31744020832D8400AFDF64 /* AudioPlayerNextTrack.png in Resources */,
 				7D31744120832D8400AFDF64 /* AudioPlayerTableBackground.png in Resources */,
 				7D31744520832D8400AFDF64 /* AudioPlayerScrubberRight.png in Resources */,
@@ -1450,9 +1567,9 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-AyaneBox/Pods-AyaneBox-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
-				"${BUILT_PRODUCTS_DIR}/FLEX/FLEX.framework",
 				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework",
+				"${BUILT_PRODUCTS_DIR}/LEEAlert/LEEAlert.framework",
 				"${BUILT_PRODUCTS_DIR}/LKDBHelper/LKDBHelper.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/MJExtension/MJExtension.framework",
@@ -1470,9 +1587,9 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLEX.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManager.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LEEAlert.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LKDBHelper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJExtension.framework",
@@ -1522,10 +1639,13 @@
 				7D55F612207E4546001E3D19 /* NSObject+Blocks.m in Sources */,
 				7D55F5B7207E4546001E3D19 /* UIImage+GIF.m in Sources */,
 				7D55F60F207E4546001E3D19 /* NSObject+AssociatedObject.m in Sources */,
+				2D0D370521143EE6002DD181 /* FileViewController.m in Sources */,
+				2D5283A4211CAB340014823A /* SCIGenericWrapper.swift in Sources */,
 				7D55F5E4207E4546001E3D19 /* UIControl+Block.m in Sources */,
 				7D55F610207E4546001E3D19 /* NSObject+KVOBlocks.m in Sources */,
 				7D55F641207E4908001E3D19 /* AFHTTPSessionManager+PUTFile.m in Sources */,
 				7D31744B20832DC600AFDF64 /* SandboxFile.m in Sources */,
+				2D0D370221136B1E002DD181 /* SetPopTextView.m in Sources */,
 				7D55F600207E4546001E3D19 /* NSString+Format.m in Sources */,
 				7D55F5DD207E4546001E3D19 /* UINavigationItem+Lock.m in Sources */,
 				7D55F602207E4546001E3D19 /* NSString+Matcher.m in Sources */,
@@ -1541,6 +1661,7 @@
 				2DD567AD20E28AE20001666E /* LoginViewController.m in Sources */,
 				7D55F642207E4908001E3D19 /* StatusModel.m in Sources */,
 				2DA5A19220ED214200D8D377 /* SettingOutTableViewCell.m in Sources */,
+				2D507AD72119D6FB00A84ACC /* PPToolsClass.m in Sources */,
 				7D55F5FD207E4546001E3D19 /* NSString+Contains.m in Sources */,
 				7D317417208328A100AFDF64 /* LuYinViewController.m in Sources */,
 				7D56F0B7207CE747006C04DD /* ABSocketServer.m in Sources */,
@@ -1548,6 +1669,7 @@
 				7D55F63F207E4908001E3D19 /* BaseModel+HUD.m in Sources */,
 				7D55F611207E4546001E3D19 /* NSObject+EasyCopy.m in Sources */,
 				7D55F643207E4908001E3D19 /* BaseModel.m in Sources */,
+				2DD9F1E4210781A600B61D7E /* PCMPlayer.m in Sources */,
 				7D55F5C0207E4546001E3D19 /* UIScreen+Frame.m in Sources */,
 				7D55F5E8207E4546001E3D19 /* NSDictionary+URL.m in Sources */,
 				7D55F5FE207E4546001E3D19 /* NSString+Trims.m in Sources */,
@@ -1561,17 +1683,22 @@
 				7D55F5EC207E4546001E3D19 /* NSDictionary+Merge.m in Sources */,
 				7D55F5F3207E4546001E3D19 /* NSURL+UrlEncode.m in Sources */,
 				7D55F5E3207E4546001E3D19 /* UIViewController+BackButtonItemTitle.m in Sources */,
+				2D0D37082114BB38002DD181 /* FileTableViewCell.m in Sources */,
 				7D55F5DB207E4546001E3D19 /* UIView+Visuals.m in Sources */,
 				2DD567AA20E28AC30001666E /* PlayControlViewController.m in Sources */,
+				2D1A670C210A014E00F24485 /* Pcm2WavUtil.m in Sources */,
 				7D55F61D207E4546001E3D19 /* UIViewController+ErrorTips.m in Sources */,
 				2DA5A19C20ED2FA500D8D377 /* UpdatePasswordViewController.m in Sources */,
+				2D5283A5211CAB340014823A /* AudioWaveformSurfaceController.swift in Sources */,
 				7D55F5E1207E4546001E3D19 /* UIImageView+Addition.m in Sources */,
 				7D55F5F1207E4546001E3D19 /* NSData+Base64.m in Sources */,
 				7D55F5D3207E4546001E3D19 /* UIView+GestureCallback.m in Sources */,
 				7D55F5E6207E4546001E3D19 /* UITextField+Blocks.m in Sources */,
 				7D55F5B6207E4546001E3D19 /* UIImage+BlurImage.m in Sources */,
+				2D781A3C210DFAED00E5A5D6 /* SocketDataObject.m in Sources */,
 				7D55F5C4207E4546001E3D19 /* UIButton+LXMImagePosition.m in Sources */,
 				7D55F5CF207E4546001E3D19 /* UIColor+Random.m in Sources */,
+				2D781A36210DF11700E5A5D6 /* DeviceData.m in Sources */,
 				7D55F616207E4546001E3D19 /* NSDate+Formatter.m in Sources */,
 				7D55F5C5207E4546001E3D19 /* UIButton+CountDown.m in Sources */,
 				7D55F5BF207E4546001E3D19 /* UIScrollView+Addition.m in Sources */,
@@ -1585,12 +1712,17 @@
 				7D55F5EB207E4546001E3D19 /* NSDictionary+JSONString.m in Sources */,
 				7D55F5F8207E4546001E3D19 /* NSString+ImageSizeUrl.m in Sources */,
 				7D6ADADC207F29F400005BFA /* IPDetector.m in Sources */,
+				2D69774B211222A10070594B /* PPFileOperate.m in Sources */,
 				2DD567A720E28AAE0001666E /* RecordsViewController.m in Sources */,
 				7D55F60E207E4546001E3D19 /* NSSet+Block.m in Sources */,
 				2DD4376220F78E980088E4D0 /* SpectrogramSurfaceView.m in Sources */,
+				2D8D69CD210C9CC50090FEDE /* RequestPostData.m in Sources */,
+				2D5283A7211CAB340014823A /* SpectrogramSurfaceController.swift in Sources */,
 				7D55F5FF207E4546001E3D19 /* NSString+UrlEncode.m in Sources */,
 				7D55F5B9207E4546001E3D19 /* UIImage+Orientation.m in Sources */,
+				2DFCBD3D210977E40059CC19 /* AudioData.m in Sources */,
 				7D55F614207E4546001E3D19 /* NSObject+Reflection.m in Sources */,
+				2D36E9A7210F5F1500C4CB33 /* EYAudio.m in Sources */,
 				7D55F5D5207E4546001E3D19 /* UIView+Frame.m in Sources */,
 				7D55F5D8207E4546001E3D19 /* UIView+SplitLine.m in Sources */,
 				7D55F5F6207E4546001E3D19 /* NSString+Base64.m in Sources */,
@@ -1604,10 +1736,15 @@
 				7D55F617207E4546001E3D19 /* NSDate+Utilities.m in Sources */,
 				7D55F5DA207E4546001E3D19 /* UIView+Recursion.m in Sources */,
 				2DD4375F20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m in Sources */,
+				2D1A67062109A8E000F24485 /* PCMDataSource.m in Sources */,
 				7D55F5DE207E4546001E3D19 /* UINavigationItem+Margin.m in Sources */,
+				2DD9F1E12107797E00B61D7E /* SettingsData.m in Sources */,
 				7D55F607207E4546001E3D19 /* NSUserDefaults+SafeAccess.m in Sources */,
 				7D56F07E207C6827006C04DD /* SecondViewController.m in Sources */,
 				7D55F613207E4546001E3D19 /* NSObject+GCD.m in Sources */,
+				2DF7278E2110C9980051BEF3 /* TabbarControl.m in Sources */,
+				2D781A39210DF51200E5A5D6 /* DeviceObject.m in Sources */,
+				2DD9F1DD21076A2A00B61D7E /* BXAudioPlayer.m in Sources */,
 				7D55F5C8207E4546001E3D19 /* UIButton+MiddleAligning.m in Sources */,
 				7D55F5D4207E4546001E3D19 /* UIView+ViewController.m in Sources */,
 				7D55F5BD207E4546001E3D19 /* UIImage+Alpha.m in Sources */,
@@ -1618,6 +1755,7 @@
 				7D55F5CD207E4546001E3D19 /* UIColor+Gradient.m in Sources */,
 				7D55F618207E4546001E3D19 /* NSDate+Reporting.m in Sources */,
 				2DA5A18820ED0E3900D8D377 /* DeviceTableViewCell.m in Sources */,
+				2D12C31D210E21FC00D14202 /* OutAudioPlayer.m in Sources */,
 				7D55F5E7207E4546001E3D19 /* UITextField+Select.m in Sources */,
 				7D55F5CE207E4546001E3D19 /* UIColor+HEX.m in Sources */,
 				7D55F5CC207E4546001E3D19 /* UIButton+ImageTitleStyle.m in Sources */,
@@ -1625,6 +1763,8 @@
 				7D55F5EE207E4546001E3D19 /* NSMutableAttributedString+ColorAndFontSize.m in Sources */,
 				7D31744720832D8400AFDF64 /* MDAudioPlayerTableViewCell.m in Sources */,
 				7D55F62C207E48E1001E3D19 /* CSErrorTips.m in Sources */,
+				2D781A33210DEF3B00E5A5D6 /* SocketObject.m in Sources */,
+				2D03D0B9211B58A2002DF77A /* EYRecord.m in Sources */,
 				7D55F60A207E4546001E3D19 /* NSDecimalNumber+Extensions.m in Sources */,
 				7D55F60C207E4546001E3D19 /* NSTimer+Blocks.m in Sources */,
 				7D55F5E9207E4546001E3D19 /* NSDictionary+Block.m in Sources */,
@@ -1656,6 +1796,7 @@
 				7D55F5C2207E4546001E3D19 /* UIButton+BackgroundColor.m in Sources */,
 				7D55F5D2207E4546001E3D19 /* UIView+CustomBorder.m in Sources */,
 				7D55F5C1207E4546001E3D19 /* UIWindow+Hierarchy.m in Sources */,
+				2D5283A6211CAB340014823A /* BaseChartSurfaceController.swift in Sources */,
 				7D55F5DF207E4546001E3D19 /* UITextView+Select.m in Sources */,
 				7D55F60B207E4546001E3D19 /* NSNumber+CGFloat.m in Sources */,
 				7D55F5BB207E4546001E3D19 /* UIImage+Color.m in Sources */,
@@ -1790,6 +1931,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1798,9 +1940,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F8B6E253C2A3040D805653F9 /* Pods-AyaneBox.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 7YNE4E4Q67;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1808,14 +1953,20 @@
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/AyaneBox/AyaneBox-Prefix.pch";
 				INFOPLIST_FILE = AyaneBox/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tf.AyaneBox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e116fc31-c5df-48ef-ba9d-a50365bd6d0a";
-				PROVISIONING_PROFILE_SPECIFIER = AyaneBoxAdHoc;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "AyaneBox/swift/AyaneBox-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 			};
@@ -1825,9 +1976,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 75D29F6743749EF26A5775AC /* Pods-AyaneBox.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 7YNE4E4Q67;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1835,14 +1989,18 @@
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/AyaneBox/AyaneBox-Prefix.pch";
 				INFOPLIST_FILE = AyaneBox/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tf.AyaneBox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e116fc31-c5df-48ef-ba9d-a50365bd6d0a";
-				PROVISIONING_PROFILE_SPECIFIER = AyaneBoxAdHoc;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "AyaneBox/swift/AyaneBox-Bridging-Header.h";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 			};

@@ -13,7 +13,6 @@
 @interface SpectrogramSurfaceView : UIView<SciChartBaseViewProtocol>
 @property (nonatomic, strong) SCIFastUniformHeatmapRenderableSeries *audioWaveformRenderableSeries;
 @property (nonatomic, strong) SCIUniformHeatmapDataSeries *audioDataSeries;
-@property (nonatomic, copy) samplesToEngineFloat updateDataSeries;
-- (void)updateData:(CADisplayLink *)displayLink;
-
+- (void)updateDataSeries:(float *)fftArray;
+- (void)updateData;
 @end

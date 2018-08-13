@@ -18,6 +18,7 @@
 typedef void (^samplesToEngine)(int*);
 typedef void (^samplesToEngineFloat)(float*);
 typedef void (^samplesToEngineDouble)(double*);
+typedef void (^samplesToEngineData)(NSData*);
 
 typedef struct
 {
@@ -49,6 +50,7 @@ void AudioInputCallback(void * inUserData,  // Custom audio metadata
 - (void)formSamplesToEngine: (int) capacity samples:(float*) samples;
 - (void)formFFTSamples: (int) capacity samples:(float*) samples;
 
+@property samplesToEngineData samplesToEngineDataDelegate;
 @property samplesToEngine sampleToEngineDelegate;
 @property samplesToEngineFloat fftSamplesDelegate;
 @property samplesToEngineFloat spectrogramSamplesDelegate;

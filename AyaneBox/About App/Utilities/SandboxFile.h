@@ -49,6 +49,7 @@
 +(NSString*)GetPathForCaches:(NSString *)filename;
 +(NSString*)GetPathForCaches:(NSString *)filename inDir:(NSString*)dir;
 
++(NSString *)GetDirectoryForDocuments:(NSString *)dir;
 +(NSString*)GetPathForDocuments:(NSString*)filename;
 +(NSString*)GetPathForDocuments:(NSString *)filename inDir:(NSString*)dir;
 

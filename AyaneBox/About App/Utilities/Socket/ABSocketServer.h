@@ -12,9 +12,12 @@
 
 @protocol ABSocketServerDelegate <NSObject>
 
+@required
+- (void)udpSocket:(GCDAsyncUdpSocket *)sock host:(NSString *)host didReceiveData:(NSData *)data fromAddress:(NSData *)address;
+@optional
 - (void)socket:(GCDAsyncSocket *)sock didAcceptAudioNewSocket:(GCDAsyncSocket *)newSocket;
 - (void)socket:(GCDAsyncSocket *)sock didAcceptExplorerNewSocket:(GCDAsyncSocket *)newSocket;
-- (void)udpSocket:(GCDAsyncUdpSocket *)sock host:(NSString *)host didReceiveData:(NSData *)data fromAddress:(NSData *)address port:(UInt16)port;
+
 
 - (void)audioSocketDidDisconnect:(GCDAsyncSocket *)sock;
 - (void)explorerSocketDidDisconnect:(GCDAsyncSocket *)sock;
@@ -32,10 +35,11 @@
 @property (nonatomic, strong) NSMutableArray *audioClientArray;
 
 @property (nonatomic, strong) GCDAsyncUdpSocket *udpServer;
-@property (nonatomic, strong) GCDAsyncSocket *gcdSocket;
-@property (nonatomic, strong) GCDAsyncSocket *audioSocket;
+//@property (nonatomic, strong) GCDAsyncSocket *gcdSocket;
+//@property (nonatomic, strong) GCDAsyncSocket *audioSocket;
 
-/** 启动UDP服务 */
+/** 启动UDP服务 打开端口 */
+- (void)startUDP:(NSUInteger)port;
 - (void)startUDP;
 
 /** 停止UDP服务 */

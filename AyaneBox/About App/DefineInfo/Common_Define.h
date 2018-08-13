@@ -24,6 +24,12 @@
 #import "ReactiveCocoa.h"
 #import "UIImageView+WebCache.h"
 #import "Masonry.h"
+#import "DeviceData.h"
+#import "DeviceObject.h"
+#import "PCMDataSource.h"
+#import <WSProgressHUD/WSProgressHUD.h>
+#import "WSProgressHUD+AutoDismiss.h"
+#import "RequestPostData.h"
 
 #define kMyUserId @""   //暂时
 
@@ -129,7 +135,7 @@ static inline UIEdgeInsets UISafeAreaInsets(UIView * view){
 #define INTERFACELandscape self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft || self.interfaceOrientation == UIInterfaceOrientationLandscapeRight
 
 #ifndef __OPTIMIZE__
-#define NSLog(...) NSLog(__VA_ARGS__)
+//#define NSLog(...) NSLog(__VA_ARGS__)
 #define DLog(fmt, ...) {NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);}
 #else
 #define DLog(...)
@@ -179,4 +185,10 @@ static inline UIEdgeInsets UISafeAreaInsets(UIView * view){
 #define kUserDefaults       [NSUserDefaults standardUserDefaults]
 #define kNotificationCenter [NSNotificationCenter defaultCenter]
 
+#define SEVERURL  @"http://101.132.175.122/color-sound-box/"
+#define kUserDefaultsCookie @"kUserDefaultsCookie"
+#define kSaveUserDefaultsCookie @"kSaveUserDefaultsCookie"
+//登录刷新
+#define LOGINSUCCESSNOTIFACTION @"LOGINSUCCESSNOTIFACTION"
+#define LOGOUTNOTIFACTION @"LOGOUTNOTIFACTION"
 #endif /* Common_Define_h */

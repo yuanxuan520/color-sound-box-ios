@@ -90,7 +90,7 @@
     [backView addSubview:phonelabel];
     
     UILabel *phoneDetaillabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 150, APPMainViewWidth-10, 50)];
-    phoneDetaillabel.text = @"010-132323232";
+    phoneDetaillabel.text = @"010-126371236";
     phoneDetaillabel.textAlignment = NSTextAlignmentRight;
     phoneDetaillabel.textColor = UIColorHex(0x999999);
     phoneDetaillabel.font = SystemFont(14);

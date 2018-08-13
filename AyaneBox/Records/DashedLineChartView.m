@@ -50,12 +50,12 @@
 //
 //    dataCount = 1000;
     SCIXyDataSeries * fourierDataSeries = [[SCIXyDataSeries alloc] initWithXType:SCIDataType_Float YType:SCIDataType_Float];
-    for (int i = 0; i < dataCount; i++) {
-        double time = 10 * i / (double)dataCount;
-        double y = 2 * sin(time) + 10;
-        
-        [fourierDataSeries appendX:SCIGeneric(time) Y:SCIGeneric(y)];
-    };
+//    for (int i = 0; i < dataCount; i++) {
+//        double time = 10 * i / (double)dataCount;
+//        double y = 2 * sin(time) + 10;
+//
+//        [fourierDataSeries appendX:SCIGeneric(time) Y:SCIGeneric(y)];
+//    };
     
     SCIEllipsePointMarker * ellipsePointMarker = [SCIEllipsePointMarker new];
     ellipsePointMarker.fillStyle = [[SCISolidBrushStyle alloc] initWithColorCode:0xFFd6ffd7];

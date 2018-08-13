@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "SciChartBaseViewProtocol.h"
 #import <SciChart/SciChart.h>
-#import "AudioRecorder.h"
 
 @interface AudioWaveformSurfaceView : UIView<SciChartBaseViewProtocol>
-@property (nonatomic, copy) samplesToEngine updateDataSeries;
-
+- (void)updateDataSeriesOld:(NSData *)dataSeries;
+- (void)updateDataSeries:(NSData *)dataSeries;
+- (void)updateData:(CADisplayLink *)displayLink;
 @end

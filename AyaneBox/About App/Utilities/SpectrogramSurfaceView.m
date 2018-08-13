@@ -14,7 +14,9 @@
 
 
 @interface SpectrogramSurfaceView ()
-@property (nonatomic) float *dataArrays;
+{
+    float *dataArrays;
+}
 @property (nonatomic) BOOL isNewData;
 
 
@@ -22,7 +24,7 @@
 
 @implementation SpectrogramSurfaceView
 @synthesize surface;
-@synthesize dataArrays,isNewData;
+@synthesize isNewData;
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     
@@ -41,15 +43,16 @@
     
     return self;
 }
-- (void)updateData:(CADisplayLink *)displayLink {
+- (void)updateData {
     if (self.isNewData) {
         self.isNewData = NO;
-        [self.audioDataSeries updateZValues:SCIGeneric(self.dataArrays) Size:xSize*ySize];
+        [self.audioDataSeries updateZValues:SCIGeneric(dataArrays) Size:xSize*ySize];
         [surface invalidateElement];
     }
     
 }
 -(void) initializeSurfaceData {
+    
     self.audioWaveformRenderableSeries = [[SCIFastUniformHeatmapRenderableSeries alloc] init];
     self.audioDataSeries = [[SCIUniformHeatmapDataSeries alloc] initWithTypeX:SCIDataType_Int32
                                                                             Y:SCIDataType_Int32
@@ -60,37 +63,23 @@
                                                                         StepX:SCIGeneric(1)
                                                                        StartY:SCIGeneric(0)
                                                                         StepY:SCIGeneric(1)];
+    dataArrays = calloc(1,xSize*ySize);;
     surface.bottomAxisAreaSize = 0.0;
     surface.topAxisAreaSize = 0.0;
     surface.leftAxisAreaSize = 0.0;
     surface.rightAxisAreaSize = 0.0;
-    self.dataArrays = malloc(sizeof(int)*xSize*ySize);;
-    isNewData = NO;
-    memset(dataArrays, 0, sizeof(int)*xSize*ySize);
-    self.updateDataSeries = ^(float *data){
-        float* pointerInt32 = data;
-        if (pointerInt32) {
-//            memmove(self.dataArrays,
-//                    self.dataArrays.advanced(by: Int(HeatmapSettings.ySize)),
-//                    Int((HeatmapSettings.xSize-1)*HeatmapSettings.ySize)*MemoryLayout<Float>.size)
-//            memcpy(self.dataArrays.advanced(by: Int(HeatmapSettings.ySize*(HeatmapSettings.xSize-1))),
-//                   pointerInt32, Int(HeatmapSettings.ySize)*MemoryLayout<Float>.size)
-            
-            memmove(self.dataArrays,sizeof(float)*ySize,sizeof(float)*(xSize-1)*ySize);
-            memcpy(self.dataArrays,sizeof(float)*(xSize-1)*ySize,sizeof(float)*ySize);
-            self.isNewData = YES;
-        }
-    };
-    
+    self.isNewData = NO;
+    memset(dataArrays, 0.0, xSize*ySize);
     float grad[] = {0.0, 0.3, 0.5, 0.7, 0.9, 1.0};
     uint colors[] = {0xFF000000, 0xFF520306, 0xFF8F2325, 0xFF68E615, 0xFF6FB9CC, 0xFF1128e6};
-    
-    self.audioWaveformRenderableSeries = [SCIFastUniformHeatmapRenderableSeries new];
+    self.audioWaveformRenderableSeries.dataSeries = self.audioDataSeries;
+    self.audioWaveformRenderableSeries.style.minimum = SCIGeneric(0.0);
+    self.audioWaveformRenderableSeries.style.maximum = SCIGeneric(60.0);
     self.audioWaveformRenderableSeries.style.colorMap = [[SCITextureOpenGL alloc] initWithGradientCoords:grad Colors:colors Count:6];
     
     [surface.renderableSeries add:self.audioWaveformRenderableSeries];
 
-    SCIAxisStyle *axisStyle = [[SCIAxisStyle alloc] init];
+    SCIAxisStyle *axisStyle = [SCIAxisStyle new];
     axisStyle.drawLabels = YES;
     axisStyle.drawMajorBands = YES;
     axisStyle.drawMinorTicks = YES;
@@ -98,12 +87,12 @@
     axisStyle.drawMajorGridLines = YES;
     axisStyle.drawMinorGridLines = YES;
     
-    id<SCIAxis2DProtocol> xAxis = [[SCINumericAxis alloc] init];
+    id<SCIAxis2DProtocol> xAxis = [SCINumericAxis new];
     xAxis.style = axisStyle;
     xAxis.axisAlignment = SCIAxisAlignment_Left;
     xAxis.autoRange = SCIAutoRange_Always;
     
-    id<SCIAxis2DProtocol> yAxis = [[SCINumericAxis alloc] init];
+    id<SCIAxis2DProtocol> yAxis = [SCINumericAxis new];
     yAxis.style = axisStyle;
     yAxis.autoRange = SCIAutoRange_Always;
     yAxis.flipCoordinates = YES;
@@ -112,8 +101,18 @@
     [surface.xAxes add:xAxis];
     [surface.yAxes add:yAxis];
     
-    [surface invalidateElement];
+//    [surface invalidateElement];
+
 }
 
+
+- (void)updateDataSeries:(float *)fftArray
+{
+    if (fftArray) {
+        memmove(dataArrays,dataArrays+ySize,sizeof(float)*(xSize-1)*ySize);
+        memcpy(dataArrays+((xSize-1)*ySize),fftArray,sizeof(int)*ySize);
+        self.isNewData = YES;
+    }
+}
 
 @end

@@ -8,22 +8,35 @@
 
 #import "RecordsViewController.h"
 #import <SciChart/SciChart.h>
-#import "AudioRecorder.h"
-//#import "DashedLineChartView.h"
+#import "DashedLineChartView.h"
 #import <Accelerate/Accelerate.h>
-
+#import "LEEAlert.h"
 #import "AudioWaveformSurfaceView.h"
 #import "SpectrogramSurfaceView.h"
+#import "SetPopTextView.h"
 
 @interface RecordsViewController ()
+
 @property (nonatomic, strong) CADisplayLink *displaylink;
+@property (nonatomic, strong) IBOutlet UIButton *recordBtn;
+@property (nonatomic, strong) IBOutlet UIView *mainView;
+//@property (nonatomic, strong) UISegmentedControl *segmentedControl;
+@property (nonatomic, strong) DashedLineChartView *dashedLineChartView;
 @property (nonatomic, strong) AudioRecorder *audioRecorderDataManager;
 @property (nonatomic, strong) AudioWaveformSurfaceView *audioWaveformSurfaceView;
 @property (nonatomic, strong) SpectrogramSurfaceView *spectrogramSurfaceView;
+@property (nonatomic, strong) NSString *filename;
+//@property (nonatomic, strong) AudioWaveformSurfaceController *audioWaveformSurfaceController;
+//@property (nonatomic, strong) SpectogramSurfaceController *spectrogramSurfaceController;
+//@property (nonatomic, strong) IBOutlet SCIChartSurface *audioWaveformSurface;
+//@property (nonatomic, strong) IBOutlet SCIChartSurface *spectrogramSurface;
+- (IBAction)recordAudio:(UIButton *)btn;
 @end
 
 @implementation RecordsViewController
-@synthesize audioRecorderDataManager,audioWaveformSurfaceView,spectrogramSurfaceView;
+@synthesize audioRecorderDataManager;
+@synthesize audioWaveformSurfaceView,spectrogramSurfaceView;
+@synthesize dashedLineChartView;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -36,27 +49,70 @@
 - (void)viewDidLoad {
     self.title = @"录音";
     [super viewDidLoad];
+//    if( ([[[UIDevice currentDevice] systemVersion] doubleValue]>=7.0)) {
+//        self.edgesForExtendedLayout = UIRectEdgeNone;
+//        self.extendedLayoutIncludesOpaqueBars = NO;
+//        self.modalPresentationCapturesStatusBarAppearance = NO;
+//        self.automaticallyAdjustsScrollViewInsets = YES;
+//    }
     // Do any additional setup after loading the view.
     [self createView];
+}
+
+- (IBAction)recordAudio:(UIButton *)btn
+{
+    if (![PCMDataSource sharedData].isRecord) {
+        [PCMDataSource sharedData].isRecord = YES;
+//
+        self.recordBtn.selected = YES;
+        [[PCMDataSource sharedData] startRecord];
+    }else {
+        [PCMDataSource sharedData].isRecord = NO;
+        self.recordBtn.selected = NO;
+        [[PCMDataSource sharedData] stopRecord];
+
+        SetPopTextView *setPopTextView = [[SetPopTextView alloc] init];
+        [setPopTextView show:self.view.window setTitle:@"存储语音文件" fileName:[PCMDataSource sharedData].defaultFileName setSetText:^(NSString *notice) {
+            [[PCMDataSource sharedData] saveWavFile:notice];
+        }];
+//      弹出保存文件框框
+//        停止播放 和录音
+//        保存文件 对应的文件
+    }
 }
 
 - (void)createView
 {
     self.audioRecorderDataManager = [[AudioRecorder alloc] init];
-    
-    self.spectrogramSurfaceView = [[SpectrogramSurfaceView alloc] initWithFrame:CGRectMake(0, 0, APPMainViewWidth, APPMainViewHeight-APPNavStateBar-50)];
-    
-    self.audioWaveformSurfaceView = [[AudioWaveformSurfaceView alloc] initWithFrame:CGRectMake(0, 0, APPMainViewWidth, APPMainViewHeight-APPNavStateBar-50)];
 
-    [self.view addSubview:spectrogramSurfaceView];
+    self.dashedLineChartView = [[DashedLineChartView alloc] initWithFrame:CGRectMake(0,APPNavStateBar + 80, APPMainViewWidth, APPMainViewHeight-APPNavStateBar-80-50)];
+    [self.mainView addSubview:self.dashedLineChartView];
+    
+
+    
+    
+    
+//    self.spectrogramSurfaceView = [[SpectrogramSurfaceView alloc] initWithFrame:CGRectMake(0, 0, APPMainViewWidth, APPMainViewHeight-APPNavStateBar-50)];
+    
+    
 //    [self.view addSubview:audioWaveformSurfaceView];
-
-//    audioRecorderDataManager.sampleToEngineDelegate = spectrogramSurfaceView.updateDataSeries;
-    audioRecorderDataManager.spectrogramSamplesDelegate = spectrogramSurfaceView.updateDataSeries;
-    [self.audioRecorderDataManager startRecording];
+//    [self.view addSubview:spectrogramSurfaceView];
+//    self.audioWaveformSurfaceController = [[AudioWaveformSurfaceController alloc] init:self.audioWaveformSurface];
     
+//    self.spectrogramSurfaceController = [[SpectogramSurfaceController alloc] init:self.spectrogramSurface];
+
+
+//    self.audioRecorderDataManager.sampleToEngineDelegate = self.audioWaveformSurfaceController.updateDataSeries;
+//    self.audioRecorderDataManager.spectrogramSamplesDelegate = self.spectrogramSurfaceController.updateDataSeries;
+//    [self.audioRecorderDataManager startRecording];
+    
+//    self.displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateData:)];
+//    [self.displaylink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 //    DashedLineChartView *dashedLineChartView = [[DashedLineChartView alloc] initWithFrame:CGRectMake(0, 50, APPMainViewWidth, APPMainViewHeight-APPNavStateBar-50)];
 //    [self.view addSubview:dashedLineChartView];
+//    self.audioWaveformSurface.frame = CGRectMake(0, 0, APPMainViewWidth, APPMainViewHeight);
+//    [self.view addSubview:self.audioWaveformSurface];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -65,7 +121,8 @@
 }
 - (void)updateData:(CADisplayLink *)displayLink
 {
-    [self.spectrogramSurfaceView updateData:displayLink];
+//    [self.spectrogramSurfaceController updateDataWithDisplayLink:displayLink];
+//    [self.audioWaveformSurfaceController updateDataWithDisplayLink:displayLink];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

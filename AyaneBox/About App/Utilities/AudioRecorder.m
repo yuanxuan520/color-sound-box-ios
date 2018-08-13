@@ -23,6 +23,7 @@ void *refToSelf;
 @synthesize sampleToEngineDelegate;
 @synthesize fftSamplesDelegate;
 @synthesize spectrogramSamplesDelegate;
+@synthesize samplesToEngineDataDelegate;
 void AudioInputCallback(void * inUserData,
                         AudioQueueRef inAQ,
                         AudioQueueBufferRef inBuffer,
@@ -40,14 +41,17 @@ void AudioInputCallback(void * inUserData,
     AudioQueueEnqueueBuffer(recordState->queue, inBuffer, 0, NULL);
     
     rec.runningTimeInterval = [NSDate date];
-    int* samples = (AUDIO_DATA_TYPE_FORMAT*)inBuffer->mAudioData;
-    
-    
-    if (inNumberPacketDescriptions != 2048) {
+//    int* samples = (AUDIO_DATA_TYPE_FORMAT*)inBuffer->mAudioData;
+    if (inNumberPacketDescriptions != 1024) {
         return;
     }
-    
-    [rec formSamplesToEngine:inNumberPacketDescriptions samples:samples];
+    int* samples = (AUDIO_DATA_TYPE_FORMAT*)inBuffer->mAudioData;
+
+    NSData *bufferData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+    if ([rec samplesToEngineDataDelegate] != nil){
+        [rec samplesToEngineDataDelegate](bufferData);
+    }
+//    [rec formSamplesToEngine:inNumberPacketDescriptions samples:samples];
 
 }
 
@@ -63,14 +67,14 @@ void AudioInputCallback(void * inUserData,
 }
 
 - (void)setupAudioFormat:(AudioStreamBasicDescription*)format {
-    format->mSampleRate = _sampleRate; //44100; //44100
+    format->mSampleRate = 44100;
     format->mFormatID = kAudioFormatLinearPCM;
     format->mFormatFlags = kAudioFormatFlagIsSignedInteger;
     format->mFramesPerPacket  = 1;
     format->mChannelsPerFrame = 1;
-    format->mBytesPerFrame    = sizeof(AUDIO_DATA_TYPE_FORMAT);
-    format->mBytesPerPacket   = sizeof(AUDIO_DATA_TYPE_FORMAT);
-    format->mBitsPerChannel   = sizeof(AUDIO_DATA_TYPE_FORMAT) * 8;
+    format->mBytesPerFrame    = sizeof(short);
+    format->mBytesPerPacket   = sizeof(short);
+    format->mBitsPerChannel   = sizeof(short) * 8;
 }
 
 - (void)startRecording{
@@ -88,11 +92,9 @@ void AudioInputCallback(void * inUserData,
                                 kCFRunLoopCommonModes,
                                 0,
                                 &recordState.queue);
-    
     if (status == 0) {
-        
         for (int i = 0; i < NUM_BUFFERS; i++) {
-            AudioQueueAllocateBuffer(recordState.queue, 2048*recordState.dataFormat.mBytesPerFrame, &recordState.buffers[i]);
+            AudioQueueAllocateBuffer(recordState.queue, 1024*recordState.dataFormat.mBytesPerFrame, &recordState.buffers[i]);
             AudioQueueEnqueueBuffer(recordState.queue, recordState.buffers[i], 0, nil);
         }
         
@@ -124,6 +126,13 @@ void AudioInputCallback(void * inUserData,
 
 - (void)formSamplesToEngine: (int)capacity samples: (int*)samples {
     AudioRecorder *rec = (__bridge AudioRecorder *) refToSelf;
+//  to do 这里sampls 这一段音频数据 写音频文件  5002端口写入数据  播放音频
+//    Byte* newData = (Byte*)samples;
+//    NSData *bufferData = [NSData dataWithBytes:newData length:capacity];
+//
+//    if ([rec samplesToEngineDataDelegate] != nil){
+//        [rec samplesToEngineDataDelegate](bufferData);
+//    }
     
     if ([rec sampleToEngineDelegate] != nil){
         [rec sampleToEngineDelegate](samples);
@@ -146,7 +155,6 @@ void AudioInputCallback(void * inUserData,
     
     float *dataFloat = malloc(sizeof(float)*numSamples);
     vDSP_vflt32(data, 1, dataFloat, 1, numSamples);
-//    NSLog(@"samples %d ",dat);
 
     DSPSplitComplex tempSplitComplex;
     tempSplitComplex.imagp = malloc(sizeof(float)*(numSamples));

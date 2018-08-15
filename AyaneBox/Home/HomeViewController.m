@@ -12,7 +12,7 @@
 #import "AudioRecorder.h"
 #import "SocketObject.h"
 #import "SocketDataObject.h"
-
+#import "LEEAlert.h"
 #import "EYAudio.h"
 
 @interface HomeViewController ()<UITableViewDelegate,UITableViewDataSource,ABSocketServerDelegate>
@@ -55,15 +55,12 @@
 }
 - (IBAction)showTip:(id)sender
 {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"设备使用需知" message:@"A.配对说明:\n1.开启硬件，可见一个指示灯闪烁，启动成功\n2.关闭手机移动数据，断开之前的WIF1连接，点击连接硬件发出的网络( mysimplelnk-**** )\n3.重启硬件，重复操作2，激活硬件\n4.打开软件，等待页面显示设备，点击配对，显示配对成功，代表软硬件连接成功，可以正常使用\nB.通道说明:\n1.输入1/输出1， 输入2/输出2为外接通道;\n2.输入3/输出3为手机通道;\n3.输入输出通道可以任意匹配使用\n" preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        
-    }];
-    
-    [alert addAction:cancelAction];
-    
-    [self presentViewController:alert animated:YES completion:nil];
+    [LEEAlert alert].config
+    .LeeTitle(@"设备使用需知")
+    .LeeContent(@"A.配对说明:\n1.开启硬件，可见一个指示灯闪烁，启动成功\n2.关闭手机移动数据，断开之前的WIF1连接，点击连接硬件发出的网络( mysimplelnk-**** )\n3.重启硬件，重复操作2，激活硬件\n4.打开软件，等待页面显示设备，点击配对，显示配对成功，代表软硬件连接成功，可以正常使用\nB.通道说明:\n1.输入1/输出1， 输入2/输出2为外接通道;\n2.输入3/输出3为手机通道;\n3.输入输出通道可以任意匹配使用\n")
+    .LeeAction(@"确定", ^{
+    })
+    .LeeShow(); // 设置完成后 别忘记调用Show来显示
 }
 
 //设备使用需知

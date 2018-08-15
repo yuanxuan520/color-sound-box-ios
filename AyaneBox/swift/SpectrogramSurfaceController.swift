@@ -81,7 +81,7 @@ class SpectogramSurfaceController: BaseChartSurfaceController {
         
         let xAxis = SCINumericAxis()
         xAxis.style = axisStyle
-        xAxis.axisAlignment = .left
+        xAxis.axisAlignment = .right
         xAxis.autoRange = .always
         
         let yAxis = SCINumericAxis()
@@ -93,6 +93,6 @@ class SpectogramSurfaceController: BaseChartSurfaceController {
         chartSurface.yAxes.add(yAxis)
         chartSurface.xAxes.add(xAxis)
         
-        chartSurface.invalidateElement()
+//        chartSurface.invalidateElement()
     }
 }

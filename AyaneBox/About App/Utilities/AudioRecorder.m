@@ -45,7 +45,7 @@ void AudioInputCallback(void * inUserData,
     if (inNumberPacketDescriptions != 1024) {
         return;
     }
-    int* samples = (AUDIO_DATA_TYPE_FORMAT*)inBuffer->mAudioData;
+//    int* samples = (AUDIO_DATA_TYPE_FORMAT*)inBuffer->mAudioData;
 
     NSData *bufferData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
     if ([rec samplesToEngineDataDelegate] != nil){
@@ -102,7 +102,7 @@ void AudioInputCallback(void * inUserData,
         
         status = AudioQueueStart(recordState.queue, NULL);
         
-        length = (uint)floor(log2(2048));
+        length = (uint)floor(log2(1024));
 
         fftSetup = vDSP_create_fftsetup(length, kFFTRadix2);
     }
@@ -124,7 +124,7 @@ void AudioInputCallback(void * inUserData,
 //    NSLog(@"max FFT Value = %i and min FFT Value = %i", _max, _min);
 }
 
-- (void)formSamplesToEngine: (int)capacity samples: (int*)samples {
+- (void)formSamplesToEngine: (int)capacity samples: (short*)samples {
     AudioRecorder *rec = (__bridge AudioRecorder *) refToSelf;
 //  to do 这里sampls 这一段音频数据 写音频文件  5002端口写入数据  播放音频
 //    Byte* newData = (Byte*)samples;
@@ -154,7 +154,7 @@ void AudioInputCallback(void * inUserData,
 - (float*) calculateFFT: (int*)data size:(uint)numSamples{
     
     float *dataFloat = malloc(sizeof(float)*numSamples);
-    vDSP_vflt32(data, 1, dataFloat, 1, numSamples);
+    vDSP_vflt16(data, 1, dataFloat, 1, numSamples);
 
     DSPSplitComplex tempSplitComplex;
     tempSplitComplex.imagp = malloc(sizeof(float)*(numSamples));

@@ -7,7 +7,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -555,22 +554,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aHf-PX-eu2" customClass="SCIChartSurface">
-                                <rect key="frame" x="0.0" y="138" width="375" height="480"/>
+                                <rect key="frame" x="0.0" y="181" width="375" height="437"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="375" id="D1c-gh-sQm"/>
-                                    <constraint firstAttribute="height" constant="480" id="Yrj-7O-Wjz"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rab-fU-61Z" customClass="SCIChartSurface">
-                                <rect key="frame" x="0.0" y="144" width="375" height="474"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="375" id="iTc-kt-hjs"/>
-                                </constraints>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kWc-Jb-2Mb">
-                                <rect key="frame" x="16" y="108" width="343" height="29"/>
+                                <rect key="frame" x="16" y="108" width="343" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Ewh-Bl-2Ob"/>
+                                </constraints>
                                 <segments>
                                     <segment title="输出信道1"/>
                                     <segment title="输出信道2"/>
@@ -580,9 +571,13 @@
                                     <action selector="changeOutputChannel:" destination="p0i-2U-XaS" eventType="valueChanged" id="mWY-XZ-EOW"/>
                                 </connections>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OEp-SY-ee1">
-                                <rect key="frame" x="16" y="74" width="81" height="26"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OEp-SY-ee1">
+                                <rect key="frame" x="16" y="74" width="75" height="26"/>
                                 <color key="backgroundColor" red="0.088261307574827849" green="0.20494200803346668" blue="0.31218749999999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="75" id="04b-8K-tiU"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="30" id="LCb-RO-3pC"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <state key="normal" title="选择播放文件">
                                     <color key="titleColor" red="0.98322265630000005" green="0.98322265630000005" blue="0.98322265630000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -593,17 +588,18 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="请选择录音文件" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fq9-So-zfg">
-                                <rect key="frame" x="105" y="77" width="186" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请选择录音文件" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fq9-So-zfg">
+                                <rect key="frame" x="106" y="79" width="183" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5qj-Cl-cct">
-                                <rect key="frame" x="299" y="72" width="60" height="26"/>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5qj-Cl-cct">
+                                <rect key="frame" x="299" y="74" width="60" height="25"/>
                                 <color key="backgroundColor" red="0.088261307570000003" green="0.20494200800000001" blue="0.31218750000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="XXR-Sc-Fcz"/>
+                                    <constraint firstAttribute="height" constant="25" id="FHz-LK-24W"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="60" id="vHD-4f-av8"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <state key="normal" title="管理">
@@ -615,17 +611,25 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GQ0-W0-Mwq">
-                                <rect key="frame" x="16" y="144" width="125" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="GQ0-W0-Mwq">
+                                <rect key="frame" x="16" y="146" width="120" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="Ygb-hB-AFw"/>
+                                    <constraint firstAttribute="height" constant="30" id="naj-Wl-kRq"/>
+                                </constraints>
                                 <segments>
                                     <segment title="2D图形"/>
                                     <segment title="3D图形"/>
                                 </segments>
+                                <connections>
+                                    <action selector="change2D3DDisplay:" destination="p0i-2U-XaS" eventType="valueChanged" id="te3-i6-uU5"/>
+                                </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7c-ur-ORH">
-                                <rect key="frame" x="152" y="382" width="71" height="70"/>
+                                <rect key="frame" x="152" y="298" width="70" height="70"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="70" id="kuC-5W-cJp"/>
+                                    <constraint firstAttribute="height" constant="70" id="Bhn-pk-Ls6"/>
+                                    <constraint firstAttribute="width" constant="70" id="l4F-L2-LAJ"/>
                                 </constraints>
                                 <state key="normal" image="ic_play_white"/>
                                 <state key="selected" image="ic_stop_white"/>
@@ -636,40 +640,38 @@
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="leading" secondItem="OEp-SY-ee1" secondAttribute="leading" id="2wN-7c-vO3"/>
-                            <constraint firstItem="rab-fU-61Z" firstAttribute="centerY" secondItem="iMr-2c-ZUF" secondAttribute="centerY" id="4cn-ld-SAF"/>
-                            <constraint firstItem="5qj-Cl-cct" firstAttribute="top" secondItem="LHS-dK-m6R" secondAttribute="top" constant="8" id="8GT-cp-LWA"/>
-                            <constraint firstItem="aHf-PX-eu2" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" id="ACl-fi-dSd"/>
-                            <constraint firstItem="aHf-PX-eu2" firstAttribute="top" secondItem="LHS-dK-m6R" secondAttribute="top" constant="74" id="CVf-Zx-ZoG"/>
-                            <constraint firstItem="rab-fU-61Z" firstAttribute="leading" secondItem="aHf-PX-eu2" secondAttribute="leading" id="HBX-Qd-aTJ"/>
-                            <constraint firstItem="aHf-PX-eu2" firstAttribute="trailing" secondItem="LHS-dK-m6R" secondAttribute="trailing" id="JIh-qN-Hrj"/>
-                            <constraint firstItem="rab-fU-61Z" firstAttribute="top" secondItem="LHS-dK-m6R" secondAttribute="top" constant="80" id="RwY-bJ-Mw6"/>
-                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="leading" secondItem="GQ0-W0-Mwq" secondAttribute="leading" id="SbS-09-aim"/>
-                            <constraint firstItem="GQ0-W0-Mwq" firstAttribute="top" secondItem="kWc-Jb-2Mb" secondAttribute="bottom" constant="8" symbolic="YES" id="T1O-KT-HaM"/>
-                            <constraint firstItem="rab-fU-61Z" firstAttribute="centerX" secondItem="d7c-ur-ORH" secondAttribute="centerX" id="YnU-FH-yOT"/>
-                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="trailing" secondItem="5qj-Cl-cct" secondAttribute="trailing" id="aLq-Ay-T7h"/>
-                            <constraint firstItem="5qj-Cl-cct" firstAttribute="bottom" secondItem="Fq9-So-zfg" secondAttribute="bottom" id="bUG-x3-CPm"/>
-                            <constraint firstItem="rab-fU-61Z" firstAttribute="centerX" secondItem="kWc-Jb-2Mb" secondAttribute="centerX" id="cWj-ZW-oU2"/>
-                            <constraint firstItem="rab-fU-61Z" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" id="dKH-RA-q9Y"/>
-                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="leading" secondItem="iMr-2c-ZUF" secondAttribute="leadingMargin" id="dME-7W-7F0"/>
-                            <constraint firstItem="5qj-Cl-cct" firstAttribute="leading" secondItem="Fq9-So-zfg" secondAttribute="trailing" constant="8" symbolic="YES" id="gf8-Cf-MFL"/>
-                            <constraint firstItem="aHf-PX-eu2" firstAttribute="top" secondItem="kWc-Jb-2Mb" secondAttribute="bottom" constant="2" id="pRG-TO-Zim"/>
-                            <constraint firstItem="d7c-ur-ORH" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" constant="152" id="qJS-FC-ata"/>
-                            <constraint firstItem="LHS-dK-m6R" firstAttribute="bottom" secondItem="d7c-ur-ORH" secondAttribute="bottom" constant="166" id="sQP-PZ-vDL"/>
-                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="top" secondItem="OEp-SY-ee1" secondAttribute="bottom" constant="8" symbolic="YES" id="yec-SV-Nks"/>
-                            <constraint firstItem="rab-fU-61Z" firstAttribute="trailing" secondItem="LHS-dK-m6R" secondAttribute="trailing" id="zjs-ZF-MrR"/>
+                            <constraint firstItem="GQ0-W0-Mwq" firstAttribute="top" secondItem="kWc-Jb-2Mb" secondAttribute="bottom" constant="8" id="309-wT-uhb"/>
+                            <constraint firstItem="LHS-dK-m6R" firstAttribute="trailing" secondItem="kWc-Jb-2Mb" secondAttribute="trailing" constant="16" id="3pW-pH-CS9"/>
+                            <constraint firstItem="OEp-SY-ee1" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" constant="16" id="95C-ci-rpK"/>
+                            <constraint firstItem="5qj-Cl-cct" firstAttribute="top" secondItem="LHS-dK-m6R" secondAttribute="top" constant="10" id="BWt-6P-CIZ"/>
+                            <constraint firstItem="aHf-PX-eu2" firstAttribute="top" secondItem="GQ0-W0-Mwq" secondAttribute="bottom" constant="5" id="IgZ-Jd-z9f"/>
+                            <constraint firstItem="d7c-ur-ORH" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" constant="152" id="JA2-Pe-vf9"/>
+                            <constraint firstItem="LHS-dK-m6R" firstAttribute="bottom" secondItem="d7c-ur-ORH" secondAttribute="bottom" constant="250" id="Jbv-5Q-pNB"/>
+                            <constraint firstItem="LHS-dK-m6R" firstAttribute="trailing" secondItem="d7c-ur-ORH" secondAttribute="trailing" constant="153" id="OQa-gl-M0C"/>
+                            <constraint firstItem="LHS-dK-m6R" firstAttribute="trailing" secondItem="5qj-Cl-cct" secondAttribute="trailing" constant="16" id="PH8-7e-vYY"/>
+                            <constraint firstItem="aHf-PX-eu2" firstAttribute="bottom" secondItem="LHS-dK-m6R" secondAttribute="bottom" id="PKT-9a-Sqz"/>
+                            <constraint firstItem="GQ0-W0-Mwq" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" constant="16" id="UlI-GI-8cc"/>
+                            <constraint firstItem="5qj-Cl-cct" firstAttribute="leading" secondItem="Fq9-So-zfg" secondAttribute="trailing" constant="10" id="b8e-I0-1ZB"/>
+                            <constraint firstItem="OEp-SY-ee1" firstAttribute="top" secondItem="LHS-dK-m6R" secondAttribute="top" constant="10" id="goh-sB-L8B"/>
+                            <constraint firstItem="aHf-PX-eu2" firstAttribute="trailing" secondItem="LHS-dK-m6R" secondAttribute="trailing" id="l7l-fn-lp9"/>
+                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" constant="16" id="p4S-h9-z8d"/>
+                            <constraint firstItem="Fq9-So-zfg" firstAttribute="top" secondItem="LHS-dK-m6R" secondAttribute="top" constant="15" id="uF6-9w-kCk"/>
+                            <constraint firstItem="Fq9-So-zfg" firstAttribute="leading" secondItem="OEp-SY-ee1" secondAttribute="trailing" constant="15" id="vra-Jn-jCy"/>
+                            <constraint firstItem="kWc-Jb-2Mb" firstAttribute="top" secondItem="OEp-SY-ee1" secondAttribute="bottom" constant="8" id="x0y-8H-kto"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="GQ0-W0-Mwq" secondAttribute="trailing" constant="20" symbolic="YES" id="xeh-FP-vHB"/>
+                            <constraint firstItem="aHf-PX-eu2" firstAttribute="leading" secondItem="LHS-dK-m6R" secondAttribute="leading" id="yIk-Vf-UVa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="LHS-dK-m6R"/>
                     </view>
                     <navigationItem key="navigationItem" id="pcK-Uv-sjd"/>
                     <connections>
-                        <outlet property="audioWaveView" destination="aHf-PX-eu2" id="tu9-FF-hLJ"/>
+                        <outlet property="audioWaveView" destination="aHf-PX-eu2" id="4Lu-Ws-Ta5"/>
+                        <outlet property="displaySegmentControl" destination="GQ0-W0-Mwq" id="NYA-bA-aaf"/>
                         <outlet property="fileLabel" destination="Fq9-So-zfg" id="ApO-3j-BJF"/>
                         <outlet property="manageBtn" destination="5qj-Cl-cct" id="6aR-hY-RZ1"/>
                         <outlet property="outputSegmentControl" destination="kWc-Jb-2Mb" id="OrP-oO-2AP"/>
                         <outlet property="playBtn" destination="d7c-ur-ORH" id="vND-Cy-dvM"/>
                         <outlet property="selectFileBtn" destination="OEp-SY-ee1" id="hbL-hm-tMW"/>
-                        <outlet property="spectogramView" destination="rab-fU-61Z" id="tkQ-JO-2GQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fGM-1e-GMo" userLabel="First Responder" sceneMemberID="firstResponder"/>

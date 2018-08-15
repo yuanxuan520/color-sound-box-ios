@@ -11,7 +11,7 @@
 #import <SciChart/SciChart.h>
 
 @interface AudioWaveformSurfaceView : UIView<SciChartBaseViewProtocol>
-- (void)updateDataSeriesOld:(NSData *)dataSeries;
+//- (void)updateDataSeriesOld:(NSData *)dataSeries;
 - (void)updateDataSeries:(NSData *)dataSeries;
-- (void)updateData:(CADisplayLink *)displayLink;
+- (void)updateData;
 @end

@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface FileViewController : UIViewController
-
+@property (nonatomic, assign) BOOL isSelect;
 @end

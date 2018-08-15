@@ -28,11 +28,11 @@
 @interface AudioWaveformSurfaceView(){
     SCIFastLineRenderableSeries *audioWaveformRenderableSeries;
     SCIXyDataSeries *audioDataSeries;
-    int32_t seriesCounter;
+    int seriesCounter;
     NSTimeInterval lastTimestamp;
     int16_t *newBuffer;
-    NSMutableData *newBufferData;
-    int16_t sizeOfBuffer;
+//    NSMutableData *newBufferData;
+    int sizeOfBuffer;
     int fifoSize;
 }
 @end
@@ -61,7 +61,7 @@
 //   创建一个快速变换的线型图
     audioWaveformRenderableSeries = [[SCIFastLineRenderableSeries alloc] init];
 //    x y 数据展示
-    audioDataSeries = [[SCIXyDataSeries alloc] initWithXType:SCIDataType_Int16 YType:SCIDataType_Int16];
+    audioDataSeries = [[SCIXyDataSeries alloc] initWithXType:SCIDataType_Int32 YType:SCIDataType_Int16];
     seriesCounter = 0;
     lastTimestamp = 0.0;
     sizeOfBuffer = 0;
@@ -88,15 +88,15 @@
     id<SCIAxis2DProtocol> xAxis = [SCINumericAxis new];
     xAxis.style = axisStyle;
     xAxis.autoRange = SCIAutoRange_Always;
-//    xAxis.visibleRange = [[SCIDoubleRange alloc]initWithMin:SCIGeneric(0) Max:SCIGeneric(INT32_MAX)];
+    xAxis.visibleRange = [[SCIDoubleRange alloc]initWithMin:SCIGeneric(0) Max:SCIGeneric(INT32_MAX)];
     
     id<SCIAxis2DProtocol> yAxis = [SCINumericAxis new];
     yAxis.style = axisStyle;
-    yAxis.visibleRange = [[SCIDoubleRange alloc]initWithMin:SCIGeneric(SHRT_MIN) Max:SCIGeneric(SHRT_MAX)];
+    yAxis.visibleRange = [[SCIDoubleRange alloc]initWithMin:SCIGeneric(INT16_MIN) Max:SCIGeneric(INT16_MAX)];
 //    yAxis.autoRange = SCIAutoRange_Never;
     
-//    xAxis.labelProvider = [[ThousandsLabelProvider alloc] init];
-//    yAxis.labelProvider = [[BillionsLabelProvider alloc] init];
+    xAxis.labelProvider = [[ThousandsLabelProvider alloc] init];
+    yAxis.labelProvider = [[BillionsLabelProvider alloc] init];
 //
     [surface.yAxes add:yAxis];
     [surface.xAxes add:xAxis];
@@ -134,7 +134,7 @@
 //        }
 //    };
 }
-- (void)updateDataSeriesOld:(NSData *)dataSeries
+- (void)updateDataSeries:(NSData *)dataSeries
 {
     NSData *newDataSeries = [NSData dataWithData:dataSeries];
     int capacity = 2048 + sizeOfBuffer;
@@ -147,7 +147,7 @@
     if (bf) {
         newBufferTemp = calloc(1, capacity);
         memmove(newBufferTemp, bf, sizeOfBuffer);
-        memmove(newBufferTemp+(sizeOfBuffer/4), data, 2048);
+        memmove(newBufferTemp+(sizeOfBuffer/2), data, 2048);
         newBuffer = newBufferTemp;
         //       释放上次的内存
         free(bf);
@@ -160,64 +160,28 @@
         sizeOfBuffer = capacity;
     }
 }
-- (void)updateDataSeries:(NSData *)dataSeries
-{
-//    NSData *newDataSeries = [NSData dataWithData:dataSeries];
-    int capacity = 2048 + sizeOfBuffer;
-    NSMutableData *newBufferTemp;
-    
-    NSMutableData *bf = newBufferData;
-    
-//    int16_t *data = (int16_t *)[newDataSeries bytes];
-    
-    if (bf) {
-        newBufferTemp = [NSMutableData dataWithLength:capacity];
-        [newBufferTemp replaceBytesInRange:NSMakeRange(0, sizeOfBuffer) withBytes:[bf bytes] length:sizeOfBuffer];
-        [newBufferTemp replaceBytesInRange:NSMakeRange(sizeOfBuffer, dataSeries.length) withBytes:[dataSeries bytes] length:dataSeries.length];
-        newBufferData = newBufferTemp;
-    }else if (dataSeries) {
-        newBufferTemp =  [NSMutableData dataWithLength:capacity];
-        [newBufferTemp replaceBytesInRange:NSMakeRange(0, capacity) withBytes:[dataSeries bytes] length:capacity];
-        newBufferData = newBufferTemp;
-        sizeOfBuffer = capacity;
-    }
-}
-
-- (void)updateData:(CADisplayLink *)displayLink {
-    
-    NSTimeInterval diffTimeStamp = displayLink.timestamp - lastTimestamp;
-    if (lastTimestamp == 0) {
-        diffTimeStamp = displayLink.duration;
-    }
-    
-    int16_t sizeOfBlock = (int16_t)(diffTimeStamp * 44100);
-    
-    sizeOfBlock = sizeOfBlock >= sizeOfBuffer ? sizeOfBuffer : sizeOfBlock;
-    
-    int16_t *xValues = calloc(1,sizeOfBlock);
-    
-    int i = 0;
-    while(i < sizeOfBlock) {
-        xValues[i] = seriesCounter;
-        seriesCounter += 1;
-        i += 1;
-    }
-    NSMutableData *bufferData = [NSMutableData dataWithData:newBufferData];
-    int16_t *buffer = (int16_t *)[bufferData bytes];
-    if (buffer) {
-        [audioDataSeries appendRangeX:SCIGeneric(xValues) Y:SCIGeneric(buffer) Count:sizeOfBlock];
-        int16_t newSizeBuffer = sizeOfBuffer - sizeOfBlock;
-        NSData *subData = [bufferData subdataWithRange:NSMakeRange(sizeOfBlock, newSizeBuffer)];
-        NSMutableData *delocBuffer = [NSMutableData dataWithLength:newSizeBuffer];
-        [delocBuffer replaceBytesInRange:NSMakeRange(sizeOfBlock, newSizeBuffer) withBytes:[subData bytes] length:newSizeBuffer];
-        newBufferData = delocBuffer;
-        sizeOfBuffer = newSizeBuffer;
-    }
-    free(xValues);
-    lastTimestamp = displayLink.timestamp;
-    [surface zoomExtentsX];
-    [surface invalidateElement];
-}
+//- (void)updateDataSeries:(NSData *)dataSeries
+//{
+////    NSData *newDataSeries = [NSData dataWithData:dataSeries];
+//    int capacity = 2048 + sizeOfBuffer;
+//    NSMutableData *newBufferTemp;
+//
+//    NSMutableData *bf = newBufferData;
+//
+////    int16_t *data = (int16_t *)[newDataSeries bytes];
+//
+//    if (bf) {
+//        newBufferTemp = [NSMutableData dataWithLength:capacity];
+//        [newBufferTemp replaceBytesInRange:NSMakeRange(0, sizeOfBuffer) withBytes:[bf bytes] length:sizeOfBuffer];
+//        [newBufferTemp replaceBytesInRange:NSMakeRange(sizeOfBuffer, dataSeries.length) withBytes:[dataSeries bytes] length:dataSeries.length];
+//        newBufferData = newBufferTemp;
+//    }else if (dataSeries) {
+//        newBufferTemp =  [NSMutableData dataWithLength:capacity];
+//        [newBufferTemp replaceBytesInRange:NSMakeRange(0, capacity) withBytes:[dataSeries bytes] length:capacity];
+//        newBufferData = newBufferTemp;
+//        sizeOfBuffer = capacity;
+//    }
+//}
 
 //- (void)updateData:(CADisplayLink *)displayLink {
 //
@@ -238,22 +202,58 @@
 //        seriesCounter += 1;
 //        i += 1;
 //    }
-//    int16_t *buffer = newBuffer;
+//    NSMutableData *bufferData = [NSMutableData dataWithData:newBufferData];
+//    int16_t *buffer = (int16_t *)[bufferData bytes];
 //    if (buffer) {
 //        [audioDataSeries appendRangeX:SCIGeneric(xValues) Y:SCIGeneric(buffer) Count:sizeOfBlock];
 //        int16_t newSizeBuffer = sizeOfBuffer - sizeOfBlock;
-//        int16_t *delocBuffer = calloc(1, newSizeBuffer);
-//        NSMutableData *delocNewData = [NSMutableData dataWithLength:newSizeBuffer];
-//        memmove(delocBuffer,buffer+sizeOfBlock,newSizeBuffer);
-//        newBuffer = delocBuffer;
+//        NSData *subData = [bufferData subdataWithRange:NSMakeRange(sizeOfBlock, newSizeBuffer)];
+//        NSMutableData *delocBuffer = [NSMutableData dataWithLength:newSizeBuffer];
+//        [delocBuffer replaceBytesInRange:NSMakeRange(sizeOfBlock, newSizeBuffer) withBytes:[subData bytes] length:newSizeBuffer];
+//        newBufferData = delocBuffer;
 //        sizeOfBuffer = newSizeBuffer;
 //    }
-//    free(buffer);
 //    free(xValues);
 //    lastTimestamp = displayLink.timestamp;
 //    [surface zoomExtentsX];
 //    [surface invalidateElement];
 //}
+
+- (void)updateData:(CADisplayLink *)displayLink {
+
+    NSTimeInterval diffTimeStamp = displayLink.timestamp - lastTimestamp;
+    if (lastTimestamp == 0) {
+        diffTimeStamp = displayLink.duration;
+    }
+//(int)(diffTimeStamp * 44100)
+    int sizeOfBlock = 2048;
+
+    sizeOfBlock = sizeOfBlock >= sizeOfBuffer ? sizeOfBuffer : sizeOfBlock;
+
+    int *xValues = calloc(1,sizeOfBlock);
+
+    int i = 0;
+    while(i < sizeOfBlock) {
+        xValues[i] = seriesCounter;
+        seriesCounter += 1;
+        i += 1;
+    }
+    int16_t *buffer = newBuffer;
+    if (buffer) {
+        [audioDataSeries appendRangeX:SCIGeneric(xValues) Y:SCIGeneric(buffer) Count:sizeOfBlock];
+        int newSizeBuffer = sizeOfBuffer - sizeOfBlock;
+        int16_t *delocBuffer = calloc(1, newSizeBuffer);
+        int16_t *curBuffer = &buffer[sizeOfBlock];
+        memmove(delocBuffer,curBuffer,newSizeBuffer);
+        newBuffer = delocBuffer;
+        sizeOfBuffer = newSizeBuffer;
+    }
+    free(buffer);
+    free(xValues);
+    lastTimestamp = displayLink.timestamp;
+    [surface zoomExtentsX];
+    [surface invalidateElement];
+}
 
 
 @end

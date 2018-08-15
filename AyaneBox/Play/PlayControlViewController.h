@@ -11,6 +11,4 @@
 #import <SciChart/SciChart.h>
 
 @interface PlayControlViewController : UIViewController
-@property (nonatomic, strong) IBOutlet SCIChartSurface *audioWaveView;
-@property (nonatomic, strong) IBOutlet SCIChartSurface *spectogramView;
 @end

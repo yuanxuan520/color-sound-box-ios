@@ -23,6 +23,7 @@
         self.curPort = port;
     }
     if (self.udpServer == nil) {
+        
         self.udpServer = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_queue_create("udp server work queue", DISPATCH_QUEUE_SERIAL)];
         
         if (![self.udpServer bindToPort:self.curPort error:&error]) {

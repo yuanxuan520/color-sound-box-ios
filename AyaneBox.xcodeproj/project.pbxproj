@@ -648,8 +648,10 @@
 		2DD5679920E289B90001666E /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				2DAD1C5C20F5014B00E26221 /* WSProgressHUD+AutoDismiss.h */,
-				2DAD1C5D20F5014C00E26221 /* WSProgressHUD+AutoDismiss.m */,
+				2D781A31210DEF3B00E5A5D6 /* SocketObject.h */,
+				2D781A32210DEF3B00E5A5D6 /* SocketObject.m */,
+				2D781A3A210DFAED00E5A5D6 /* SocketDataObject.h */,
+				2D781A3B210DFAED00E5A5D6 /* SocketDataObject.m */,
 				2DD5679F20E28A8F0001666E /* HomeViewController.h */,
 				2DD567A020E28A8F0001666E /* HomeViewController.m */,
 				2DA5A18620ED0E3800D8D377 /* DeviceTableViewCell.h */,
@@ -1404,6 +1406,8 @@
 		7D56F090207C9B9C006C04DD /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				2DAD1C5C20F5014B00E26221 /* WSProgressHUD+AutoDismiss.h */,
+				2DAD1C5D20F5014C00E26221 /* WSProgressHUD+AutoDismiss.m */,
 				2D8D69CC210C9CC50090FEDE /* RequestPostData.h */,
 				2D8D69CB210C9CC40090FEDE /* RequestPostData.m */,
 				2DD9F1DF2107797E00B61D7E /* SettingsData.h */,
@@ -1436,10 +1440,6 @@
 				7D55F4BF207E1B59001E3D19 /* Util.h */,
 				7D55F4BE207E1B59001E3D19 /* Util.m */,
 				7D56F0B4207CE72B006C04DD /* Socket */,
-				2D781A31210DEF3B00E5A5D6 /* SocketObject.h */,
-				2D781A32210DEF3B00E5A5D6 /* SocketObject.m */,
-				2D781A3A210DFAED00E5A5D6 /* SocketDataObject.h */,
-				2D781A3B210DFAED00E5A5D6 /* SocketDataObject.m */,
 				2D781A34210DF11700E5A5D6 /* DeviceData.h */,
 				2D781A35210DF11700E5A5D6 /* DeviceData.m */,
 				2D781A37210DF51200E5A5D6 /* DeviceObject.h */,
@@ -1575,6 +1575,7 @@
 				"${BUILT_PRODUCTS_DIR}/MJExtension/MJExtension.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
+				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/ReactiveCocoa/ReactiveCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RegexKitLite/RegexKitLite.framework",
 				"${BUILT_PRODUCTS_DIR}/SAMKeychain/SAMKeychain.framework",
@@ -1595,6 +1596,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJExtension.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RegexKitLite.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SAMKeychain.framework",
@@ -1967,7 +1969,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "AyaneBox/swift/AyaneBox-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 			};
 			name = Debug;
@@ -2001,7 +2003,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "AyaneBox/swift/AyaneBox-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 			};
 			name = Release;

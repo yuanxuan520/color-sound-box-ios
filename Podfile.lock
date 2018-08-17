@@ -28,6 +28,7 @@ PODS:
   - MBProgressHUD (1.1.0)
   - MJExtension (3.0.15.1)
   - MJRefresh (3.1.15.3)
+  - Reachability (3.2)
   - ReactiveCocoa (2.5):
     - ReactiveCocoa/UI (= 2.5)
   - ReactiveCocoa/Core (2.5):
@@ -37,7 +38,7 @@ PODS:
     - ReactiveCocoa/Core
   - RegexKitLite (4.0)
   - SAMKeychain (1.5.3)
-  - SciChart (2.1.0.2037)
+  - SciChart (2.1.0.1826)
   - SDWebImage (4.4.1):
     - SDWebImage/Core (= 4.4.1)
   - SDWebImage/Core (4.4.1)
@@ -55,10 +56,11 @@ DEPENDENCIES:
   - MBProgressHUD (~> 1.1.0)
   - MJExtension (~> 3.0.13)
   - MJRefresh (~> 3.1.12)
+  - Reachability (~> 3.2)
   - ReactiveCocoa (~> 2.5)
   - RegexKitLite
   - SAMKeychain
-  - SciChart
+  - SciChart (= 2.1.0.1826)
   - SDWebImage
   - WSProgressHUD
 
@@ -76,6 +78,7 @@ SPEC REPOS:
     - MBProgressHUD
     - MJExtension
     - MJRefresh
+    - Reachability
     - ReactiveCocoa
     - RegexKitLite
     - SAMKeychain
@@ -94,14 +97,15 @@ SPEC CHECKSUMS:
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
   MJRefresh: b48380ae2b927b46c4ef000de9adb8dc748e1df7
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
   RegexKitLite: c0e4c12e6e7de0769f3a3ed679f0f61604170661
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
-  SciChart: 7ffac3d1242082327e65bafa4067d316278ab573
+  SciChart: 022eefd66cbd78a275277cfb8e2dfd35e4b8e4cd
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
   WSProgressHUD: a0902809c8af112fb34b004fdc75c16eb85167a3
 
-PODFILE CHECKSUM: e009d8aad196a70562c8f3b94d9628929669ce4d
+PODFILE CHECKSUM: 01304e6caa0bb80b0489639cc84393b5a1905319
 
 COCOAPODS: 1.5.3

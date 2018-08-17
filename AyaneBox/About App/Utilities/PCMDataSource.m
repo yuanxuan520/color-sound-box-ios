@@ -10,6 +10,9 @@
 #import "PPFileOperate.h"
 #import "Pcm2WavUtil.h"
 @interface PCMDataSource()<ABSocketServerDelegate>
+{
+    NSLock *lock;
+}
 @property (nonatomic) BOOL isLE; /** LE or BE */
 @property (nonatomic) BOOL isAvoidDataOverflows; /** 是否避免数据溢出*/
 @end
@@ -435,14 +438,24 @@
     }
     
     
+    
     NSData *outputData = [NSData dataWithBytes:deviceOutput length:BytePerDeviceInput];
     [self writeNetworkDevice:outputData];
-
-    NSData *in01Data = [NSData dataWithBytes:in01 length:(FramePerPacket * 2)];
-    [self.deviceOutFile01 appendData:in01Data];
     
-    NSData *in02Data = [NSData dataWithBytes:in02 length:(FramePerPacket * 2)];
-    [self.deviceOutFile02 appendData:in02Data];
+    
+    if (self.channelInput01 > 0) {
+        NSData *in01Data = [NSData dataWithBytes:in01 length:(FramePerPacket * 2)];
+        [self.deviceOutFile01 appendData:in01Data];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"INPUT01DATA" object:in01Data];
+
+    }
+    
+    if (self.channelInput02 > 0) {
+        NSData *in02Data = [NSData dataWithBytes:in02 length:(FramePerPacket * 2)];
+        [self.deviceOutFile02 appendData:in02Data];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"INPUT02DATA" object:in02Data];
+    }
+    
 
 //    NSData *deviceOutputData = [NSData dataWithBytes:deviceOutput length:BytePerDeviceInput];
 //    [self.deviceOutput appendData:deviceOutputData];
@@ -451,9 +464,8 @@
 //    NSData *phoneOutputData = [NSData dataWithBytes:out03 length:BytePerPhoneInput];
 //    [self.phoneOutput appendData:phoneOutputData];
     
-    
 //    if (self.channelOutput03 > 0) {
-//        [self.playAudioDataManager playWithData:phoneOutputData];
+//
 //    }
 
 
@@ -472,7 +484,6 @@
         // 如果没有到 1024 * 2 这个长度的数据 就等待
         return;
     }
-    [self.playAudioDataManager playWithData:data];
     [self processPhoneData];
     
     
@@ -480,9 +491,8 @@
     //   把音频片段in01 in02 in03 保存为文件 把音频片段ou01 ou02写到输出设备   把音频片段播放只对out03   音频图绘制绘制只hui'zhi
 }
 
-- (void)processPhoneData {
-    
-    
+- (void)processPhoneData
+{
     NSUInteger phoneInputLenght = [self.phoneInput length];
     NSData *phoneInputData = [NSData dataWithData:self.phoneInput];
 //    Byte *phoneInput = (Byte *)[phoneInputData bytes];
@@ -607,7 +617,7 @@
     }
     
     NSData *data = [NSData dataWithBytes:out03 length:phoneInputLenght];
-//    [self.playAudioDataManager playWithData:data];
+    [self.playAudioDataManager playWithData:data];
 
 //   输出3文件写入
     [self.phoneOutFile03 appendData:data];

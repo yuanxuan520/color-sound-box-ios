@@ -12,5 +12,6 @@
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock host:(NSString *)host didReceiveData:(NSData *)data fromAddress:(NSData *)address
 {
     [[PCMDataSource sharedData] appendByDeviceInput:data];
+    NSLog(@"%@",data);
 }
 @end

@@ -15,7 +15,7 @@
 #import <SciChart/SciChart.h>
 
 #define NUM_BUFFERS 30
-typedef void (^samplesToEngine)(int*);
+typedef void (^samplesToEngine)(short*);
 typedef void (^samplesToEngineFloat)(float*);
 typedef void (^samplesToEngineDouble)(double*);
 typedef void (^samplesToEngineData)(NSData*);

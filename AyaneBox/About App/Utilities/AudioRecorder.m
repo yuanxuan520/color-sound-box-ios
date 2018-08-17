@@ -69,7 +69,7 @@ void AudioInputCallback(void * inUserData,
 - (void)setupAudioFormat:(AudioStreamBasicDescription*)format {
     format->mSampleRate = 44100;
     format->mFormatID = kAudioFormatLinearPCM;
-    format->mFormatFlags = kAudioFormatFlagIsSignedInteger;
+    format->mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
     format->mFramesPerPacket  = 1;
     format->mChannelsPerFrame = 1;
     format->mBytesPerFrame    = sizeof(short);
@@ -102,7 +102,7 @@ void AudioInputCallback(void * inUserData,
         
         status = AudioQueueStart(recordState.queue, NULL);
         
-        length = (uint)floor(log2(1024));
+        length = (uint)floor(log2(2048));
 
         fftSetup = vDSP_create_fftsetup(length, kFFTRadix2);
     }

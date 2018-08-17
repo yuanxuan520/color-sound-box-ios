@@ -9,11 +9,11 @@
 #import "HomeViewController.h"
 #import "ABSocketServer.h"
 #import "IPDetector.h"
-#import "AudioRecorder.h"
 #import "SocketObject.h"
 #import "SocketDataObject.h"
 #import "LEEAlert.h"
 #import "EYAudio.h"
+#import "Reachability.h"
 
 @interface HomeViewController ()<UITableViewDelegate,UITableViewDataSource,ABSocketServerDelegate>
 @property (nonatomic, strong) NSMutableArray *deviceDataList;
@@ -24,11 +24,8 @@
 // 绑定6002 端口
 @property (strong, nonatomic) ABSocketServer *socketServer6002;
 @property (strong, nonatomic) SocketObject *socketObject6002;
-
-@property (nonatomic, strong) AudioRecorder *audioRecorderDataManager;
-@property (nonatomic, strong) NSMutableData *audioData;
+@property (nonatomic, assign) NSInteger curNetState;
 @property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, strong) EYAudio *eyAudio;
 - (IBAction)showTip:(id)sender;
 @end
 
@@ -36,9 +33,8 @@
 @synthesize deviceTableView,ipAddressLabel;
 @synthesize socketServer5001,socketObject5001;
 @synthesize socketServer6002,socketObject6002;
-@synthesize audioRecorderDataManager;
 @synthesize timer;
-
+@synthesize curNetState;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -48,6 +44,7 @@
     self.navigationController.navigationBar.barTintColor = UIColorHex(0x303f4a);
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 //    [self udpBroadcast];
+    // Allocate a reachability objec
     self.ipAddressLabel.text = [IPDetector getIPAddress];
 
 //    [self.socketServer startUDP];
@@ -74,6 +71,12 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSString *ipAddress = [USERDEFAULTS objectForKey:@"IPAddress"];
+    if (ipAddress) {
+        [PCMDataSource sharedData].ipAddress = ipAddress;
+    }
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceList:) name:@"DEVICEUPDATE" object:nil];
 //    self.eyAudio = [[EYAudio alloc] init];
     
@@ -81,31 +84,14 @@
     
     self.socketObject5001 = [[SocketDataObject alloc] init];
     self.socketServer5001.delegate = self;
-    [self.socketServer5001 startUDP:5001];
+    
     
     self.socketServer6002 = [[ABSocketServer alloc] init];
     self.socketObject6002 = [[SocketObject alloc] init];
     self.socketServer6002.delegate = self.socketObject6002;
+    [self.socketServer5001 startUDP:5001];
     [self.socketServer6002 startUDP:6002];
 
-//    录音部分
-//    self.audioRecorderDataManager = [[AudioRecorder alloc] init];
-//    [self.audioRecorderDataManager startRecording];
-    
-//    NSData *strData = [@"testdata" dataUsingEncoding:NSUTF8StringEncoding];
-//    NSMutableData *data = [NSMutableData data];
-//    [data appendData:strData];
-//    NSLog(@"data length:%ld",data.length);
-//
-//    // delete
-//    [data replaceBytesInRange:NSMakeRange(0, 4) withBytes:NULL length:0];
-//    NSLog(@"data length:%ld",data.length);
-//
-//    //insert
-//    [data replaceBytesInRange:NSMakeRange(0, 0) withBytes:strData.bytes length:strData.length];
-//    NSLog(@"data length:%ld",data.length);
-    
-    
 //    重复发送广播
     self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
     [self.timer fire];
@@ -113,8 +99,6 @@
 //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //        [self deviceSendMacBroadcast];
 //    });
-    
-
     deviceTableView.tableFooterView = [[UIView alloc] init];
     deviceTableView.backgroundColor = [UIColor clearColor];
     deviceTableView.separatorInset = UIEdgeInsetsZero;
@@ -129,7 +113,73 @@
     deviceTableView.separatorColor = UIColorHex(0xf0f0f0);
     // Do any additional setup after loading the view.
     
+    [self netStateListen];
+    
 }
+
+#pragma mark 网络监听
+- (void)netStateListen{
+    Reachability* reach = [Reachability reachabilityWithHostname:@"www.google.com"];
+    
+    // Set the blocks
+    reach.reachableBlock = ^(Reachability*reach)
+    {
+        // keep in mind this is called on a background thread
+        // and if you are updating the UI it needs to happen
+        // on the main thread, like this:
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"REACHABLE!");
+            if (self.curNetState == 0) {
+//                启动监听
+//                [self.socketServer5001 startUDP:5001];
+//                [self.socketServer6002 startUDP:6002];
+                
+                //    重复发送广播
+//                self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
+//                [self.timer fire];
+                
+            }
+            self.curNetState = [reach currentReachabilityStatus];
+            
+            switch (self.curNetState) {
+                case 1:
+                {
+                    self.ipAddressLabel.text = @"4G";
+                }
+                    break;
+                case 2:
+                {
+                    self.ipAddressLabel.text = [IPDetector getIPAddress];
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+        });
+    };
+    
+    reach.unreachableBlock = ^(Reachability*reach)
+    {
+        if (self.curNetState != 0) {
+//            [self.socketServer5001 stopUDP];
+//            [self.socketServer6002 stopUDP];
+            
+//            //    重复发送广播
+//            [self.timer invalidate];
+//            self.timer = nil;
+        }
+        self.curNetState = [reach currentReachabilityStatus];
+        self.ipAddressLabel.text = @"无网络";
+        NSLog(@"UNREACHABLE!");
+    };
+    
+    // Start the notifier, which will cause the reachability object to retain itself!
+    [reach startNotifier];
+}
+
+
 - (void)updateDeviceList:(NSNotification *)object
 {
     [deviceTableView reloadData];
@@ -167,13 +217,10 @@
             break;
         }
     }
-    
-    
-    
     NSData *data = [NSData dataWithBytes:&byte length:sizeof(byte)];
 //    NSString *path=[[NSBundle mainBundle] pathForResource:@"simple-drum-beat" ofType:@"wav"];
 //    NSData *data = [NSData dataWithContentsOfFile:path];
-//    SLog(@"发送UDP广播--%@",data);
+    SLog(@"发送UDP广播--%@",data);
     [self.socketServer6002 sendUDPData:data toHost:@"255.255.255.255" Port:6001 Tag:1];
 }
 
@@ -290,6 +337,8 @@
     DeviceObject *object = [[DeviceData sharedData].deviceList objectAtIndex:btn.tag];
     object.isMatching = YES;
     [PCMDataSource sharedData].ipAddress = object.ipAddres;
+    [USERDEFAULTS setObject:object.ipAddres forKey:@"IPAddress"];
+    [USERDEFAULTS synchronize];
     [btn setTitle:@"已配对" forState:UIControlStateNormal];
     [btn setUserInteractionEnabled:YES];
 }
@@ -312,6 +361,8 @@
     }
 }
 
+
+#pragma mark 接收5001 端口设备的数据
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock host:(NSString *)host didReceiveData:(NSData *)data fromAddress:(NSData *)address
 {
     

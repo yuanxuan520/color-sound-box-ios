@@ -65,6 +65,8 @@
 - (void)stopRecord;
 // 保存数据
 - (void)saveWavFile:(NSString *)fileName;
+// 输出数据
+- (void)writeNetworkDevice:(NSData *)outputData;
 
 
 @end

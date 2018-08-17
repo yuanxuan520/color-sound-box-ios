@@ -8,7 +8,7 @@
 
 #import "RecordsViewController.h"
 #import <SciChart/SciChart.h>
-#import "DashedLineChartView.h"
+#import "AyaneBox-Swift.h"
 #import <Accelerate/Accelerate.h>
 #import "LEEAlert.h"
 #import "AudioWaveformSurfaceView.h"
@@ -20,23 +20,23 @@
 @property (nonatomic, strong) CADisplayLink *displaylink;
 @property (nonatomic, strong) IBOutlet UIButton *recordBtn;
 @property (nonatomic, strong) IBOutlet UIView *mainView;
-//@property (nonatomic, strong) UISegmentedControl *segmentedControl;
-@property (nonatomic, strong) DashedLineChartView *dashedLineChartView;
+@property (nonatomic, strong) IBOutlet UISegmentedControl *inputSegmentControl;
 @property (nonatomic, strong) AudioRecorder *audioRecorderDataManager;
-@property (nonatomic, strong) AudioWaveformSurfaceView *audioWaveformSurfaceView;
-@property (nonatomic, strong) SpectrogramSurfaceView *spectrogramSurfaceView;
+//@property (nonatomic, strong) AudioWaveformSurfaceView *audioWaveformSurfaceView;
+//@property (nonatomic, strong) SpectrogramSurfaceView *spectrogramSurfaceView;
 @property (nonatomic, strong) NSString *filename;
-//@property (nonatomic, strong) AudioWaveformSurfaceController *audioWaveformSurfaceController;
-//@property (nonatomic, strong) SpectogramSurfaceController *spectrogramSurfaceController;
-//@property (nonatomic, strong) IBOutlet SCIChartSurface *audioWaveformSurface;
-//@property (nonatomic, strong) IBOutlet SCIChartSurface *spectrogramSurface;
+@property (nonatomic, assign) NSUInteger inputChannel;
+@property (nonatomic, strong) AudioWaveformSurfaceController *audioWaveformSurfaceController;
+@property (nonatomic, strong) SpectogramSurfaceController *spectrogramSurfaceController;
+@property (nonatomic, strong) IBOutlet SCIChartSurface *audioWaveformSurface;
+@property (nonatomic, strong) IBOutlet SCIChartSurface *spectrogramSurface;
 - (IBAction)recordAudio:(UIButton *)btn;
 @end
 
 @implementation RecordsViewController
 @synthesize audioRecorderDataManager;
-@synthesize audioWaveformSurfaceView,spectrogramSurfaceView;
-@synthesize dashedLineChartView;
+//@synthesize audioWaveformSurfaceView,spectrogramSurfaceView;
+@synthesize audioWaveformSurfaceController,spectrogramSurfaceController;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -49,6 +49,14 @@
 - (void)viewDidLoad {
     self.title = @"录音";
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getInput01Data:) name:@"INPUT01DATA" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getInput02Data:) name:@"INPUT02DATA" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getInput03Data:) name:@"INPUT03DATA" object:nil];
+    
+    // 默认是输出3端口
+    self.inputChannel = 3;
+    [self.inputSegmentControl setSelectedSegmentIndex:self.inputChannel-1];
 //    if( ([[[UIDevice currentDevice] systemVersion] doubleValue]>=7.0)) {
 //        self.edgesForExtendedLayout = UIRectEdgeNone;
 //        self.extendedLayoutIncludesOpaqueBars = NO;
@@ -59,6 +67,26 @@
     [self createView];
 }
 
+
+#pragma mark - 输入数据
+- (void)getInput01Data:(NSNotification *)object
+{
+    NSData *data = [object object];
+    
+}
+
+- (void)getInput02Data:(NSNotification *)object
+{
+    NSData *data = [object object];
+
+}
+
+- (void)getInput03Data:(NSNotification *)object
+{
+    NSData *data = [object object];
+
+}
+
 - (IBAction)recordAudio:(UIButton *)btn
 {
     if (![PCMDataSource sharedData].isRecord) {
@@ -66,6 +94,7 @@
 //
         self.recordBtn.selected = YES;
         [[PCMDataSource sharedData] startRecord];
+        
     }else {
         [PCMDataSource sharedData].isRecord = NO;
         self.recordBtn.selected = NO;
@@ -84,13 +113,6 @@
 - (void)createView
 {
     self.audioRecorderDataManager = [[AudioRecorder alloc] init];
-
-    self.dashedLineChartView = [[DashedLineChartView alloc] initWithFrame:CGRectMake(0,APPNavStateBar + 80, APPMainViewWidth, APPMainViewHeight-APPNavStateBar-80-50)];
-    [self.mainView addSubview:self.dashedLineChartView];
-    
-
-    
-    
     
 //    self.spectrogramSurfaceView = [[SpectrogramSurfaceView alloc] initWithFrame:CGRectMake(0, 0, APPMainViewWidth, APPMainViewHeight-APPNavStateBar-50)];
     

@@ -28,14 +28,14 @@ class BillionsLabelProvider: SCINumericLabelProvider { //pow(10, 9)
 
 class AudioWaveformSurfaceController: BaseChartSurfaceController {
     
-    let audioWaveformRenderableSeries: SCIFastLineRenderableSeries = SCIFastLineRenderableSeries()
-    let audioDataSeries: SCIXyDataSeries = SCIXyDataSeries(xType: .int32, yType: .int32)
+    var audioWaveformRenderableSeries: SCIFastLineRenderableSeries = SCIFastLineRenderableSeries()
+    var audioDataSeries: SCIXyDataSeries = SCIXyDataSeries(xType: .int32, yType: .int16)
     @objc var updateDataSeries: samplesToEngine!
     var seriesCounter : Int32 = 0
     var lastTimestamp : Double = 0.0
-    var newBuffer : UnsafeMutablePointer<Int32>?
+    var newBuffer : UnsafeMutablePointer<Int16>?
     var sizeOfBuffer = 0
-    let fifoSize = 500000
+    var fifoSize = 500000
     
     @objc public func updateData(displayLink: CADisplayLink) {
         
@@ -61,16 +61,16 @@ class AudioWaveformSurfaceController: BaseChartSurfaceController {
         if let buffer = newBuffer {
             audioDataSeries.appendRangeX(SCIGeneric(xValues), y: SCIGeneric(buffer), count: Int32(sizeOfBlock))
             let newSizeBuffer = sizeOfBuffer - sizeOfBlock
-            let delocBuffer = UnsafeMutablePointer<Int32>.allocate(capacity: newSizeBuffer)
+            let delocBuffer = UnsafeMutablePointer<Int16>.allocate(capacity: newSizeBuffer)
             delocBuffer.initialize(to: 0)
             delocBuffer.moveAssign(from: buffer.advanced(by: sizeOfBlock), count: newSizeBuffer)
             newBuffer = delocBuffer
-            buffer.deallocate(capacity: sizeOfBuffer)
+            buffer.deallocate() //capacity: sizeOfBuffer
             sizeOfBuffer = newSizeBuffer
         }
         
-        xValues.deinitialize()
-        xValues.deallocate(capacity: sizeOfBlock)
+        xValues.deinitialize(count: sizeOfBlock) //
+        xValues.deallocate() //capacity: sizeOfBlock
         
         lastTimestamp = displayLink.timestamp
         chartSurface.zoomExtentsX()
@@ -88,19 +88,19 @@ class AudioWaveformSurfaceController: BaseChartSurfaceController {
         
         self.updateDataSeries = { [unowned self] dataSeries in
             let capacity = 2048 + self.sizeOfBuffer
-            let newBuffer : UnsafeMutablePointer<Int32>
+            let newBuffer : UnsafeMutablePointer<Int16>
             
             if let bf = self.newBuffer {
-                newBuffer = UnsafeMutablePointer<Int32>.allocate(capacity: capacity)
+                newBuffer = UnsafeMutablePointer<Int16>.allocate(capacity: capacity)
                 newBuffer.initialize(to: 0)
                 newBuffer.moveAssign(from: bf, count: self.sizeOfBuffer)
                 newBuffer.advanced(by: self.sizeOfBuffer).moveAssign(from: dataSeries!, count: 2048)
                 self.newBuffer = newBuffer
-                bf.deallocate(capacity: self.sizeOfBuffer)
+                bf.deallocate() //capacity: self.sizeOfBuffer
                 self.sizeOfBuffer = capacity
             }
             else if let data = dataSeries {
-                newBuffer = UnsafeMutablePointer<Int32>.allocate(capacity: capacity)
+                newBuffer = UnsafeMutablePointer<Int16>.allocate(capacity: capacity)
                 newBuffer.initialize(to: 0)
                 newBuffer.moveAssign(from: data, count: capacity)
                 self.newBuffer = newBuffer
@@ -127,7 +127,7 @@ class AudioWaveformSurfaceController: BaseChartSurfaceController {
         
         let yAxis = SCINumericAxis()
         yAxis.style = axisStyle
-        yAxis.visibleRange = SCIDoubleRange(min: SCIGeneric(Int32.min), max: SCIGeneric(Int32.max))
+        yAxis.visibleRange = SCIDoubleRange(min: SCIGeneric(Int16.min), max: SCIGeneric(Int16.max))
         yAxis.autoRange = .never
         
         xAxis.labelProvider = ThousandsLabelProvider()
@@ -138,26 +138,104 @@ class AudioWaveformSurfaceController: BaseChartSurfaceController {
         
     }
     
-    //    func fillFifoToMax() {
-    //        let xValues = UnsafeMutablePointer<Int32>.allocate(capacity: fifoSize)
-    //        xValues.initialize(to: 0)
-    //
-    //        for i in 0..<fifoSize {
-    //            xValues[i] = seriesCounter
-    //            seriesCounter += 1
-    //        }
-    //
-    //        let yValues = UnsafeMutablePointer<Int32>.allocate(capacity: fifoSize)
-    //        yValues.initialize(to: 0)
-    //
-    //        audioDataSeries.appendRangeX(SCIGeneric(xValues),
-    //                                     y: SCIGeneric(yValues),
-    //                                     count: Int32(fifoSize))
-    //        xValues.deinitialize()
-    //        xValues.deallocate(capacity: fifoSize)
-    //        yValues.deinitialize()
-    //        yValues.deallocate(capacity: fifoSize)
-    //
-    //    }
+    @objc func resetData() {
+        if let bf = self.newBuffer {
+            bf.deallocate()
+            self.newBuffer = nil;
+//            self.sizeOfBuffer = 0;
+//            self.seriesCounter = 0
+//            self.lastTimestamp = 0.0
+//            self.fifoSize = 500000
+        }
+        
+//        chartSurface.yAxes.clear();
+//        chartSurface.xAxes.clear();
+//        chartSurface.renderableSeries.clear()
+//
+//        chartSurface.bottomAxisAreaSize = 0.0
+//        chartSurface.topAxisAreaSize = 0.0
+//        chartSurface.leftAxisAreaSize = 0.0
+//        chartSurface.rightAxisAreaSize = 0.0
+//
+//        self.audioDataSeries = SCIXyDataSeries(xType: .int32, yType: .int16)
+//        self.audioWaveformRenderableSeries = SCIFastLineRenderableSeries()
+//
+//        audioWaveformRenderableSeries.dataSeries = audioDataSeries
+//        //        fillFifoToMax()
+//        chartSurface.renderableSeries.add(audioWaveformRenderableSeries)
+//
+//        let axisStyle = SCIAxisStyle()
+//        axisStyle.drawLabels = true
+//        axisStyle.drawMajorBands = true
+//        axisStyle.drawMinorTicks = true
+//        axisStyle.drawMajorTicks = true
+//        axisStyle.drawMajorGridLines = true
+//        axisStyle.drawMinorGridLines = true
+//
+//        let xAxis = SCINumericAxis()
+//        xAxis.style = axisStyle
+//        xAxis.visibleRange = SCIIntegerRange(min: SCIGeneric(0), max: SCIGeneric(Int32.max))
+//
+//        let yAxis = SCINumericAxis()
+//        yAxis.style = axisStyle
+//        yAxis.visibleRange = SCIDoubleRange(min: SCIGeneric(Int16.min), max: SCIGeneric(Int16.max))
+//        yAxis.autoRange = .never
+//
+//        xAxis.labelProvider = ThousandsLabelProvider()
+//        yAxis.labelProvider = BillionsLabelProvider()
+//
+//        chartSurface.yAxes.add(yAxis)
+//        chartSurface.xAxes.add(xAxis)
+        
+//        fillFifoToMax()
+        
+//
+        
+//
+//        let axisStyle = SCIAxisStyle()
+//        axisStyle.drawLabels = true
+//        axisStyle.drawMajorBands = true
+//        axisStyle.drawMinorTicks = true
+//        axisStyle.drawMajorTicks = true
+//        axisStyle.drawMajorGridLines = true
+//        axisStyle.drawMinorGridLines = true
+//
+//        let xAxis = SCINumericAxis()
+//        xAxis.style = axisStyle
+//        xAxis.visibleRange = SCIIntegerRange(min: SCIGeneric(0), max: SCIGeneric(Int32.max))
+//
+//        let yAxis = SCINumericAxis()
+//        yAxis.style = axisStyle
+//        yAxis.visibleRange = SCIDoubleRange(min: SCIGeneric(Int16.min), max: SCIGeneric(Int16.max))
+//        yAxis.autoRange = .never
+//
+//        xAxis.labelProvider = ThousandsLabelProvider()
+//        yAxis.labelProvider = BillionsLabelProvider()
+//
+//        chartSurface.yAxes.add(yAxis)
+//        chartSurface.xAxes.add(xAxis)
+    }
+    
+//    func fillFifoToMax() {
+//        let xValues = UnsafeMutablePointer<Int32>.allocate(capacity: fifoSize)
+//        xValues.initialize(to: 0)
+//
+//        for i in 0..<fifoSize {
+//            xValues[i] = seriesCounter
+//            seriesCounter += 1
+//        }
+//
+//        let yValues = UnsafeMutablePointer<Int32>.allocate(capacity: fifoSize)
+//        yValues.initialize(to: 0)
+//
+//        audioDataSeries.appendRangeX(SCIGeneric(xValues),
+//                                     y: SCIGeneric(yValues),
+//                                     count: Int32(fifoSize))
+//        xValues.deinitialize()
+//        xValues.deallocate(capacity: fifoSize)
+//        yValues.deinitialize()
+//        yValues.deallocate(capacity: fifoSize)
+//
+//    }
     
 }

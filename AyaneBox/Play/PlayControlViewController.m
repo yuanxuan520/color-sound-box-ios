@@ -22,6 +22,7 @@
 {
     FFTSetup fftSetup;
     uint length;
+    NSLock *synlock ;///同步控制
 }
 @property (nonatomic, strong) IBOutlet UISegmentedControl *outputSegmentControl;
 @property (nonatomic, assign) NSUInteger outputChannel;
@@ -36,17 +37,21 @@
 @property (nonatomic, strong) EYAudio *outAudioPlayer;
 @property (nonatomic, strong) NSString *fileName;
 
+@property (nonatomic, strong) IBOutlet UISegmentedControl *displaySegmentControl;
+@property (nonatomic, assign) NSUInteger changeGraph;
+
+
+
 @property (nonatomic, strong) IBOutlet SCIChartSurface *audioWaveView;
 @property (nonatomic, strong) IBOutlet UIStackView *spectogramStackView;
 @property (nonatomic, strong) IBOutlet SCIChartSurface *spectogramView;
-@property (nonatomic, strong) IBOutlet UISegmentedControl *displaySegmentControl;
 
 @property (nonatomic, strong) CADisplayLink *displaylink;
 @property (nonatomic, strong) AudioWaveformSurfaceController *audioWaveformSurfaceController;
 @property (nonatomic, strong) SpectogramSurfaceController *spectogramSurfaceController;
 
-@property (nonatomic, strong) AudioWaveformSurfaceView *audioWaveformSurfaceView;
-@property (nonatomic, strong) SpectrogramSurfaceView *spectrogramSurfaceView;
+//@property (nonatomic, strong) AudioWaveformSurfaceView *audioWaveformSurfaceView;
+//@property (nonatomic, strong) SpectrogramSurfaceView *spectrogramSurfaceView;
 
 @property samplesToEngine sampleToEngineDelegate;
 @property samplesToEngineFloat spectrogramSamplesDelegate;
@@ -56,7 +61,7 @@
 @synthesize outAudioPlayer;
 @synthesize playWavFileData;
 @synthesize spectogramStackView;
-@synthesize spectrogramSurfaceView,audioWaveformSurfaceView;
+//@synthesize spectrogramSurfaceView,audioWaveformSurfaceView;
 @synthesize displaylink;
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -70,9 +75,12 @@
 - (void)viewDidLoad {
     self.title = @"播放";
     [super viewDidLoad];
-    //   默认输出1
+//   默认输出1
     self.outputChannel = 3;
     [self.outputSegmentControl setSelectedSegmentIndex:self.outputChannel-1];
+    
+//    默认是2d图形
+    self.changeGraph = 0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectFileName:) name:@"SelectFile" object:nil];
     [self.selectFileBtn addTarget:self action:@selector(enterFileList:) forControlEvents:UIControlEventTouchUpInside];
@@ -87,13 +95,13 @@
     
 //    初始化3D图
     
-//    self.spectogramSurfaceController = [[SpectogramSurfaceController alloc] init:self.spectogramView];
-//    self.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
+    self.spectogramSurfaceController = [[SpectogramSurfaceController alloc] init:self.spectogramView];
+    self.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
 //
     //    [self.audioWaveView ]
     
     self.audioWaveView.hidden = NO;
-//    self.spectogramStackView.hidden = YES;
+    self.spectogramView.hidden = YES;
     
     
     
@@ -126,23 +134,35 @@
 #pragma mark - 切换2d3d图形
 - (IBAction)change2D3DDisplay:(UISegmentedControl *)sender
 {
-    switch (sender.selectedSegmentIndex) {
-        case 0:
-        {
-            self.audioWaveView.hidden = NO;
-//            self.spectogramStackView.hidden = YES;
+    if ([PCMDataSource sharedData].isPlay) { // 如果当前正在播放时
+        [LEEAlert alert].config
+        .LeeTitle(@"注意")
+        .LeeContent(@"当前正在播放声音无法切换图形显示.")
+        .LeeAction(@"确定", ^{
+        })
+        .LeeShow(); // 设置完成后 别忘记调用Show来显示
+        [sender setSelectedSegmentIndex:self.changeGraph];
+    }else {
+        switch (sender.selectedSegmentIndex) {
+            case 0:
+            {
+                self.audioWaveView.hidden = NO;
+                self.spectogramView.hidden = YES;
+            }
+                break;
+            case 1:
+            {
+                self.audioWaveView.hidden = YES;
+                self.spectogramView.hidden = NO;
+            }
+                break;
+                
+            default:
+                break;
         }
-            break;
-        case 1:
-        {
-            self.audioWaveView.hidden = YES;
-//            self.spectogramStackView.hidden = NO;
-        }
-            break;
-            
-        default:
-            break;
+        self.changeGraph = sender.selectedSegmentIndex;
     }
+    
     
 }
 
@@ -164,7 +184,6 @@
 
 #pragma mark - 切换播放音频
 - (void)playAudioTimer{
-    
     NSInteger wavLength = self.playWavFileData.length - audioPlayLength;
     if (wavLength > 0) {
         
@@ -189,7 +208,6 @@
         [self.displaylink invalidate];
         self.displaylink = nil;
     }
-    
 }
 #pragma mark - 处理音频数据
 - (void)processAudioData:(NSData *)data
@@ -220,33 +238,48 @@
 #pragma mark - 绘制 -2d -3d
 - (void)drawingGraphics:(NSData *)data
 {
-//   2d图形
-    Byte* samples = (Byte *)[data bytes];
-    BOOL isLE = YES;
-    int *v04 = malloc(audioPlayLength/2);
-    for (int k4 = 0; k4 < audioPlayLength; k4 = k4 + 2) {
-        if (k4 % 2 == 0) {
-            // 低位在前，或高位在前 LE or BE
-            if (isLE) {
-                // short类型 显示short类型图 04
-                v04[k4 / 2] = (int) (((samples[k4] & 0xff) | samples[k4 + 1] << 8) & 0xffff);
-//                NSLog(@"%d",v04[k4 / 2]);
-                //                    NSLog(@"%d-%d-%d",v04[k4 / 2],samples[k4],samples[k4+1]);
-            } else {
-                // short类型 显示short类型图 04
-                v04[k4 / 2] = (int) (samples[k4] << 8 | (samples[k4 + 1] & 0xff));
-            }
+    if (self.changeGraph == 0) {
+        //   2d图形 图形显示
+        NSData *newdata1 = [NSData dataWithData:data];
+        short* samples1 = (short *)[newdata1 bytes];
+        if ([self sampleToEngineDelegate] != nil){
+            [self sampleToEngineDelegate](samples1);
+        }
+    }else {
+        //   3d图形 图形显示
+        NSData *newdata2 = [NSData dataWithData:data];
+        short* samples2 = (short *)[newdata2 bytes];
+        float* fftArray = [self calculateFFT:(int *)samples2 size:2048];
+        if ([self spectrogramSamplesDelegate] != nil){
+            [self spectrogramSamplesDelegate](fftArray);
         }
     }
-    if ([self sampleToEngineDelegate] != nil){
-        [self sampleToEngineDelegate](v04);
-    }
+
+
     
+    
+    
+    //    BOOL isLE = YES;
+    //    int *v04 = malloc(audioPlayLength/2);
+    //    for (int k4 = 0; k4 < audioPlayLength; k4 = k4 + 2) {
+    //        if (k4 % 2 == 0) {
+    //            // 低位在前，或高位在前 LE or BE
+    //            if (isLE) {
+    //                // short类型 显示short类型图 04
+    //                v04[k4 / 2] = (int) (((samples[k4] & 0xff) | samples[k4 + 1] << 8) & 0xffff);
+    ////                NSLog(@"%d",v04[k4 / 2]);
+    //                //                    NSLog(@"%d-%d-%d",v04[k4 / 2],samples[k4],samples[k4+1]);
+    //            } else {
+    //                // short类型 显示short类型图 04
+    //                v04[k4 / 2] = (int) (samples[k4] << 8 | (samples[k4 + 1] & 0xff));
+    //            }
+    //        }
+    //    }
     //            绘制图形
     //        NSData *sampleData = [self.playWavFileData subdataWithRange:NSMakeRange(0, audioPlayLength)];
     //            int* fftSample = malloc([data length]);
     //            memcpy(fftSample, (int *)[data bytes], [data length]);
-    //            float* fftArray = [self calculateFFT:(int *)[self.curSelectFileData bytes] size:[self.curSelectFileData length]];
+    
     
     //
     //            [self.spectrogramSurfaceView updateDataSeries:fftArray];
@@ -294,15 +327,16 @@
         fftSetup = vDSP_create_fftsetup(length, kFFTRadix2);
         self.curLocation = 0;
         self.playBtn.selected = YES;
+//        [self.audioWaveformSurfaceController resetData];
         if (self.playWavFileData) {
             self.playWavFileData = nil;
         }
-        //        [self.audioWaveformSurfaceController initData];
+        [self.audioWaveformSurfaceController resetData];
         self.playWavFileData = [NSMutableData dataWithData:self.curSelectFileData];
         //        去掉头部44字节 变成pcm 格式数据
         [self.playWavFileData replaceBytesInRange:NSMakeRange(0, 44) withBytes:NULL length:0];
         
-        self.playTimer = [NSTimer scheduledTimerWithTimeInterval:0.001 target:self selector:@selector(playAudioTimer) userInfo:nil repeats:YES];
+        self.playTimer = [NSTimer scheduledTimerWithTimeInterval:(1024/44100) target:self selector:@selector(playAudioTimer) userInfo:nil repeats:YES];
         self.displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateData:)];
         [self.displaylink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     }else {
@@ -338,11 +372,16 @@
 #pragma mark - 显示更新
 - (void)updateData:(CADisplayLink *)displayLink
 {
-    //    [self.spectrogramSurfaceController updateDataWithDisplayLink:displayLink];
-//    oc
+    if (self.changeGraph == 0) {
+        [self.audioWaveformSurfaceController updateDataWithDisplayLink:displayLink];
+        
+    }else {
+        [self.spectogramSurfaceController updateDataWithDisplayLink:displayLink];
+
+    }
+    //    oc
 //    [self.audioWaveformSurfaceView updateData:displayLink];
 //    swift
-    [self.audioWaveformSurfaceController updateDataWithDisplayLink:displayLink];
 }
 
 #pragma mark - 文件列表
@@ -402,22 +441,22 @@
 
 - (void)ProcessingOutput01:(NSData *)data
 {
-    NSMutableData *output01 = [NSMutableData dataWithLength:4096];
+    NSMutableData *output01 = [NSMutableData dataWithLength:data.length*4];
     Byte *out03 = (Byte *)[data bytes];
     for (int i = 0; i < data.length; i++) {
         [output01 replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&out03[i]];
     }
-    
-    
+    [[PCMDataSource sharedData] writeNetworkDevice:output01];
 }
 
 - (void)ProcessingOutput02:(NSData *)data
 {
-    NSMutableData *output02 = [NSMutableData dataWithLength:4096];
+    NSMutableData *output02 = [NSMutableData dataWithLength:data.length*4];
     Byte *out03 = (Byte *)[data bytes];
     for (int i = 0; i < data.length; i++) {
         [output02 replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&out03[i]];
     }
+    [[PCMDataSource sharedData] writeNetworkDevice:output02];
 }
 /*
  #pragma mark - Navigation

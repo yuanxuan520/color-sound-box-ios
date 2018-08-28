@@ -7,10 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AudioData.h"
+//#import "AudioData.h"
 #import "EYAudio.h"
 #import "ABSocketServer.h"
 #import "AudioRecorder.h"
+
+// 音频片段的帧数
+#define FramePerPacket 1024
+// 音频片段的设备输入字节数
+#define BytePerDeviceInput (FramePerPacket * 4)
+// 音频片段的手机输入字节数
+#define BytePerPhoneInput (FramePerPacket * 2)
+
 @interface PCMDataSource : NSObject
 @property (nonatomic, assign) int channelInput01; // 设备输入01
 @property (nonatomic, assign) int channelInput02; // 设备输入02
@@ -34,12 +42,14 @@
 @property (nonatomic, strong) NSMutableData *deviceOutput02; // 输出对象2
 @property (nonatomic, strong) NSMutableData *phoneOutput03;  // 输出对象3
 @property (nonatomic, strong) NSString *defaultFileName; // 默认文件名
-// 音频片段数据
-@property (nonatomic, strong) AudioData *audioData; // 每个包 (FramePerPacket = 1024帧)
-// 播放Pcm控件对象
-@property (nonatomic, strong) EYAudio *playAudioDataManager;
-// 录制Pcm控件对象
-@property (nonatomic, strong) AudioRecorder *audioRecorderDataManager;
+
+// 输出设备对象保存
+@property (nonatomic, strong) NSTimer *outputTimer;
+@property (nonatomic, strong) NSMutableData *outputDevice01; // 设备输出1
+@property (nonatomic, strong) NSMutableData *outputDevice02; // 设备输出2
+@property (nonatomic, strong) NSMutableData *outputPhone03;  // 输出对象3
+//// 音频片段数据
+//@property (nonatomic, strong) AudioData *audioData; // 每个包 (FramePerPacket = 1024帧)
 
 // 输出数据存储对象
 @property (nonatomic, strong) NSMutableData *deviceOutFile01;
@@ -67,6 +77,7 @@
 - (void)saveWavFile:(NSString *)fileName;
 // 输出数据
 - (void)writeNetworkDevice:(NSData *)outputData;
-
+// 输出设备
+- (void)writePlayNetworkDevice:(NSData *)outputData;
 
 @end

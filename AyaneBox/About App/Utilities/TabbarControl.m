@@ -8,9 +8,18 @@
 
 #import "TabbarControl.h"
 #import "LEEAlert.h"
+#import "RecordsViewController.h"
 @implementation TabbarControl
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController{
-    
+    if ([viewController isKindOfClass:[RecordsViewController class]] && [PCMDataSource sharedData].ipAddress == nil){
+        [LEEAlert alert].config
+        .LeeTitle(@"注意")
+        .LeeContent(@"请绑定设备，才能录音")
+        .LeeAction(@"确认", ^{
+        })
+        .LeeShow();
+        return NO;
+    }
     if ([PCMDataSource sharedData].isRecord == YES) {
         [LEEAlert alert].config
         .LeeTitle(@"注意")

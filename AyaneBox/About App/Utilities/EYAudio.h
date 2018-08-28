@@ -7,8 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "AudioRecorder.h"
 @interface EYAudio : NSObject
+@property samplesToEngine sampleToEngineDelegate;
+@property samplesToEngineFloat spectrogramSamplesDelegate;
+- (instancetype)initWithVolume:(Float32)volume;
 // 播放的数据流数据
 - (void)playWithData:(NSData *)data;
 

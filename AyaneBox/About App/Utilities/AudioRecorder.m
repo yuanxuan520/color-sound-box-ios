@@ -41,17 +41,16 @@ void AudioInputCallback(void * inUserData,
     AudioQueueEnqueueBuffer(recordState->queue, inBuffer, 0, NULL);
     
     rec.runningTimeInterval = [NSDate date];
-//    int* samples = (AUDIO_DATA_TYPE_FORMAT*)inBuffer->mAudioData;
+    short* samples = (short*)inBuffer->mAudioData;
     if (inNumberPacketDescriptions != 1024) {
         return;
     }
-//    int* samples = (AUDIO_DATA_TYPE_FORMAT*)inBuffer->mAudioData;
 
     NSData *bufferData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
     if ([rec samplesToEngineDataDelegate] != nil){
         [rec samplesToEngineDataDelegate](bufferData);
     }
-//    [rec formSamplesToEngine:inNumberPacketDescriptions samples:samples];
+    [rec formSamplesToEngine:inNumberPacketDescriptions samples:samples];
 
 }
 
@@ -127,21 +126,15 @@ void AudioInputCallback(void * inUserData,
 - (void)formSamplesToEngine: (int)capacity samples: (short*)samples {
     AudioRecorder *rec = (__bridge AudioRecorder *) refToSelf;
 //  to do 这里sampls 这一段音频数据 写音频文件  5002端口写入数据  播放音频
-//    Byte* newData = (Byte*)samples;
-//    NSData *bufferData = [NSData dataWithBytes:newData length:capacity];
-//
-//    if ([rec samplesToEngineDataDelegate] != nil){
-//        [rec samplesToEngineDataDelegate](bufferData);
-//    }
-    
+
     if ([rec sampleToEngineDelegate] != nil){
         [rec sampleToEngineDelegate](samples);
     }
-    float* fftArray = [self calculateFFT:samples size:capacity];
+    float* fftArray = [self calculateFFT:samples size:2048];
 
-    if ([rec fftSamplesDelegate] != nil){
-        [rec fftSamplesDelegate](fftArray);
-    }
+//    if ([rec fftSamplesDelegate] != nil){
+//        [rec fftSamplesDelegate](fftArray);
+//    }
     
     if ([rec spectrogramSamplesDelegate] != nil){
         [rec spectrogramSamplesDelegate](fftArray);
@@ -151,7 +144,7 @@ void AudioInputCallback(void * inUserData,
     
 }
 
-- (float*) calculateFFT: (int*)data size:(uint)numSamples{
+- (float*) calculateFFT: (short*)data size:(uint)numSamples{
     
     float *dataFloat = malloc(sizeof(float)*numSamples);
     vDSP_vflt16(data, 1, dataFloat, 1, numSamples);
@@ -175,7 +168,7 @@ void AudioInputCallback(void * inUserData,
 
     for (int i = 0 ; i < numSamples; i++) {
         
-        float current = (sqrt(tempSplitComplex.realp[i]*tempSplitComplex.realp[i] + tempSplitComplex.imagp[i]*tempSplitComplex.imagp[i]) * 0.000025);
+        float current = (sqrt(tempSplitComplex.realp[i]*tempSplitComplex.realp[i] + tempSplitComplex.imagp[i]*tempSplitComplex.imagp[i]) * 0.5);
         current = log10(current)*10;
         result[i] = current;
       

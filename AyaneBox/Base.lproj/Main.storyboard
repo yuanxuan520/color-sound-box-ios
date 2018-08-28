@@ -479,10 +479,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ylo-Oz-C8J">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pHo-c7-j0Z" customClass="SCIChartSurface">
+                                <rect key="frame" x="0.0" y="143" width="375" height="475"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Lk-yX-aFe" customClass="SCIChartSurface">
+                                <rect key="frame" x="0.0" y="143" width="375" height="475"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ljm-0e-vtX">
                                 <rect key="frame" x="16" y="74" width="343" height="29"/>
@@ -491,6 +494,9 @@
                                     <segment title="输入信道2"/>
                                     <segment title="输入信道3"/>
                                 </segments>
+                                <connections>
+                                    <action selector="changeintputChannel:" destination="Pwq-SK-QbY" eventType="valueChanged" id="zfR-04-HR0"/>
+                                </connections>
                             </segmentedControl>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ytc-hk-QIf">
                                 <rect key="frame" x="16" y="110" width="120" height="29"/>
@@ -501,6 +507,9 @@
                                     <segment title="2D图形"/>
                                     <segment title="3D图形"/>
                                 </segments>
+                                <connections>
+                                    <action selector="change2D3DDisplay:" destination="Pwq-SK-QbY" eventType="valueChanged" id="CX5-iq-GGA"/>
+                                </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPb-vw-RJW">
                                 <rect key="frame" x="164" y="410" width="48" height="48"/>
@@ -516,20 +525,30 @@
                         <constraints>
                             <constraint firstItem="Ytc-hk-QIf" firstAttribute="leading" secondItem="lvY-df-Xzw" secondAttribute="leading" constant="16" id="23A-Al-NyL"/>
                             <constraint firstItem="Ytc-hk-QIf" firstAttribute="top" secondItem="Ljm-0e-vtX" secondAttribute="bottom" constant="8" id="4w7-QX-Lce"/>
+                            <constraint firstItem="pHo-c7-j0Z" firstAttribute="top" secondItem="Ytc-hk-QIf" secondAttribute="bottom" constant="5" id="53y-ST-Bjs"/>
+                            <constraint firstItem="lvY-df-Xzw" firstAttribute="bottom" secondItem="pHo-c7-j0Z" secondAttribute="bottom" id="5DK-Yy-ylx"/>
                             <constraint firstItem="qPb-vw-RJW" firstAttribute="centerX" secondItem="Atw-VR-kTf" secondAttribute="centerX" id="886-Ux-4My"/>
+                            <constraint firstItem="3Lk-yX-aFe" firstAttribute="top" secondItem="Ytc-hk-QIf" secondAttribute="bottom" constant="5" id="9b2-ho-IXr"/>
                             <constraint firstItem="lvY-df-Xzw" firstAttribute="trailing" secondItem="Ljm-0e-vtX" secondAttribute="trailing" constant="16" id="CNj-b3-qY2"/>
                             <constraint firstItem="Ljm-0e-vtX" firstAttribute="top" secondItem="lvY-df-Xzw" secondAttribute="top" constant="10" id="HCB-gP-Muu"/>
+                            <constraint firstItem="3Lk-yX-aFe" firstAttribute="trailing" secondItem="lvY-df-Xzw" secondAttribute="trailing" id="Yte-CY-smu"/>
+                            <constraint firstItem="pHo-c7-j0Z" firstAttribute="leading" secondItem="lvY-df-Xzw" secondAttribute="leading" id="bHg-Nd-cQs"/>
                             <constraint firstItem="lvY-df-Xzw" firstAttribute="bottom" secondItem="qPb-vw-RJW" secondAttribute="bottom" constant="160" id="g3r-Ov-GZp"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Ytc-hk-QIf" secondAttribute="trailing" constant="20" symbolic="YES" id="hR5-Ai-Vgp"/>
+                            <constraint firstItem="pHo-c7-j0Z" firstAttribute="trailing" secondItem="lvY-df-Xzw" secondAttribute="trailing" id="ne3-wd-TEd"/>
                             <constraint firstItem="Ljm-0e-vtX" firstAttribute="leading" secondItem="lvY-df-Xzw" secondAttribute="leading" constant="16" id="oXs-sX-vcd"/>
+                            <constraint firstItem="lvY-df-Xzw" firstAttribute="bottom" secondItem="3Lk-yX-aFe" secondAttribute="bottom" id="wq9-7m-LxX"/>
+                            <constraint firstItem="3Lk-yX-aFe" firstAttribute="leading" secondItem="lvY-df-Xzw" secondAttribute="leading" id="xZk-qu-xUt"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="lvY-df-Xzw"/>
                     </view>
                     <navigationItem key="navigationItem" id="bgY-dm-ELW"/>
                     <connections>
+                        <outlet property="audioWaveView" destination="pHo-c7-j0Z" id="r0K-AH-O1H"/>
+                        <outlet property="displaySegmentControl" destination="Ytc-hk-QIf" id="Pn9-Rk-6th"/>
                         <outlet property="inputSegmentControl" destination="Ljm-0e-vtX" id="F1U-PZ-kv2"/>
-                        <outlet property="mainView" destination="ylo-Oz-C8J" id="kti-aV-s23"/>
                         <outlet property="recordBtn" destination="qPb-vw-RJW" id="u6x-gJ-qM3"/>
+                        <outlet property="spectogramView" destination="3Lk-yX-aFe" id="WWP-F9-yZq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="joq-32-9U4" userLabel="First Responder" sceneMemberID="firstResponder"/>

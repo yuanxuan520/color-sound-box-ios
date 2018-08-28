@@ -18,11 +18,12 @@
 
 #define audioPlayLength 2048
 
+#define audioDeviceLength 1024
+
 @interface PlayControlViewController ()
 {
     FFTSetup fftSetup;
     uint length;
-    NSLock *synlock ;///同步控制
 }
 @property (nonatomic, strong) IBOutlet UISegmentedControl *outputSegmentControl;
 @property (nonatomic, assign) NSUInteger outputChannel;
@@ -40,10 +41,10 @@
 @property (nonatomic, strong) IBOutlet UISegmentedControl *displaySegmentControl;
 @property (nonatomic, assign) NSUInteger changeGraph;
 
-
+@property (nonatomic, strong) NSTimer *playDeviceTimer;
+@property (nonatomic, strong) NSMutableData *playdeviceFileData;
 
 @property (nonatomic, strong) IBOutlet SCIChartSurface *audioWaveView;
-@property (nonatomic, strong) IBOutlet UIStackView *spectogramStackView;
 @property (nonatomic, strong) IBOutlet SCIChartSurface *spectogramView;
 
 @property (nonatomic, strong) CADisplayLink *displaylink;
@@ -60,7 +61,6 @@
 @implementation PlayControlViewController
 @synthesize outAudioPlayer;
 @synthesize playWavFileData;
-@synthesize spectogramStackView;
 //@synthesize spectrogramSurfaceView,audioWaveformSurfaceView;
 @synthesize displaylink;
 - (void)viewWillAppear:(BOOL)animated
@@ -72,6 +72,14 @@
     self.navigationController.navigationBar.barTintColor = UIColorHex(0x303f4a);
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.displaylink invalidate];
+    self.displaylink = nil;
+}
+
 - (void)viewDidLoad {
     self.title = @"播放";
     [super viewDidLoad];
@@ -80,8 +88,8 @@
     [self.outputSegmentControl setSelectedSegmentIndex:self.outputChannel-1];
     
 //    默认是2d图形
-    self.changeGraph = 0;
-    
+    self.changeGraph = 1;
+    [self.displaySegmentControl  setSelectedSegmentIndex:self.changeGraph];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectFileName:) name:@"SelectFile" object:nil];
     [self.selectFileBtn addTarget:self action:@selector(enterFileList:) forControlEvents:UIControlEventTouchUpInside];
     [self.manageBtn addTarget:self action:@selector(enterFileList:) forControlEvents:UIControlEventTouchUpInside];
@@ -90,18 +98,17 @@
 //   初始化2D图 swift
     self.audioWaveformSurfaceController = [[AudioWaveformSurfaceController alloc] init:self.audioWaveView];
     //    self.audioWaveView
-    self.sampleToEngineDelegate = self.audioWaveformSurfaceController.updateDataSeries;
     
     
 //    初始化3D图
     
     self.spectogramSurfaceController = [[SpectogramSurfaceController alloc] init:self.spectogramView];
-    self.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
+   
 //
     //    [self.audioWaveView ]
     
-    self.audioWaveView.hidden = NO;
-    self.spectogramView.hidden = YES;
+    self.audioWaveView.hidden = YES;
+    self.spectogramView.hidden = NO;
     
     
     
@@ -134,15 +141,15 @@
 #pragma mark - 切换2d3d图形
 - (IBAction)change2D3DDisplay:(UISegmentedControl *)sender
 {
-    if ([PCMDataSource sharedData].isPlay) { // 如果当前正在播放时
-        [LEEAlert alert].config
-        .LeeTitle(@"注意")
-        .LeeContent(@"当前正在播放声音无法切换图形显示.")
-        .LeeAction(@"确定", ^{
-        })
-        .LeeShow(); // 设置完成后 别忘记调用Show来显示
-        [sender setSelectedSegmentIndex:self.changeGraph];
-    }else {
+//    if ([PCMDataSource sharedData].isPlay) { // 如果当前正在播放时
+//        [LEEAlert alert].config
+//        .LeeTitle(@"注意")
+//        .LeeContent(@"当前正在播放声音无法切换图形显示.")
+//        .LeeAction(@"确定", ^{
+//        })
+//        .LeeShow(); // 设置完成后 别忘记调用Show来显示
+//        [sender setSelectedSegmentIndex:self.changeGraph];
+//    }else {
         switch (sender.selectedSegmentIndex) {
             case 0:
             {
@@ -161,7 +168,7 @@
                 break;
         }
         self.changeGraph = sender.selectedSegmentIndex;
-    }
+//    }
     
     
 }
@@ -189,14 +196,16 @@
         
         NSData *data = [self.playWavFileData subdataWithRange:NSMakeRange(0, audioPlayLength)];
         
-        [self drawingGraphics:data];
+//        绘制图形
+//        [self drawingGraphics:data];
+//        处理数据
         [self processAudioData:data];
         //删除数据
         [self.playWavFileData replaceBytesInRange:NSMakeRange(0, audioPlayLength) withBytes:NULL length:0];
         //            [self.playWavFileData resetBytesInRange:NSMakeRange(0, 2048)];
     }else {
         NSData *data = [self.playWavFileData subdataWithRange:NSMakeRange(0, self.playWavFileData.length)];
-        [self drawingGraphics:data];
+//        [self drawingGraphics:data];
         [self processAudioData:data];
         [self.playWavFileData replaceBytesInRange:NSMakeRange(0, self.playWavFileData.length) withBytes:NULL length:0];
         
@@ -205,8 +214,6 @@
         self.playBtn.selected = NO;
         [self.playTimer invalidate];
         self.playTimer = nil;
-        [self.displaylink invalidate];
-        self.displaylink = nil;
     }
 }
 #pragma mark - 处理音频数据
@@ -215,12 +222,14 @@
     switch (self.outputChannel) {
         case 1:
         {
-            [self ProcessingOutput01:data];
+            [self.outAudioPlayer playWithData:data];
+            [self processingOutput01:data];
         }
             break;
         case 2:
         {
-            [self ProcessingOutput02:data];
+            [self.outAudioPlayer playWithData:data];
+            [self processingOutput02:data];
         }
             break;
         case 3:
@@ -235,30 +244,28 @@
     }
 }
 
-#pragma mark - 绘制 -2d -3d
+#pragma mark - 绘制 -2d -3d   --- 弃用
 - (void)drawingGraphics:(NSData *)data
 {
     if (self.changeGraph == 0) {
         //   2d图形 图形显示
-        NSData *newdata1 = [NSData dataWithData:data];
-        short* samples1 = (short *)[newdata1 bytes];
-        if ([self sampleToEngineDelegate] != nil){
-            [self sampleToEngineDelegate](samples1);
-        }
+//        NSData *newdata1 = [NSData dataWithData:data];
+//        short* samples1 = (short *)[newdata1 bytes];
+////        for (int i = 0; i < newdata1.length; i++) {
+////            NSLog(@"%d",samples1[i]);
+////        }
+//        if ([self sampleToEngineDelegate] != nil){
+//            [self sampleToEngineDelegate](samples1);
+//        }
     }else {
         //   3d图形 图形显示
-        NSData *newdata2 = [NSData dataWithData:data];
-        short* samples2 = (short *)[newdata2 bytes];
-        float* fftArray = [self calculateFFT:(int *)samples2 size:2048];
-        if ([self spectrogramSamplesDelegate] != nil){
-            [self spectrogramSamplesDelegate](fftArray);
-        }
+//        NSData *newdata2 = [NSData dataWithData:data];
+//        short* samples2 = (short *)[newdata2 bytes];
+//        float* fftArray = [self calculateFFT:samples2 size:2048];
+//        if ([self spectrogramSamplesDelegate] != nil){
+//            [self spectrogramSamplesDelegate](fftArray);
+//        }
     }
-
-
-    
-    
-    
     //    BOOL isLE = YES;
     //    int *v04 = malloc(audioPlayLength/2);
     //    for (int k4 = 0; k4 < audioPlayLength; k4 = k4 + 2) {
@@ -286,6 +293,27 @@
     //           播放声音
 }
 
+- (void)playDeviceAudioTimer
+{
+    if (self.playdeviceFileData.length > 0) {
+        NSInteger wavLength = self.playdeviceFileData.length - audioDeviceLength;
+        if (wavLength > 0) {
+            
+            NSData *data = [self.playdeviceFileData subdataWithRange:NSMakeRange(0, audioDeviceLength)];
+            [[PCMDataSource sharedData] writePlayNetworkDevice:data];
+            //删除数据
+            [self.playdeviceFileData replaceBytesInRange:NSMakeRange(0, audioDeviceLength) withBytes:NULL length:0];
+            //            [self.playWavFileData resetBytesInRange:NSMakeRange(0, 2048)];
+        }else {
+            NSData *data = [self.playdeviceFileData subdataWithRange:NSMakeRange(0, audioDeviceLength)];
+            [[PCMDataSource sharedData] writePlayNetworkDevice:data];
+            
+            [self.playdeviceFileData replaceBytesInRange:NSMakeRange(0, self.playdeviceFileData.length) withBytes:NULL length:0];
+            
+        }
+    }
+}
+#pragma mark 点击播放按钮
 - (IBAction)playAudio:(UIButton *)btn
 {
     if (self.curSelectFileData == nil) {
@@ -302,12 +330,22 @@
         switch (self.outputChannel) {
             case 1:
             {
-                
+                if (self.outAudioPlayer) {
+                    self.outAudioPlayer = nil;
+                }
+                self.outAudioPlayer = [[EYAudio alloc] initWithVolume:0.0];
+//                self.outAudioPlayer.sampleToEngineDelegate = self.audioWaveformSurfaceController.updateDataSeries;
+                self.outAudioPlayer.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
             }
                 break;
             case 2:
             {
-                
+                if (self.outAudioPlayer) {
+                    self.outAudioPlayer = nil;
+                }
+                self.outAudioPlayer = [[EYAudio alloc] initWithVolume:0.0];
+//                self.outAudioPlayer.sampleToEngineDelegate = self.audioWaveformSurfaceController.updateDataSeries;
+                self.outAudioPlayer.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
             }
                 break;
             case 3:
@@ -316,6 +354,8 @@
                     self.outAudioPlayer = nil;
                 }
                 self.outAudioPlayer = [[EYAudio alloc] init];
+                self.outAudioPlayer.sampleToEngineDelegate = self.audioWaveformSurfaceController.updateDataSeries;
+                self.outAudioPlayer.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
             }
                 break;
                 
@@ -331,26 +371,29 @@
         if (self.playWavFileData) {
             self.playWavFileData = nil;
         }
-        [self.audioWaveformSurfaceController resetData];
+//        [self.audioWaveformSurfaceController resetData];
+        self.playdeviceFileData = [NSMutableData dataWithCapacity:0];
         self.playWavFileData = [NSMutableData dataWithData:self.curSelectFileData];
         //        去掉头部44字节 变成pcm 格式数据
         [self.playWavFileData replaceBytesInRange:NSMakeRange(0, 44) withBytes:NULL length:0];
         
-        self.playTimer = [NSTimer scheduledTimerWithTimeInterval:(1024/44100) target:self selector:@selector(playAudioTimer) userInfo:nil repeats:YES];
+        self.playTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/2048/1000) target:self selector:@selector(playAudioTimer) userInfo:nil repeats:YES];
+        self.playDeviceTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/2048/1000) target:self selector:@selector(playDeviceAudioTimer) userInfo:nil repeats:YES];
         self.displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateData:)];
         [self.displaylink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+
     }else {
         [PCMDataSource sharedData].isPlay = NO;
         self.playBtn.selected = NO;
         switch (self.outputChannel) {
             case 1:
             {
-                
+                [self.outAudioPlayer stop];
             }
                 break;
             case 2:
             {
-                
+                [self.outAudioPlayer stop];
             }
                 break;
             case 3:
@@ -362,23 +405,28 @@
             default:
                 break;
         }
+//        播放定时器
         [self.playTimer invalidate];
         self.playTimer = nil;
         [self.displaylink invalidate];
         self.displaylink = nil;
+//       输出定时器
+        [self.playDeviceTimer invalidate];
+        self.playDeviceTimer = nil;
+        self.playdeviceFileData = nil;
     }
 }
 
 #pragma mark - 显示更新
 - (void)updateData:(CADisplayLink *)displayLink
 {
-    if (self.changeGraph == 0) {
+//    if (self.changeGraph == 0) {
         [self.audioWaveformSurfaceController updateDataWithDisplayLink:displayLink];
         
-    }else {
+//    }else {
         [self.spectogramSurfaceController updateDataWithDisplayLink:displayLink];
 
-    }
+//    }
     //    oc
 //    [self.audioWaveformSurfaceView updateData:displayLink];
 //    swift
@@ -399,10 +447,10 @@
 }
 
 
-- (float*) calculateFFT: (int*)data size:(NSUInteger)numSamples{
+- (float*) calculateFFT: (short*)data size:(NSUInteger)numSamples{
     
     float *dataFloat = malloc(sizeof(float)*numSamples);
-    vDSP_vflt32(data, 1, dataFloat, 1, numSamples);
+    vDSP_vflt16(data, 1, dataFloat, 1, numSamples);
     
     DSPSplitComplex tempSplitComplex;
     tempSplitComplex.imagp = malloc(sizeof(float)*(numSamples));
@@ -423,7 +471,7 @@
     
     for (int i = 0 ; i < numSamples; i++) {
         
-        float current = (sqrt(tempSplitComplex.realp[i]*tempSplitComplex.realp[i] + tempSplitComplex.imagp[i]*tempSplitComplex.imagp[i]) * 0.000025);
+        float current = (sqrt(tempSplitComplex.realp[i]*tempSplitComplex.realp[i] + tempSplitComplex.imagp[i]*tempSplitComplex.imagp[i]) * 0.5);
         current = log10(current)*10;
         result[i] = current;
         
@@ -439,24 +487,25 @@
 
 #pragma mark - 输出到信道一、信道二、信道三
 
-- (void)ProcessingOutput01:(NSData *)data
+- (void)processingOutput01:(NSData *)data
 {
     NSMutableData *output01 = [NSMutableData dataWithLength:data.length*4];
     Byte *out03 = (Byte *)[data bytes];
     for (int i = 0; i < data.length; i++) {
-        [output01 replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&out03[i]];
+        [output01 replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&out03[i*2]];
     }
-    [[PCMDataSource sharedData] writeNetworkDevice:output01];
+    [self.playdeviceFileData appendData:output01];
 }
 
-- (void)ProcessingOutput02:(NSData *)data
+- (void)processingOutput02:(NSData *)data
 {
     NSMutableData *output02 = [NSMutableData dataWithLength:data.length*4];
     Byte *out03 = (Byte *)[data bytes];
     for (int i = 0; i < data.length; i++) {
-        [output02 replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&out03[i]];
+        [output02 replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&out03[i*2]];
     }
-    [[PCMDataSource sharedData] writeNetworkDevice:output02];
+    [self.playdeviceFileData appendData:output02];
+//    [[PCMDataSource sharedData] writeNetworkDevice:output02];
 }
 /*
  #pragma mark - Navigation

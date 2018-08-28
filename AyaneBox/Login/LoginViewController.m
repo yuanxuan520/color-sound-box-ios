@@ -165,6 +165,20 @@
 //    [ppfileop createDirName:KLCDATA];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    BOOL isLogin = [USERDEFAULTS objectForKey:@"isLogin"];
+    if (isLogin) {
+        UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UITabBarController *tabbarVc = [sboard instantiateViewControllerWithIdentifier:@"home"];
+        AppDelegate* appDelagete = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        appDelagete.window.rootViewController = tabbarVc;
+    }
+
+    
+}
+
 /*
 #pragma mark - Navigation
 

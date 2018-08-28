@@ -17,9 +17,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    NSString *licencing = @"<LicenseContract><Customer>yuanxuanl@foxmail.com</Customer><OrderId>Trial</OrderId><LicenseCount>1</LicenseCount><IsTrialLicense>true</IsTrialLicense><SupportExpires>08/27/2018 00:00:00</SupportExpires><ProductCode>SC-IOS-2D-ENTERPRISE-SRC</ProductCode><KeyCode>b5ecbf48eb0462e82551a1c130c03e27e2512ef5298bccfd1250731689cd6f90c813a718ece97801c2406808866b7042652f804b158c4cae61d298fca948a8432c707a25c896e481033df8d74e0401e018c064efca031fa0de5985bc74eb17d41ae3c67568bab1d2c5f8aa861ac5718e084b0e09c75228adf1f9bb497a8bc07d377571ee038b5683069f13ae09dfd3a985e32a858ea4650960ad611e57af1dcb6c0d1f62df70df6ac63ae2</KeyCode></LicenseContract>";
+    NSString *licencing = @"<LicenseContract><Customer>dev9802@topflames.com</Customer><OrderId>Trial</OrderId><LicenseCount>1</LicenseCount><IsTrialLicense>true</IsTrialLicense><SupportExpires>09/20/2018 00:00:00</SupportExpires><ProductCode>SC-IOS-2D-ENTERPRISE-SRC</ProductCode><KeyCode>c2a3917ca7a5d7225ab8a386eeff308f4bb6ad369cfbd9cd8d0f0043faeed86e4833a2268f49717c899df251c3ddf63b71e65cbfb886e802890c7d08e422689660cdf208e1c00dafa163d95c0c1c7dfa1992e5d7c8026e300836ccc44e7f6eb72b3e620a52ed7f4a015a769622a4956774442b480be60c3c442e798402cba36e061874669228d301fa6bb93cb6afa3e6c3bfb18da3e3b4ed80e14d6ec14c544ae59f173fa5ee85b338831e</KeyCode></LicenseContract>";
     [SCIChartSurface setRuntimeLicenseKey:licencing];
     [SCIChartSurface setDisplayLinkRunLoopMode:NSRunLoopCommonModes];
+    
+
+    
     return YES;
 }
 

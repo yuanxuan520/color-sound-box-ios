@@ -46,8 +46,8 @@ void AudioInputCallback(void * inUserData,  // Custom audio metadata
 - (void)setupAudioFormat:(AudioStreamBasicDescription*)format;
 - (void)startRecording;
 - (void)stopRecording;
-
-- (void)formSamplesToEngine: (int) capacity samples:(float*) samples;
+- (void)formSamplesToEngine: (int)capacity samples: (short*)samples;
+//- (void)formSamplesToEngine: (int) capacity samples:(float*) samples;
 - (void)formFFTSamples: (int) capacity samples:(float*) samples;
 
 @property samplesToEngineData samplesToEngineDataDelegate;

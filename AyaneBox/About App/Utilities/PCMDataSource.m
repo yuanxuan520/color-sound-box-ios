@@ -107,13 +107,17 @@
 
 // 初始化所有需要使用的数据
 - (void)initData{
-    // 两个临时使用的数据初始化
+    // 两个临时使用的数据初始化 主要用于存储当前数据量
     self.deviceInput = [NSMutableData dataWithLength:0]; //FramePerPacket
     self.phoneInput = [NSMutableData dataWithLength:0]; //FramePerPacket
-    
+//    输出到文件
     self.deviceOutFile01 = [NSMutableData dataWithLength:0];
     self.deviceOutFile02 = [NSMutableData dataWithLength:0];
     self.phoneOutFile03 = [NSMutableData dataWithLength:0];
+//    主要用于输出到设备中
+    self.outputDevice01 = [NSMutableData dataWithLength:0];
+    self.outputDevice02 = [NSMutableData dataWithLength:0];
+    self.outputPhone03 = [NSMutableData dataWithLength:0];
 
     self.udpSocketServer = [[ABSocketServer alloc] init];
     self.udpSocketServer.delegate = self;
@@ -131,32 +135,33 @@
     if (self.phoneOutFile03) {
         self.phoneOutFile03 = nil;
     }
-    
-    
+    if (self.outputDevice01) {
+        self.outputDevice01 = nil;
+    }
+    if (self.outputDevice02) {
+        self.outputDevice02 = nil;
+    }
+    if (self.outputPhone03) {
+        self.outputPhone03 = nil;
+    }
     self.deviceOutFile01 = [NSMutableData dataWithLength:0];
     self.deviceOutFile02 = [NSMutableData dataWithLength:0];
     self.phoneOutFile03 = [NSMutableData dataWithLength:0];
+    self.outputDevice01 = [NSMutableData dataWithLength:0];
+    self.outputDevice02 = [NSMutableData dataWithLength:0];
+    self.outputPhone03 = [NSMutableData dataWithLength:0];
 }
 
 // 开始录音
 - (void)startRecord{
 //    [EYAudio initialize]; // 设置后可以同时录音和播放
 //   开始录制的时候清空 数据
+    [self startOutPutDevice];
     [self resetOutFileData];
-    self.playAudioDataManager = [[EYAudio alloc] init];
-    self.audioRecorderDataManager = [[AudioRecorder alloc] init];
-    self.audioRecorderDataManager.samplesToEngineDataDelegate = ^(NSData *data){
-        [self appendByPhoneInput:data];
-    };
-    [self.audioRecorderDataManager startRecording];
 }
 
 // 停止录音
 - (void)stopRecord{
-    [self.audioRecorderDataManager stopRecording];
-    [self.playAudioDataManager stop];
-    self.playAudioDataManager = nil;
-    self.audioRecorderDataManager = nil;
     self.defaultFileName = [NSString stringWithFormat:@"新文件_%@",[NSDate currentDateStringWithFormat:@"yyMMdd_HHmmss"]];
     [self saveDefaultFile];
     // 保存文件
@@ -198,7 +203,7 @@
     PPFileOperate *fileOP = [[PPFileOperate alloc] init];
     if (self.channelInput01 > 0) {
         NSString *pcmFileName = [NSString stringWithFormat:@"%@_1",self.defaultFileName];
-        NSString *wavFileName = [NSString stringWithFormat:@"%@_1",fileName];
+        NSString *wavFileName = [NSString stringWithFormat:@"%@_1.wav",fileName];
         NSString *filePath = [fileOP getDirName:@"wavFilePcm" fileName:pcmFileName];
         NSString *newfilePath = [fileOP getDirName:@"wavFile" fileName:wavFileName];
         char *cFilePath = (char *)[filePath UTF8String];
@@ -264,7 +269,275 @@
 //  把音频片段in01 in02 in03 保存为文件 把音频片段ou01 ou02写到输出设备   把音频片段播放只对out03   音频图绘制绘制只hui'zhi
 }
 
+
+- (void)startOutPutDevice
+{
+    if (self.outputTimer) {
+        [self.outputTimer invalidate];
+        self.outputTimer = nil;
+    }
+    self.outputTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/2048/1000) target:self selector:@selector(processOutDeviceData) userInfo:nil repeats:YES];
+}
+
+- (void)processOutDeviceData
+{
+    int size = 1024;
+    NSData *in01 = nil;
+    if (self.outputDevice01.length >= size) {
+        in01 = [self.outputDevice01 subdataWithRange:NSMakeRange(0, size)];
+    }else {
+        in01 = [NSMutableData dataWithLength:size];
+    }
+    NSData *in02 = nil;
+    if (self.outputDevice02.length >= size) {
+        in02 = [self.outputDevice02 subdataWithRange:NSMakeRange(0, size)];
+    }else {
+        in02 = [NSMutableData dataWithLength:size];
+    }
+    NSData *in03 = nil;
+    if (self.outputPhone03.length >= size) {
+        in03 = [self.outputPhone03 subdataWithRange:NSMakeRange(0, size)];
+    }else {
+        in03 = [NSMutableData dataWithLength:size];
+    }
+    Byte *deviceInput01 = (Byte *)[in01 bytes];
+    Byte *deviceInput02 = (Byte *)[in02 bytes];
+    Byte *phoneInput03 = (Byte *)[in03 bytes];
+    
+    NSMutableData *deviceOutput = [NSMutableData dataWithLength:2048];
+    
+    for (int i = 0; i<512; i++) {
+        // 输出1相关计算
+        // --------------------------------------------------------
+        // 输出1 关闭时
+        if (self.channelOutput01 == 0) {
+            
+        }
+        // 输出1 指向输入1 时
+        else if (self.channelOutput01 == 1) {
+            [deviceOutput replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&deviceInput01[i*2]];
+        }
+        // 输出1 指向输入2 时
+        else if (self.channelOutput01 == 2) {
+            [deviceOutput replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&deviceInput02[i*2]];
+        }
+        // 输出1 指向输入3 时
+        else if (self.channelOutput01 == 3) {
+            [deviceOutput replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&phoneInput03[i*2]];
+        }
+        
+        // 输出2相关计算
+        // --------------------------------------------------------
+        // 输出2 关闭时
+        if (self.channelOutput02 == 0) {
+            
+        }
+        // 输出2 指向输入1 时
+        else if (self.channelOutput02 == 1) {
+            [deviceOutput replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&deviceInput01[i*2]];
+        }
+        // 输出2 指向输入2 时
+        else if (self.channelOutput02 == 2) {
+            [deviceOutput replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&deviceInput02[i*2]];
+        }
+        // 输出2 指向输入3 时
+        else if (self.channelOutput02 == 3) {
+            [deviceOutput replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&phoneInput03[i*2]];
+        }
+    }
+    [self writeNetworkDevice:deviceOutput];
+    
+    
+    if (self.outputDevice01.length >= size) {
+        [self.outputDevice01 replaceBytesInRange:NSMakeRange(0, size) withBytes:NULL length:0];
+
+    }
+    if (self.outputDevice02.length >= size) {
+        [self.outputDevice02 replaceBytesInRange:NSMakeRange(0, size) withBytes:NULL length:0];
+
+    }
+    if (self.outputPhone03.length >= size) {
+        [self.outputPhone03 replaceBytesInRange:NSMakeRange(0, size) withBytes:NULL length:0];
+
+    }
+    
+    if (self.outputDevice01.length == 0 && self.outputDevice02.length ==0 && self.outputPhone03.length ==0&&!self.isRecord) {
+//        停止定时器
+        [self.outputTimer invalidate];
+        self.outputTimer = nil;
+    }
+}
+
+
+
+
 - (void)processDeviceData
+{
+    NSUInteger deviceInputLenght = [self.deviceInput length];
+    NSData *deviceInputData = [NSData dataWithData:self.deviceInput];
+    
+    Byte *deviceInput = (Byte *)[deviceInputData bytes];
+    
+    //清空数据
+    [self.deviceInput resetBytesInRange:NSMakeRange(0, self.deviceInput.length)];
+    [self.deviceInput setLength:0];
+    //    Byte byteData[deviceInputLenght];
+    //    memcpy(byteData, [self.deviceInput bytes], deviceInputLenght);
+    //    for(int i=0;i<deviceInputLenght;i++)
+    //        NSLog(@"deviceInput = %hhx\n",deviceInput[i]);
+    
+    NSMutableData *in01 = [NSMutableData dataWithLength:(FramePerPacket * 2)];
+    NSMutableData *in02 = [NSMutableData dataWithLength:(FramePerPacket * 2)];
+//    NSMutableData *in03 = [NSMutableData dataWithLength:(FramePerPacket * 2)];
+//
+//    NSMutableData *out01 = [NSMutableData dataWithLength:(FramePerPacket * 2)];
+//    NSMutableData *out02 = [NSMutableData dataWithLength:(FramePerPacket * 2)];
+//    NSMutableData *out03 = [NSMutableData dataWithLength:(FramePerPacket * 2)];
+//
+//    Byte *deviceOutput = (Byte*)malloc(BytePerDeviceInput);
+    
+    //    NSLog(@"%@",deviceInputData);
+    //      channelInput01    channelInput02
+    if (deviceInputLenght >= BytePerDeviceInput && (self.channelInput01 > 0 || self.channelInput02 > 0)) {
+        
+        for (int i = 0, j = 0; i<BytePerDeviceInput; i= i+4) {
+            
+            if (i % 4 == 0) {
+                // 构造01输入 第0字节 第1字节
+                if (self.channelInput01 != 0) {
+                    [in01 replaceBytesInRange:NSMakeRange(j, 2) withBytes:&deviceInput[i]];
+                }
+//                in01[j] = (self.channelInput01 == 0)? 0 : deviceInput[i];
+//                in01[j + 1] = (self.channelInput01 == 0)? 0 : deviceInput[i + 1];
+//
+                if (self.channelInput02 != 0) {
+                    [in02 replaceBytesInRange:NSMakeRange(j, 2) withBytes:&deviceInput[i+2]];
+                }
+//                // 构造02输入 第2字节 第3字节
+//                in02[j] =  (self.channelInput02 == 0)? 0 : deviceInput[i + 2];
+//                in02[j + 1] =  (self.channelInput02 == 0)? 0 : deviceInput[i + 3];
+                
+                // 输出1相关计算
+                // --------------------------------------------------------
+                // 输出1 关闭时
+//                if (self.channelOutput01 == 0) {
+//                    out01[j] = 0;
+//                    out01[j + 1] = 0;
+//                }
+//                // 输出1 指向输入1 时
+//                else if (self.channelOutput01 == 1) {
+//                    out01[j] = in01[j];
+//                    out01[j + 1] = in01[j + 1];
+//                }
+//                // 输出1 指向输入2 时
+//                else if (self.channelOutput01 == 2) {
+//                    out01[j] = in02[j];
+//                    out01[j + 1] = in02[j + 1];
+//                }
+//                // 输出1 指向输入3 时
+//                else if (self.channelOutput01 == 3) {
+//                    out01[j] = in03[j];
+//                    out01[j + 1]  = in03[j + 1];
+//                }
+                
+                // 输出2相关计算
+                // --------------------------------------------------------
+                // 输出2 关闭时
+//                if (self.channelOutput02 == 0) {
+//                    out02[j] = 0;
+//                    out02[j + 1] = 0;
+//                }
+//                // 输出2 指向输入1 时
+//                else if (self.channelOutput02 == 1) {
+//                    out02[j] = in01[j];
+//                    out02[j + 1] = in01[j + 1];
+//                }
+//                // 输出2 指向输入2 时
+//                else if (self.channelOutput02 == 2) {
+//                    out02[j] = in02[j];
+//                    out02[j + 1] = in02[j + 1];
+//                }
+//                // 输出2 指向输入3 时
+//                else if (self.channelOutput02 == 3) {
+//                    out02[j] = in03[j];
+//                    out02[j + 1]  = in03[j + 1];
+//                }
+                
+                // 输出3相关计算
+                // --------------------------------------------------------
+                // 输出3 关闭时
+//                if (self.channelOutput03 == 0) {
+//                    out03[j] = 0;
+//                    out03[j + 1] = 0;
+//                }
+//                // 输出3 指向输入1 时
+//                else if (self.channelOutput03 == 1) {
+//                    out03[j] = in01[j];
+//                    out03[j + 1] = in01[j + 1];
+//                }
+//                // 输出3 指向输入2 时
+//                else if (self.channelOutput03 == 2) {
+//                    out03[j] = in02[j];
+//                    out03[j + 1] = in02[j + 1];
+//                }
+//                // 输出3 指向输入3 时
+//                else if (self.channelOutput03 == 3) {
+//                    out03[j] = in03[j];
+//                    out03[j + 1]  = in03[j + 1];
+//                }
+//
+                
+                // 设备流输出
+//                deviceOutput[i] = out01[j];
+//                deviceOutput[i + 1] = out01[j + 1];
+//                deviceOutput[i + 2] = out02[j];
+//                deviceOutput[i + 3] = out02[j + 1];
+                
+                j += 2;
+            }
+            
+            
+        }
+        //        to do 数据到2048使用完毕有 需要释放
+        
+    }
+    
+    
+    
+//    NSData *outputData = [NSData dataWithBytes:deviceOutput length:BytePerDeviceInput];
+//    [self writeNetworkDevice:outputData];
+//    
+//
+    if (self.isRecord) {
+        if (self.channelInput01 > 0) {
+//            NSData *in01Data = [NSData dataWithBytes:in01 length:(FramePerPacket * 2)];
+            [self.deviceOutFile01 appendData:in01];
+            [self.outputDevice01 appendData:in01];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"INPUT01DATA" object:in01];
+
+        }
+
+        if (self.channelInput02 > 0) {
+            [self.deviceOutFile02 appendData:in02];
+            [self.outputDevice02 appendData:in02];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"INPUT02DATA" object:in02];
+        }
+    }
+    
+    
+    
+    //    NSData *deviceOutputData = [NSData dataWithBytes:deviceOutput length:BytePerDeviceInput];
+    //    [self.deviceOutput appendData:deviceOutputData];
+    //
+    //
+    //    NSData *phoneOutputData = [NSData dataWithBytes:out03 length:BytePerPhoneInput];
+    //    [self.phoneOutput appendData:phoneOutputData];
+    
+    //    if (self.channelOutput03 > 0) {
+    //
+    //    }
+}
+- (void)processDeviceDataOld
 {
     NSUInteger deviceInputLenght = [self.deviceInput length];
     NSData *deviceInputData = [NSData dataWithData:self.deviceInput];
@@ -443,18 +716,21 @@
     [self writeNetworkDevice:outputData];
     
     
-    if (self.channelInput01 > 0) {
-        NSData *in01Data = [NSData dataWithBytes:in01 length:(FramePerPacket * 2)];
-        [self.deviceOutFile01 appendData:in01Data];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"INPUT01DATA" object:in01Data];
-
+    if (self.isRecord) {
+        if (self.channelInput01 > 0) {
+            NSData *in01Data = [NSData dataWithBytes:in01 length:(FramePerPacket * 2)];
+            [self.deviceOutFile01 appendData:in01Data];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"INPUT01DATA" object:in01Data];
+            
+        }
+        
+        if (self.channelInput02 > 0) {
+            NSData *in02Data = [NSData dataWithBytes:in02 length:(FramePerPacket * 2)];
+            [self.deviceOutFile02 appendData:in02Data];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"INPUT02DATA" object:in02Data];
+        }
     }
-    
-    if (self.channelInput02 > 0) {
-        NSData *in02Data = [NSData dataWithBytes:in02 length:(FramePerPacket * 2)];
-        [self.deviceOutFile02 appendData:in02Data];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"INPUT02DATA" object:in02Data];
-    }
+   
     
 
 //    NSData *deviceOutputData = [NSData dataWithBytes:deviceOutput length:BytePerDeviceInput];
@@ -616,29 +892,43 @@
         }
     }
     
-    NSData *data = [NSData dataWithBytes:out03 length:phoneInputLenght];
-    [self.playAudioDataManager playWithData:data];
+    NSData *data = [NSData dataWithBytes:in03 length:phoneInputLenght];
 
 //   输出3文件写入
-    [self.phoneOutFile03 appendData:data];
+    
+    if (self.isRecord) {
+        if (self.channelInput03 > 0) {
+            [self.phoneOutFile03 appendData:data];
+            [self.outputPhone03 appendData:data];
+//            NSData *in03Data = [NSData dataWithBytes:out03 length:(FramePerPacket * 2)];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"INPUT03DATA" object:data];
+        }
+    }
 //    NSData *deviceOutputData = [NSData dataWithBytes:deviceOutput length:BytePerDeviceInput];
 //    [self.deviceOutput appendData:deviceOutputData];
     
+    
 //    [self.phoneOutFile03 appendData:data];
-    NSData *outputData = [NSData dataWithBytes:deviceOutput length:BytePerDeviceInput];
-    [self writeNetworkDevice:outputData];
+//    NSData *outputData = [NSData dataWithBytes:deviceOutput length:BytePerDeviceInput];
+//    [self writeNetworkDevice:outputData];
+    
+    
+    
 //    [self.phoneOutput appendData:phoneOutputData];
     //      channelInput01    channelInput02
 }
 
+#pragma mark 直接将数据写入设备中
 - (void)writeNetworkDevice:(NSData *)outputData
 {
     if(self.channelOutput01 > 0 || self.channelOutput02 > 0){
-        for (int i = 0; i < outputData.length; i = i + 1024) {
-            NSData *data = [outputData subdataWithRange:NSMakeRange(i, 1024)];
-            [self.udpSocketServer sendUDPData:data toHost:self.ipAddress Port:5002 Tag:1];
-        }
+        [self.udpSocketServer sendUDPData:outputData toHost:self.ipAddress Port:5002 Tag:1];
     }
+}
+
+- (void)writePlayNetworkDevice:(NSData *)outputData
+{
+    [self.udpSocketServer sendUDPData:outputData toHost:self.ipAddress Port:5002 Tag:1];
 }
 
 

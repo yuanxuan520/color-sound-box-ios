@@ -221,7 +221,9 @@
 //    NSString *path=[[NSBundle mainBundle] pathForResource:@"simple-drum-beat" ofType:@"wav"];
 //    NSData *data = [NSData dataWithContentsOfFile:path];
     SLog(@"发送UDP广播--%@",data);
+//    if ([PCMDataSource sharedData].ipAddress) {
     [self.socketServer6002 sendUDPData:data toHost:@"255.255.255.255" Port:6001 Tag:1];
+//    }
 }
 
 
@@ -367,7 +369,9 @@
 {
     
 //    [self.eyAudio playWithData:data];
-    [[PCMDataSource sharedData] appendByDeviceInput:data];
+    if ([PCMDataSource sharedData].isRecord) { // 一旦点击开始录音后,开始接收数据
+        [[PCMDataSource sharedData] appendByDeviceInput:data];
+    }
 }
 //- (void)socket:(GCDAsyncSocket *)sock didAcceptAudioNewSocket:(GCDAsyncSocket *)newSocket
 //{

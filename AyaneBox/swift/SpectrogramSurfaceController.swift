@@ -19,7 +19,7 @@ class SpectogramSurfaceController: BaseChartSurfaceController {
     
     let audioWaveformRenderableSeries: SCIFastUniformHeatmapRenderableSeries = SCIFastUniformHeatmapRenderableSeries()
     var audioDataSeries: SCIUniformHeatmapDataSeries = SCIUniformHeatmapDataSeries(typeX: .int32,
-                                                                                   y: .int32,
+                                                                                   y: .int16,
                                                                                    z: .float,
                                                                                    sizeX: 1024,
                                                                                    y: 250,

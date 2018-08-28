@@ -25,16 +25,11 @@
     return [super formatLabel:(SCIGeneric(SCIGenericDouble(dataValue) / 10000))];
 }
 @end
-@interface AudioWaveformSurfaceView(){
-    SCIFastLineRenderableSeries *audioWaveformRenderableSeries;
-    SCIXyDataSeries *audioDataSeries;
-    int seriesCounter;
-    NSTimeInterval lastTimestamp;
-    int16_t *newBuffer;
-//    NSMutableData *newBufferData;
-    int sizeOfBuffer;
-    int fifoSize;
-}
+@interface AudioWaveformSurfaceView()
+@property (nonatomic, strong) SCIFastLineRenderableSeries *audioWaveformRenderableSeries;
+@property (nonatomic, strong) SCIXyDataSeries *audioDataSeries;
+@property (nonatomic, assign) int seriesCounter;
+@property (nonatomic, assign) int fifoSize;
 @end
 
 @implementation AudioWaveformSurfaceView
@@ -59,23 +54,21 @@
 }
 - (void)initializeSurfaceData {
 //   创建一个快速变换的线型图
-    audioWaveformRenderableSeries = [[SCIFastLineRenderableSeries alloc] init];
+    self.audioWaveformRenderableSeries = [[SCIFastLineRenderableSeries alloc] init];
 //    x y 数据展示
-    audioDataSeries = [[SCIXyDataSeries alloc] initWithXType:SCIDataType_Int32 YType:SCIDataType_Int16];
-    seriesCounter = 0;
-    lastTimestamp = 0.0;
-    sizeOfBuffer = 0;
-    fifoSize = 500000;
+    self.audioDataSeries = [[SCIXyDataSeries alloc] initWithXType:SCIDataType_Int32 YType:SCIDataType_Int16];
+    self.seriesCounter = 0;
+    self.fifoSize = 500000;
     
     surface.bottomAxisAreaSize = 0.0;
     surface.topAxisAreaSize = 0.0;
     surface.leftAxisAreaSize = 0.0;
     surface.rightAxisAreaSize = 0.0;
     
-    audioDataSeries.fifoCapacity = (int)fifoSize;
-    audioWaveformRenderableSeries.dataSeries = audioDataSeries;
+    self.audioDataSeries.fifoCapacity = self.fifoSize;
+    self.audioWaveformRenderableSeries.dataSeries = self.audioDataSeries;
 //    //        fillFifoToMax()
-    [surface.renderableSeries add:audioWaveformRenderableSeries];
+    [surface.renderableSeries add:self.audioWaveformRenderableSeries];
     
     SCIAxisStyle *axisStyle = [[SCIAxisStyle alloc] init];
     axisStyle.drawLabels = YES;
@@ -101,11 +94,13 @@
     [surface.yAxes add:yAxis];
     [surface.xAxes add:xAxis];
     
+//    NSArray *xArray = @[@1, @2, @3, @4, @5];
+//    NSArray *yArray = @[@100, @200, @10000, @(-10000), @20000];
+    
 //    [SCIUpdateSuspender usingWithSuspendable:surface withBlock:^{
-//        [_dataSeries updateZValues:data[_timerIndex % SERIES_PER_PERIOD] Size:WIDTH * HEIGHT];
-//
+//        [self.audioDataSeries appendRangeX:xArray Y:yArray];
+
 //        [surface invalidateElement];
-//        _timerIndex++;
 //    }];
 //    __weak typeof(self) weakSelf = self;
 //    AudioWaveformSurfaceView *strongSelf = weakSelf;
@@ -134,32 +129,53 @@
 //        }
 //    };
 }
+
+
 - (void)updateDataSeries:(NSData *)dataSeries
 {
-    NSData *newDataSeries = [NSData dataWithData:dataSeries];
-    int capacity = 2048 + sizeOfBuffer;
-    int16_t *newBufferTemp;
-    
-    int16_t *bf = newBuffer;
-    
-    int16_t *data = (int16_t *)[newDataSeries bytes];
-    
-    if (bf) {
-        newBufferTemp = calloc(1, capacity);
-        memmove(newBufferTemp, bf, sizeOfBuffer);
-        memmove(newBufferTemp+(sizeOfBuffer/2), data, 2048);
-        newBuffer = newBufferTemp;
-        //       释放上次的内存
-        free(bf);
-        sizeOfBuffer = capacity;
-        
-    }else if (data) {
-        newBufferTemp = calloc(1 ,capacity);
-        memmove(newBufferTemp, data, capacity);
-        newBuffer = newBufferTemp;
-        sizeOfBuffer = capacity;
+    NSUInteger length = [dataSeries length];
+    NSMutableArray *xArray = [NSMutableArray arrayWithCapacity:0];
+    NSMutableArray *yArray = [NSMutableArray arrayWithCapacity:0];
+    short *out03 = (short *)[dataSeries bytes];
+    int i = 0;
+    while(i < (length/2)) {
+        [xArray addObject:@(self.seriesCounter)];
+        [yArray addObject:@(out03[self.seriesCounter])];
+        self.seriesCounter += 1;
+        i += 1;
     }
+    [SCIUpdateSuspender usingWithSuspendable:surface withBlock:^{
+        [self.audioDataSeries appendRangeX:xArray Y:yArray];
+//        [surface invalidateElement];
+    }];
 }
+
+//- (void)updateDataSeries:(NSData *)dataSeries
+//{
+//    NSData *newDataSeries = [NSData dataWithData:dataSeries];
+//    int capacity = 2048 + sizeOfBuffer;
+//    int16_t *newBufferTemp;
+//
+//    int16_t *bf = newBuffer;
+//
+//    int16_t *data = (int16_t *)[newDataSeries bytes];
+//
+//    if (bf) {
+//        newBufferTemp = calloc(1, capacity);
+//        memmove(newBufferTemp, bf, sizeOfBuffer);
+//        memmove(newBufferTemp+(sizeOfBuffer/2), data, 2048);
+//        newBuffer = newBufferTemp;
+//        //       释放上次的内存
+//        free(bf);
+//        sizeOfBuffer = capacity;
+//
+//    }else if (data) {
+//        newBufferTemp = calloc(1 ,capacity);
+//        memmove(newBufferTemp, data, capacity);
+//        newBuffer = newBufferTemp;
+//        sizeOfBuffer = capacity;
+//    }
+//}
 //- (void)updateDataSeries:(NSData *)dataSeries
 //{
 ////    NSData *newDataSeries = [NSData dataWithData:dataSeries];
@@ -219,41 +235,41 @@
 //    [surface invalidateElement];
 //}
 
-- (void)updateData:(CADisplayLink *)displayLink {
-
-    NSTimeInterval diffTimeStamp = displayLink.timestamp - lastTimestamp;
-    if (lastTimestamp == 0) {
-        diffTimeStamp = displayLink.duration;
-    }
-//(int)(diffTimeStamp * 44100)
-    int sizeOfBlock = 2048;
-
-    sizeOfBlock = sizeOfBlock >= sizeOfBuffer ? sizeOfBuffer : sizeOfBlock;
-
-    int *xValues = calloc(1,sizeOfBlock);
-
-    int i = 0;
-    while(i < sizeOfBlock) {
-        xValues[i] = seriesCounter;
-        seriesCounter += 1;
-        i += 1;
-    }
-    int16_t *buffer = newBuffer;
-    if (buffer) {
-        [audioDataSeries appendRangeX:SCIGeneric(xValues) Y:SCIGeneric(buffer) Count:sizeOfBlock];
-        int newSizeBuffer = sizeOfBuffer - sizeOfBlock;
-        int16_t *delocBuffer = calloc(1, newSizeBuffer);
-        int16_t *curBuffer = &buffer[sizeOfBlock];
-        memmove(delocBuffer,curBuffer,newSizeBuffer);
-        newBuffer = delocBuffer;
-        sizeOfBuffer = newSizeBuffer;
-    }
-    free(buffer);
-    free(xValues);
-    lastTimestamp = displayLink.timestamp;
-    [surface zoomExtentsX];
-    [surface invalidateElement];
-}
+//- (void)updateData:(CADisplayLink *)displayLink {
+//
+//    NSTimeInterval diffTimeStamp = displayLink.timestamp - lastTimestamp;
+//    if (lastTimestamp == 0) {
+//        diffTimeStamp = displayLink.duration;
+//    }
+////(int)(diffTimeStamp * 44100)
+//    int sizeOfBlock = 2048;
+//
+//    sizeOfBlock = sizeOfBlock >= sizeOfBuffer ? sizeOfBuffer : sizeOfBlock;
+//
+//    int *xValues = calloc(1,sizeOfBlock);
+//
+//    int i = 0;
+//    while(i < sizeOfBlock) {
+//        xValues[i] = seriesCounter;
+//        seriesCounter += 1;
+//        i += 1;
+//    }
+//    int16_t *buffer = newBuffer;
+//    if (buffer) {
+//        [audioDataSeries appendRangeX:SCIGeneric(xValues) Y:SCIGeneric(buffer) Count:sizeOfBlock];
+//        int newSizeBuffer = sizeOfBuffer - sizeOfBlock;
+//        int16_t *delocBuffer = calloc(1, newSizeBuffer);
+//        int16_t *curBuffer = &buffer[sizeOfBlock];
+//        memmove(delocBuffer,curBuffer,newSizeBuffer);
+//        newBuffer = delocBuffer;
+//        sizeOfBuffer = newSizeBuffer;
+//    }
+//    free(buffer);
+//    free(xValues);
+//    lastTimestamp = displayLink.timestamp;
+//    [surface zoomExtentsX];
+//    [surface invalidateElement];
+//}
 
 
 @end

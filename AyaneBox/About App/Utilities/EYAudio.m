@@ -9,11 +9,11 @@
 #import "EYAudio.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import <Accelerate/Accelerate.h>
 
 #define MIN_SIZE_PER_FRAME (4096*2)   //每个包的大小,室内机要求为960,具体看下面的配置信息
 #define QUEUE_BUFFER_SIZE  3      //缓冲器个数
 #define SAMPLE_RATE        44100  //采样频率
-
 @interface EYAudio(){
     AudioQueueRef audioQueue;                                 //音频播放队列
     AudioStreamBasicDescription _audioDescription;
@@ -22,6 +22,8 @@
     NSLock *sysnLock;
     NSMutableData *tempData;
     OSStatus osState;
+    FFTSetup fftSetup;
+    uint length;
 }
 @end
 @implementation EYAudio
@@ -68,7 +70,9 @@
     self = [super init];
     if (self) {
         sysnLock = [[NSLock alloc]init];
+        length = (uint)floor(log2(2048));
         
+        fftSetup = vDSP_create_fftsetup(length, kFFTRadix2);
         //设置音频参数 具体的信息需要问后台
         _audioDescription.mSampleRate = SAMPLE_RATE;
         _audioDescription.mFormatID = kAudioFormatLinearPCM;
@@ -88,6 +92,48 @@
         
         // 设置音量
         AudioQueueSetParameter(audioQueue, kAudioQueueParam_Volume, 1.0);
+        
+        // 初始化需要的缓冲区
+        for (int i = 0; i < QUEUE_BUFFER_SIZE; i++) {
+            audioQueueBufferUsed[i] = false;
+            osState = AudioQueueAllocateBuffer(audioQueue, MIN_SIZE_PER_FRAME, &audioQueueBuffers[i]);
+        }
+        
+        osState = AudioQueueStart(audioQueue, NULL);
+        if (osState != noErr) {
+            NSLog(@"AudioQueueStart Error");
+        }
+    }
+    return self;
+}
+
+- (instancetype)initWithVolume:(Float32)volume
+{
+    self = [super init];
+    if (self) {
+        sysnLock = [[NSLock alloc]init];
+        length = (uint)floor(log2(2048));
+        
+        fftSetup = vDSP_create_fftsetup(length, kFFTRadix2);
+        //设置音频参数 具体的信息需要问后台
+        _audioDescription.mSampleRate = SAMPLE_RATE;
+        _audioDescription.mFormatID = kAudioFormatLinearPCM;
+        _audioDescription.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+        //1单声道
+        _audioDescription.mChannelsPerFrame = 1;
+        //每一个packet一侦数据,每个数据包下的桢数，即每个数据包里面有多少桢
+        _audioDescription.mFramesPerPacket = 1;
+        //每个采样点16bit量化 语音每采样点占用位数
+        _audioDescription.mBitsPerChannel = 16;
+        _audioDescription.mBytesPerFrame = (_audioDescription.mBitsPerChannel / 8) * _audioDescription.mChannelsPerFrame;
+        //每个数据包的bytes总数，每桢的bytes数*每个数据包的桢数
+        _audioDescription.mBytesPerPacket = _audioDescription.mBytesPerFrame * _audioDescription.mFramesPerPacket;
+        
+        // 使用player的内部线程播放 新建输出
+        AudioQueueNewOutput(&_audioDescription, AudioPlayerAQInputCallback, (__bridge void * _Nullable)(self), nil, 0, 0, &audioQueue);
+        
+        // 设置音量
+        AudioQueueSetParameter(audioQueue, kAudioQueueParam_Volume, volume);
         
         // 初始化需要的缓冲区
         for (int i = 0; i < QUEUE_BUFFER_SIZE; i++) {
@@ -143,9 +189,19 @@
 // ************************** 回调 **********************************
 // 回调回来把buffer状态设为未使用
 static void AudioPlayerAQInputCallback(void* inUserData,AudioQueueRef audioQueueRef, AudioQueueBufferRef audioQueueBufferRef) {
-    
+//    __weak EYAudio *playAudio = (__bridge AudioRecorder *) refToSelf;
+
     EYAudio* audio = (__bridge EYAudio*)inUserData;
+    short* samples = (short*)audioQueueBufferRef->mAudioData;
+
+    if ([audio sampleToEngineDelegate] != nil){
+//        [audio sampleToEngineDelegate](samples);
+    }
+    float* fftArray = [audio calculateFFT:samples size:2048];
     
+    if ([audio spectrogramSamplesDelegate] != nil){
+        [audio spectrogramSamplesDelegate](fftArray);
+    }
     [audio resetBufferState:audioQueueRef and:audioQueueBufferRef];
 }
 
@@ -165,4 +221,43 @@ static void AudioPlayerAQInputCallback(void* inUserData,AudioQueueRef audioQueue
         }
     }
 }
+
+- (float*) calculateFFT: (short*)data size:(uint)numSamples{
+    
+    float *dataFloat = malloc(sizeof(float)*numSamples);
+    vDSP_vflt16(data, 1, dataFloat, 1, numSamples);
+    
+    DSPSplitComplex tempSplitComplex;
+    tempSplitComplex.imagp = malloc(sizeof(float)*(numSamples));
+    tempSplitComplex.realp = malloc(sizeof(float)*(numSamples));
+    
+    DSPComplex *audioBufferComplex = malloc(sizeof(DSPComplex)*(numSamples));
+    
+    for (int i = 0; i < numSamples; i++) {
+        audioBufferComplex[i].real = dataFloat[i];
+        audioBufferComplex[i].imag = 0.0f;
+    }
+    
+    vDSP_ctoz(audioBufferComplex, 2, &tempSplitComplex, 1, numSamples);
+    
+    vDSP_fft_zip(fftSetup, &tempSplitComplex, 1, length, FFT_FORWARD);
+    
+    float* result = malloc(sizeof(float)*numSamples);
+    
+    for (int i = 0 ; i < numSamples; i++) {
+        
+        float current = (sqrt(tempSplitComplex.realp[i]*tempSplitComplex.realp[i] + tempSplitComplex.imagp[i]*tempSplitComplex.imagp[i]) * 0.5);
+        current = log10(current)*10;
+        result[i] = current;
+        
+    }
+    
+    free(dataFloat);
+    free(audioBufferComplex);
+    free(tempSplitComplex.imagp);
+    free(tempSplitComplex.realp);
+    
+    return result;
+}
+
 @end

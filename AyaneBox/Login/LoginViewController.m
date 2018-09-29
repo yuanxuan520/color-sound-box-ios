@@ -175,8 +175,6 @@
         AppDelegate* appDelagete = (AppDelegate *)[UIApplication sharedApplication].delegate;
         appDelagete.window.rootViewController = tabbarVc;
     }
-
-    
 }
 
 /*

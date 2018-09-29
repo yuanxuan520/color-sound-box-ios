@@ -14,6 +14,7 @@
 #import "LEEAlert.h"
 #import "EYAudio.h"
 #import "Reachability.h"
+#import "MJRefresh.h"
 
 @interface HomeViewController ()<UITableViewDelegate,UITableViewDataSource,ABSocketServerDelegate>
 @property (nonatomic, strong) NSMutableArray *deviceDataList;
@@ -48,7 +49,13 @@
     self.ipAddressLabel.text = [IPDetector getIPAddress];
 
 //    [self.socketServer startUDP];
-    
+    //    重复发送广播
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
+        [self.timer fire];
+    }
 }
 - (IBAction)showTip:(id)sender
 {
@@ -67,7 +74,10 @@
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-//    [self.socketServer stopUDP];
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -76,12 +86,10 @@
         [PCMDataSource sharedData].ipAddress = ipAddress;
     }
     
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceList:) name:@"DEVICEUPDATE" object:nil];
 //    self.eyAudio = [[EYAudio alloc] init];
     
     self.socketServer5001 = [[ABSocketServer alloc] init];
-    
     self.socketObject5001 = [[SocketDataObject alloc] init];
     self.socketServer5001.delegate = self;
     
@@ -91,14 +99,7 @@
     self.socketServer6002.delegate = self.socketObject6002;
     [self.socketServer5001 startUDP:5001];
     [self.socketServer6002 startUDP:6002];
-
-//    重复发送广播
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
-    [self.timer fire];
     
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self deviceSendMacBroadcast];
-//    });
     deviceTableView.tableFooterView = [[UIView alloc] init];
     deviceTableView.backgroundColor = [UIColor clearColor];
     deviceTableView.separatorInset = UIEdgeInsetsZero;
@@ -112,7 +113,9 @@
     }
     deviceTableView.separatorColor = UIColorHex(0xf0f0f0);
     // Do any additional setup after loading the view.
-    
+    MJRefreshNormalHeader *reloadheader = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(udpBroadcast)];//@selector(loadMylogList)
+    reloadheader.lastUpdatedTimeLabel.hidden = YES;
+    deviceTableView.mj_header = reloadheader;
     [self netStateListen];
     
 }
@@ -221,8 +224,14 @@
 //    NSString *path=[[NSBundle mainBundle] pathForResource:@"simple-drum-beat" ofType:@"wav"];
 //    NSData *data = [NSData dataWithContentsOfFile:path];
     SLog(@"发送UDP广播--%@",data);
-//    if ([PCMDataSource sharedData].ipAddress) {
-    [self.socketServer6002 sendUDPData:data toHost:@"255.255.255.255" Port:6001 Tag:1];
+    if ([PCMDataSource sharedData].ipAddress) {
+        [self.socketServer6002 sendUDPData:data toHost:[PCMDataSource sharedData].ipAddress Port:6001 Tag:1];
+    }else {
+        [self.socketServer6002 sendUDPData:data toHost:@"255.255.255.255" Port:6001 Tag:1];
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [deviceTableView.mj_header endRefreshing];
+    });
 //    }
 }
 
@@ -367,10 +376,12 @@
 #pragma mark 接收5001 端口设备的数据
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock host:(NSString *)host didReceiveData:(NSData *)data fromAddress:(NSData *)address
 {
-    
+//    NSLog(@"%@",data);
 //    [self.eyAudio playWithData:data];
     if ([PCMDataSource sharedData].isRecord) { // 一旦点击开始录音后,开始接收数据
-        [[PCMDataSource sharedData] appendByDeviceInput:data];
+        if ([PCMDataSource sharedData].channelInput01 > 0 || [PCMDataSource sharedData].channelInput02 > 0 ) { // 输入3 开启
+            [[PCMDataSource sharedData] appendByDeviceInput:data];
+        }
     }
 }
 //- (void)socket:(GCDAsyncSocket *)sock didAcceptAudioNewSocket:(GCDAsyncSocket *)newSocket

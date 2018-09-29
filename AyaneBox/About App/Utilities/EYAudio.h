@@ -8,7 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import "AudioRecorder.h"
-@interface EYAudio : NSObject
+#define NUM_BUFFERS 30
+typedef struct
+{
+    AudioStreamBasicDescription dataFormat;
+    AudioQueueRef               queue;
+    AudioQueueBufferRef         buffers[NUM_BUFFERS];
+    AudioFileID                 audioFile;
+    SInt64                      currentPacket;
+    bool                        playing;
+}PlayState;
+
+@interface EYAudio : NSObject{
+    PlayState playState;
+}
 @property samplesToEngine sampleToEngineDelegate;
 @property samplesToEngineFloat spectrogramSamplesDelegate;
 - (instancetype)initWithVolume:(Float32)volume;

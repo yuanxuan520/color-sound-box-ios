@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AyaneBox-Swift.h"
-#import <SciChart/SciChart.h>
+
 
 @interface PlayControlViewController : UIViewController
 @end

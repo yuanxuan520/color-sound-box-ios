@@ -13,7 +13,6 @@
 		2D0D370221136B1E002DD181 /* SetPopTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0D370121136B1E002DD181 /* SetPopTextView.m */; };
 		2D0D370521143EE6002DD181 /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0D370421143EE6002DD181 /* FileViewController.m */; };
 		2D0D37082114BB38002DD181 /* FileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0D37072114BB38002DD181 /* FileTableViewCell.m */; };
-		2D12C31D210E21FC00D14202 /* OutAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D12C31C210E21FC00D14202 /* OutAudioPlayer.m */; };
 		2D1A67062109A8E000F24485 /* PCMDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A67052109A8E000F24485 /* PCMDataSource.m */; };
 		2D1A670C210A014E00F24485 /* Pcm2WavUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A670B210A014E00F24485 /* Pcm2WavUtil.m */; };
 		2D36E9A7210F5F1500C4CB33 /* EYAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D36E9A6210F5F1500C4CB33 /* EYAudio.m */; };
@@ -35,7 +34,6 @@
 		2DA5A19620ED26BC00D8D377 /* SettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5A19420ED26BC00D8D377 /* SettingTableViewCell.m */; };
 		2DA5A19920ED2D7F00D8D377 /* AboutusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5A19820ED2D7F00D8D377 /* AboutusViewController.m */; };
 		2DA5A19C20ED2FA500D8D377 /* UpdatePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5A19A20ED2FA500D8D377 /* UpdatePasswordViewController.m */; };
-		2DAD1C5A20F4F63100E26221 /* DashedLineChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DAD1C5920F4F63100E26221 /* DashedLineChartView.m */; };
 		2DAD1C5E20F5014C00E26221 /* WSProgressHUD+AutoDismiss.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DAD1C5D20F5014C00E26221 /* WSProgressHUD+AutoDismiss.m */; };
 		2DAD1C6020F502BD00E26221 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C5F20F502BD00E26221 /* AFNetworking.framework */; };
 		2DAD1C6220F502BD00E26221 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C6120F502BD00E26221 /* CocoaAsyncSocket.framework */; };
@@ -53,18 +51,13 @@
 		2DAD1C7E20F502BD00E26221 /* WSProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DAD1C7D20F502BD00E26221 /* WSProgressHUD.framework */; };
 		2DBFA1962103A34800BB0697 /* simple-drum-beat.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2DBFA1952103A34700BB0697 /* simple-drum-beat.wav */; };
 		2DC5248C20F25D0500FF2CE9 /* AudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DC5248A20F25D0500FF2CE9 /* AudioRecorder.m */; };
-		2DD4375F20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD4375E20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m */; };
-		2DD4376220F78E980088E4D0 /* SpectrogramSurfaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD4376120F78E980088E4D0 /* SpectrogramSurfaceView.m */; };
 		2DD567A120E28A8F0001666E /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD567A020E28A8F0001666E /* HomeViewController.m */; };
 		2DD567A420E28A9C0001666E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD567A320E28A9C0001666E /* SettingsViewController.m */; };
 		2DD567A720E28AAE0001666E /* RecordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD567A620E28AAE0001666E /* RecordsViewController.m */; };
 		2DD567AA20E28AC30001666E /* PlayControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD567A920E28AC30001666E /* PlayControlViewController.m */; };
 		2DD567AD20E28AE20001666E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD567AC20E28AE20001666E /* LoginViewController.m */; };
-		2DD9F1DD21076A2A00B61D7E /* BXAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD9F1DB21076A2900B61D7E /* BXAudioPlayer.m */; };
 		2DD9F1E12107797E00B61D7E /* SettingsData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD9F1E02107797E00B61D7E /* SettingsData.m */; };
-		2DD9F1E4210781A600B61D7E /* PCMPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DD9F1E3210781A600B61D7E /* PCMPlayer.m */; };
 		2DF7278E2110C9980051BEF3 /* TabbarControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DF7278D2110C9980051BEF3 /* TabbarControl.m */; };
-		2DFCBD3D210977E40059CC19 /* AudioData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DFCBD3C210977E40059CC19 /* AudioData.m */; };
 		7D317417208328A100AFDF64 /* LuYinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D317416208328A100AFDF64 /* LuYinViewController.m */; };
 		7D31741A208328E600AFDF64 /* MeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D317418208328E500AFDF64 /* MeViewController.m */; };
 		7D31743520832D8400AFDF64 /* AudioPlayerBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D31742020832D8400AFDF64 /* AudioPlayerBarBackground.png */; };
@@ -225,8 +218,6 @@
 		2D0D370421143EE6002DD181 /* FileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileViewController.m; sourceTree = "<group>"; };
 		2D0D37062114BB38002DD181 /* FileTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileTableViewCell.h; sourceTree = "<group>"; };
 		2D0D37072114BB38002DD181 /* FileTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileTableViewCell.m; sourceTree = "<group>"; };
-		2D12C31B210E21FC00D14202 /* OutAudioPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OutAudioPlayer.h; sourceTree = "<group>"; };
-		2D12C31C210E21FC00D14202 /* OutAudioPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OutAudioPlayer.m; sourceTree = "<group>"; };
 		2D1A67042109A8E000F24485 /* PCMDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCMDataSource.h; sourceTree = "<group>"; };
 		2D1A67052109A8E000F24485 /* PCMDataSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCMDataSource.m; sourceTree = "<group>"; };
 		2D1A670A210A014E00F24485 /* Pcm2WavUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pcm2WavUtil.h; sourceTree = "<group>"; };
@@ -265,8 +256,6 @@
 		2DA5A19820ED2D7F00D8D377 /* AboutusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutusViewController.m; sourceTree = "<group>"; };
 		2DA5A19A20ED2FA500D8D377 /* UpdatePasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdatePasswordViewController.m; sourceTree = "<group>"; };
 		2DA5A19B20ED2FA500D8D377 /* UpdatePasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdatePasswordViewController.h; sourceTree = "<group>"; };
-		2DAD1C5820F4F63100E26221 /* DashedLineChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DashedLineChartView.h; sourceTree = "<group>"; };
-		2DAD1C5920F4F63100E26221 /* DashedLineChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DashedLineChartView.m; sourceTree = "<group>"; };
 		2DAD1C5B20F4F67800E26221 /* SciChartBaseViewProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SciChartBaseViewProtocol.h; sourceTree = "<group>"; };
 		2DAD1C5C20F5014B00E26221 /* WSProgressHUD+AutoDismiss.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WSProgressHUD+AutoDismiss.h"; sourceTree = "<group>"; };
 		2DAD1C5D20F5014C00E26221 /* WSProgressHUD+AutoDismiss.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WSProgressHUD+AutoDismiss.m"; sourceTree = "<group>"; };
@@ -290,10 +279,6 @@
 		2DBFA1952103A34700BB0697 /* simple-drum-beat.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "simple-drum-beat.wav"; sourceTree = "<group>"; };
 		2DC5248A20F25D0500FF2CE9 /* AudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecorder.m; sourceTree = "<group>"; };
 		2DC5248B20F25D0500FF2CE9 /* AudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecorder.h; sourceTree = "<group>"; };
-		2DD4375D20F78E7F0088E4D0 /* AudioWaveformSurfaceView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioWaveformSurfaceView.h; sourceTree = "<group>"; };
-		2DD4375E20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioWaveformSurfaceView.m; sourceTree = "<group>"; };
-		2DD4376020F78E980088E4D0 /* SpectrogramSurfaceView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpectrogramSurfaceView.h; sourceTree = "<group>"; };
-		2DD4376120F78E980088E4D0 /* SpectrogramSurfaceView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpectrogramSurfaceView.m; sourceTree = "<group>"; };
 		2DD5679F20E28A8F0001666E /* HomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
 		2DD567A020E28A8F0001666E /* HomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		2DD567A220E28A9C0001666E /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -304,16 +289,10 @@
 		2DD567A920E28AC30001666E /* PlayControlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayControlViewController.m; sourceTree = "<group>"; };
 		2DD567AB20E28AE20001666E /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		2DD567AC20E28AE20001666E /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		2DD9F1DB21076A2900B61D7E /* BXAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BXAudioPlayer.m; sourceTree = "<group>"; };
-		2DD9F1DC21076A2900B61D7E /* BXAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BXAudioPlayer.h; sourceTree = "<group>"; };
 		2DD9F1DF2107797E00B61D7E /* SettingsData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsData.h; sourceTree = "<group>"; };
 		2DD9F1E02107797E00B61D7E /* SettingsData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsData.m; sourceTree = "<group>"; };
-		2DD9F1E2210781A600B61D7E /* PCMPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCMPlayer.h; sourceTree = "<group>"; };
-		2DD9F1E3210781A600B61D7E /* PCMPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCMPlayer.m; sourceTree = "<group>"; };
 		2DF7278C2110C9980051BEF3 /* TabbarControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabbarControl.h; sourceTree = "<group>"; };
 		2DF7278D2110C9980051BEF3 /* TabbarControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabbarControl.m; sourceTree = "<group>"; };
-		2DFCBD3B210977E40059CC19 /* AudioData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioData.h; sourceTree = "<group>"; };
-		2DFCBD3C210977E40059CC19 /* AudioData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioData.m; sourceTree = "<group>"; };
 		6C28A8DCA3BD380381D3CC8D /* Pods_AyaneBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AyaneBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D29F6743749EF26A5775AC /* Pods-AyaneBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AyaneBox.release.xcconfig"; path = "Pods/Target Support Files/Pods-AyaneBox/Pods-AyaneBox.release.xcconfig"; sourceTree = "<group>"; };
 		7D317415208328A100AFDF64 /* LuYinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuYinViewController.h; sourceTree = "<group>"; };
@@ -682,8 +661,6 @@
 				2DD567A520E28AAE0001666E /* RecordsViewController.h */,
 				2DD567A620E28AAE0001666E /* RecordsViewController.m */,
 				2DAD1C5B20F4F67800E26221 /* SciChartBaseViewProtocol.h */,
-				2DAD1C5820F4F63100E26221 /* DashedLineChartView.h */,
-				2DAD1C5920F4F63100E26221 /* DashedLineChartView.m */,
 			);
 			path = Records;
 			sourceTree = "<group>";
@@ -691,8 +668,6 @@
 		2DD5679C20E289F50001666E /* Play */ = {
 			isa = PBXGroup;
 			children = (
-				2DD9F1DC21076A2900B61D7E /* BXAudioPlayer.h */,
-				2DD9F1DB21076A2900B61D7E /* BXAudioPlayer.m */,
 				2DD567A820E28AC30001666E /* PlayControlViewController.h */,
 				2DD567A920E28AC30001666E /* PlayControlViewController.m */,
 				2D0D37062114BB38002DD181 /* FileTableViewCell.h */,
@@ -701,10 +676,6 @@
 				2D0D370421143EE6002DD181 /* FileViewController.m */,
 				2D507AD62119D6FA00A84ACC /* PPToolsClass.h */,
 				2D507AD52119D6FA00A84ACC /* PPToolsClass.m */,
-				2DD9F1E2210781A600B61D7E /* PCMPlayer.h */,
-				2DD9F1E3210781A600B61D7E /* PCMPlayer.m */,
-				2D12C31B210E21FC00D14202 /* OutAudioPlayer.h */,
-				2D12C31C210E21FC00D14202 /* OutAudioPlayer.m */,
 			);
 			path = Play;
 			sourceTree = "<group>";
@@ -1412,12 +1383,6 @@
 				2D8D69CB210C9CC40090FEDE /* RequestPostData.m */,
 				2DD9F1DF2107797E00B61D7E /* SettingsData.h */,
 				2DD9F1E02107797E00B61D7E /* SettingsData.m */,
-				2DFCBD3B210977E40059CC19 /* AudioData.h */,
-				2DFCBD3C210977E40059CC19 /* AudioData.m */,
-				2DD4375D20F78E7F0088E4D0 /* AudioWaveformSurfaceView.h */,
-				2DD4375E20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m */,
-				2DD4376020F78E980088E4D0 /* SpectrogramSurfaceView.h */,
-				2DD4376120F78E980088E4D0 /* SpectrogramSurfaceView.m */,
 				2DC5248B20F25D0500FF2CE9 /* AudioRecorder.h */,
 				2DC5248A20F25D0500FF2CE9 /* AudioRecorder.m */,
 				2D36E9A5210F5F1500C4CB33 /* EYAudio.h */,
@@ -1637,7 +1602,6 @@
 			files = (
 				7D55F604207E4546001E3D19 /* NSString+Size.m in Sources */,
 				7D55F619207E4546001E3D19 /* NSDate+CupertinoYankee.m in Sources */,
-				2DAD1C5A20F4F63100E26221 /* DashedLineChartView.m in Sources */,
 				7D55F612207E4546001E3D19 /* NSObject+Blocks.m in Sources */,
 				7D55F5B7207E4546001E3D19 /* UIImage+GIF.m in Sources */,
 				7D55F60F207E4546001E3D19 /* NSObject+AssociatedObject.m in Sources */,
@@ -1671,7 +1635,6 @@
 				7D55F63F207E4908001E3D19 /* BaseModel+HUD.m in Sources */,
 				7D55F611207E4546001E3D19 /* NSObject+EasyCopy.m in Sources */,
 				7D55F643207E4908001E3D19 /* BaseModel.m in Sources */,
-				2DD9F1E4210781A600B61D7E /* PCMPlayer.m in Sources */,
 				7D55F5C0207E4546001E3D19 /* UIScreen+Frame.m in Sources */,
 				7D55F5E8207E4546001E3D19 /* NSDictionary+URL.m in Sources */,
 				7D55F5FE207E4546001E3D19 /* NSString+Trims.m in Sources */,
@@ -1717,12 +1680,10 @@
 				2D69774B211222A10070594B /* PPFileOperate.m in Sources */,
 				2DD567A720E28AAE0001666E /* RecordsViewController.m in Sources */,
 				7D55F60E207E4546001E3D19 /* NSSet+Block.m in Sources */,
-				2DD4376220F78E980088E4D0 /* SpectrogramSurfaceView.m in Sources */,
 				2D8D69CD210C9CC50090FEDE /* RequestPostData.m in Sources */,
 				2D5283A7211CAB340014823A /* SpectrogramSurfaceController.swift in Sources */,
 				7D55F5FF207E4546001E3D19 /* NSString+UrlEncode.m in Sources */,
 				7D55F5B9207E4546001E3D19 /* UIImage+Orientation.m in Sources */,
-				2DFCBD3D210977E40059CC19 /* AudioData.m in Sources */,
 				7D55F614207E4546001E3D19 /* NSObject+Reflection.m in Sources */,
 				2D36E9A7210F5F1500C4CB33 /* EYAudio.m in Sources */,
 				7D55F5D5207E4546001E3D19 /* UIView+Frame.m in Sources */,
@@ -1737,7 +1698,6 @@
 				7D55F5FC207E4546001E3D19 /* NSString+Score.m in Sources */,
 				7D55F617207E4546001E3D19 /* NSDate+Utilities.m in Sources */,
 				7D55F5DA207E4546001E3D19 /* UIView+Recursion.m in Sources */,
-				2DD4375F20F78E7F0088E4D0 /* AudioWaveformSurfaceView.m in Sources */,
 				2D1A67062109A8E000F24485 /* PCMDataSource.m in Sources */,
 				7D55F5DE207E4546001E3D19 /* UINavigationItem+Margin.m in Sources */,
 				2DD9F1E12107797E00B61D7E /* SettingsData.m in Sources */,
@@ -1746,7 +1706,6 @@
 				7D55F613207E4546001E3D19 /* NSObject+GCD.m in Sources */,
 				2DF7278E2110C9980051BEF3 /* TabbarControl.m in Sources */,
 				2D781A39210DF51200E5A5D6 /* DeviceObject.m in Sources */,
-				2DD9F1DD21076A2A00B61D7E /* BXAudioPlayer.m in Sources */,
 				7D55F5C8207E4546001E3D19 /* UIButton+MiddleAligning.m in Sources */,
 				7D55F5D4207E4546001E3D19 /* UIView+ViewController.m in Sources */,
 				7D55F5BD207E4546001E3D19 /* UIImage+Alpha.m in Sources */,
@@ -1757,7 +1716,6 @@
 				7D55F5CD207E4546001E3D19 /* UIColor+Gradient.m in Sources */,
 				7D55F618207E4546001E3D19 /* NSDate+Reporting.m in Sources */,
 				2DA5A18820ED0E3900D8D377 /* DeviceTableViewCell.m in Sources */,
-				2D12C31D210E21FC00D14202 /* OutAudioPlayer.m in Sources */,
 				7D55F5E7207E4546001E3D19 /* UITextField+Select.m in Sources */,
 				7D55F5CE207E4546001E3D19 /* UIColor+HEX.m in Sources */,
 				7D55F5CC207E4546001E3D19 /* UIButton+ImageTitleStyle.m in Sources */,
@@ -1955,7 +1913,7 @@
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/AyaneBox/AyaneBox-Prefix.pch";
 				INFOPLIST_FILE = AyaneBox/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1991,7 +1949,7 @@
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/AyaneBox/AyaneBox-Prefix.pch";
 				INFOPLIST_FILE = AyaneBox/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

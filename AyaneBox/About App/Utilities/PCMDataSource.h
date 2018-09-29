@@ -15,11 +15,13 @@
 // 音频片段的帧数
 #define FramePerPacket 1024
 // 音频片段的设备输入字节数
-#define BytePerDeviceInput (FramePerPacket * 4)
+#define BytePerDeviceInput (FramePerPacket * 8)
 // 音频片段的手机输入字节数
-#define BytePerPhoneInput (FramePerPacket * 2)
+#define BytePerPhoneInput (FramePerPacket * 4)
 
 @interface PCMDataSource : NSObject
+@property (nonatomic, strong) NSString *ipAddress; // 绑定的地址
+
 @property (nonatomic, assign) int channelInput01; // 设备输入01
 @property (nonatomic, assign) int channelInput02; // 设备输入02
 @property (nonatomic, assign) int channelInput03; // 开启麦克风
@@ -28,38 +30,25 @@
 @property (nonatomic, assign) int channelOutput02; // 设备输出02
 @property (nonatomic, assign) int channelOutput03; // 开启扬声器
 
-@property (nonatomic, strong) NSString *ipAddress;
-
+// 录音状态
 @property (nonatomic) BOOL isRecord; // 当前是否正在录音
 @property (nonatomic) BOOL isPlay;  // 当前是否正在播放
-// 创建一个udp发送对象
-@property (nonatomic, strong) ABSocketServer *udpSocketServer;
+
+@property (nonatomic, strong) ABSocketServer *udpSocketServer; // 创建一个udp发送对象
 // 临时数据存储Data对象
 @property (nonatomic, strong) NSMutableData *deviceInput; //  (FramePerPacket = 1024帧) * 左声道(2个字节) * 右声道(2个字节)
 @property (nonatomic, strong) NSMutableData *phoneInput; // (FramePerPacket = 1024帧) * 单声道(2个字节)
 // 临时输出数据存储Data对象
-@property (nonatomic, strong) NSMutableData *deviceOutput01; // 输出对象1
-@property (nonatomic, strong) NSMutableData *deviceOutput02; // 输出对象2
-@property (nonatomic, strong) NSMutableData *phoneOutput03;  // 输出对象3
 @property (nonatomic, strong) NSString *defaultFileName; // 默认文件名
 
 // 输出设备对象保存
+@property (nonatomic) NSUInteger curLocation;
 @property (nonatomic, strong) NSTimer *outputTimer;
 @property (nonatomic, strong) NSMutableData *outputDevice01; // 设备输出1
 @property (nonatomic, strong) NSMutableData *outputDevice02; // 设备输出2
 @property (nonatomic, strong) NSMutableData *outputPhone03;  // 输出对象3
 //// 音频片段数据
 //@property (nonatomic, strong) AudioData *audioData; // 每个包 (FramePerPacket = 1024帧)
-
-// 输出数据存储对象
-@property (nonatomic, strong) NSMutableData *deviceOutFile01;
-@property (nonatomic, strong) NSMutableData *deviceOutFile02;
-@property (nonatomic, strong) NSMutableData *phoneOutFile03;
-
-@property (nonatomic, strong) NSMutableData *phoneOutFile04;
-//
-@property (nonatomic, strong) NSMutableData *deviceOutput; // (FramePerPacket = 1024帧) * 左声道(2个字节) * 右声道(2个字节)
-@property (nonatomic, strong) NSMutableData *phoneOutput;  // (FramePerPacket = 1024帧) * 单声道(2个字节)
 
 + (PCMDataSource *)sharedData;
 
@@ -75,6 +64,8 @@
 - (void)stopRecord;
 // 保存数据
 - (void)saveWavFile:(NSString *)fileName;
+// 取消保存数据
+- (void)cancleSaveWavFile;
 // 输出数据
 - (void)writeNetworkDevice:(NSData *)outputData;
 // 输出设备

@@ -11,7 +11,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <Accelerate/Accelerate.h>
 
-#define MIN_SIZE_PER_FRAME (4096*2)   //每个包的大小,室内机要求为960,具体看下面的配置信息
+#define MIN_SIZE_PER_FRAME (1024*2)   //每个包的大小,室内机要求为960,具体看下面的配置信息
 #define QUEUE_BUFFER_SIZE  3      //缓冲器个数
 #define SAMPLE_RATE        44100  //采样频率
 @interface EYAudio(){
@@ -74,29 +74,26 @@
         
         fftSetup = vDSP_create_fftsetup(length, kFFTRadix2);
         //设置音频参数 具体的信息需要问后台
-        _audioDescription.mSampleRate = SAMPLE_RATE;
+        _audioDescription.mSampleRate = 44100;
         _audioDescription.mFormatID = kAudioFormatLinearPCM;
-        _audioDescription.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-        //1单声道
+        _audioDescription.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+        _audioDescription.mFramesPerPacket  = 1;
         _audioDescription.mChannelsPerFrame = 1;
-        //每一个packet一侦数据,每个数据包下的桢数，即每个数据包里面有多少桢
-        _audioDescription.mFramesPerPacket = 1;
-        //每个采样点16bit量化 语音每采样点占用位数
-        _audioDescription.mBitsPerChannel = 16;
-        _audioDescription.mBytesPerFrame = (_audioDescription.mBitsPerChannel / 8) * _audioDescription.mChannelsPerFrame;
-        //每个数据包的bytes总数，每桢的bytes数*每个数据包的桢数
-        _audioDescription.mBytesPerPacket = _audioDescription.mBytesPerFrame * _audioDescription.mFramesPerPacket;
+        _audioDescription.mBytesPerFrame    = sizeof(short);
+        _audioDescription.mBytesPerPacket   = sizeof(short);
+        _audioDescription.mBitsPerChannel   = sizeof(short) * 8;
         
         // 使用player的内部线程播放 新建输出
         AudioQueueNewOutput(&_audioDescription, AudioPlayerAQInputCallback, (__bridge void * _Nullable)(self), nil, 0, 0, &audioQueue);
-        
+
         // 设置音量
         AudioQueueSetParameter(audioQueue, kAudioQueueParam_Volume, 1.0);
         
         // 初始化需要的缓冲区
         for (int i = 0; i < QUEUE_BUFFER_SIZE; i++) {
             audioQueueBufferUsed[i] = false;
-            osState = AudioQueueAllocateBuffer(audioQueue, MIN_SIZE_PER_FRAME, &audioQueueBuffers[i]);
+            AudioQueueAllocateBuffer(audioQueue, 1024*_audioDescription.mBytesPerFrame, &audioQueueBuffers[i]);
+//            AudioQueueEnqueueBuffer(audioQueue, audioQueueBufferUsed[i], 0, nil);
         }
         
         osState = AudioQueueStart(audioQueue, NULL);
@@ -116,29 +113,27 @@
         
         fftSetup = vDSP_create_fftsetup(length, kFFTRadix2);
         //设置音频参数 具体的信息需要问后台
-        _audioDescription.mSampleRate = SAMPLE_RATE;
+        _audioDescription.mSampleRate = 44100;
         _audioDescription.mFormatID = kAudioFormatLinearPCM;
-        _audioDescription.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-        //1单声道
+        _audioDescription.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+        _audioDescription.mFramesPerPacket  = 1;
         _audioDescription.mChannelsPerFrame = 1;
-        //每一个packet一侦数据,每个数据包下的桢数，即每个数据包里面有多少桢
-        _audioDescription.mFramesPerPacket = 1;
-        //每个采样点16bit量化 语音每采样点占用位数
-        _audioDescription.mBitsPerChannel = 16;
-        _audioDescription.mBytesPerFrame = (_audioDescription.mBitsPerChannel / 8) * _audioDescription.mChannelsPerFrame;
-        //每个数据包的bytes总数，每桢的bytes数*每个数据包的桢数
-        _audioDescription.mBytesPerPacket = _audioDescription.mBytesPerFrame * _audioDescription.mFramesPerPacket;
+        _audioDescription.mBytesPerFrame    = sizeof(short);
+        _audioDescription.mBytesPerPacket   = sizeof(short);
+        _audioDescription.mBitsPerChannel   = sizeof(short) * 8;
         
         // 使用player的内部线程播放 新建输出
         AudioQueueNewOutput(&_audioDescription, AudioPlayerAQInputCallback, (__bridge void * _Nullable)(self), nil, 0, 0, &audioQueue);
         
+//        CFRunLoopGetCurrent(), kCFRunLoopCommonModes
         // 设置音量
         AudioQueueSetParameter(audioQueue, kAudioQueueParam_Volume, volume);
         
         // 初始化需要的缓冲区
         for (int i = 0; i < QUEUE_BUFFER_SIZE; i++) {
             audioQueueBufferUsed[i] = false;
-            osState = AudioQueueAllocateBuffer(audioQueue, MIN_SIZE_PER_FRAME, &audioQueueBuffers[i]);
+            osState = AudioQueueAllocateBuffer(audioQueue, 1024*_audioDescription.mBytesPerFrame, &audioQueueBuffers[i]);
+//            AudioQueueEnqueueBuffer(audioQueue, audioQueueBufferUsed[i], 0, nil);
         }
         
         osState = AudioQueueStart(audioQueue, NULL);
@@ -195,7 +190,7 @@ static void AudioPlayerAQInputCallback(void* inUserData,AudioQueueRef audioQueue
     short* samples = (short*)audioQueueBufferRef->mAudioData;
 
     if ([audio sampleToEngineDelegate] != nil){
-//        [audio sampleToEngineDelegate](samples);
+        [audio sampleToEngineDelegate](samples);
     }
     float* fftArray = [audio calculateFFT:samples size:2048];
     
@@ -208,10 +203,11 @@ static void AudioPlayerAQInputCallback(void* inUserData,AudioQueueRef audioQueue
 - (void)resetBufferState:(AudioQueueRef)audioQueueRef and:(AudioQueueBufferRef)audioQueueBufferRef {
     // 防止空数据让audioqueue后续都不播放,为了安全防护一下
     if (tempData.length == 0) {
-        audioQueueBufferRef->mAudioDataByteSize = 1;
-        Byte* byte = audioQueueBufferRef->mAudioData;
-        byte = 0;
-        AudioQueueEnqueueBuffer(audioQueueRef, audioQueueBufferRef, 0, NULL);
+//        audioQueueBufferRef->mAudioDataByteSize = 1;
+//        Byte* byte = audioQueueBufferRef->mAudioData;
+//        byte = 0;
+        AudioQueueEnqueueBuffer(audioQueue, audioQueueBufferRef, 0, NULL);
+//        AudioQueueEnqueueBuffer(audioQueueRef, audioQueueBufferRef, 0, NULL);
     }
     
     for (int i = 0; i < QUEUE_BUFFER_SIZE; i++) {

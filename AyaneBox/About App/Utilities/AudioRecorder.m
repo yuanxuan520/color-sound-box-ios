@@ -41,16 +41,16 @@ void AudioInputCallback(void * inUserData,
     AudioQueueEnqueueBuffer(recordState->queue, inBuffer, 0, NULL);
     
     rec.runningTimeInterval = [NSDate date];
-    short* samples = (short*)inBuffer->mAudioData;
-    if (inNumberPacketDescriptions != 1024) {
+//    short* samples = (short*)inBuffer->mAudioData;
+    if (inNumberPacketDescriptions != 2048) {
         return;
     }
-
     NSData *bufferData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+//    NSData *bufferData = [[NSData alloc] initWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
     if ([rec samplesToEngineDataDelegate] != nil){
         [rec samplesToEngineDataDelegate](bufferData);
     }
-    [rec formSamplesToEngine:inNumberPacketDescriptions samples:samples];
+//    [rec formSamplesToEngine:inNumberPacketDescriptions samples:samples];
 
 }
 
@@ -87,13 +87,12 @@ void AudioInputCallback(void * inUserData,
     status = AudioQueueNewInput(&recordState.dataFormat,
                                 AudioInputCallback,
                                 &recordState,
-                                CFRunLoopGetCurrent(),
-                                kCFRunLoopCommonModes,
+                                nil, 0,
                                 0,
                                 &recordState.queue);
     if (status == 0) {
         for (int i = 0; i < NUM_BUFFERS; i++) {
-            AudioQueueAllocateBuffer(recordState.queue, 1024*recordState.dataFormat.mBytesPerFrame, &recordState.buffers[i]);
+            AudioQueueAllocateBuffer(recordState.queue, 2048*recordState.dataFormat.mBytesPerFrame, &recordState.buffers[i]);
             AudioQueueEnqueueBuffer(recordState.queue, recordState.buffers[i], 0, nil);
         }
         

@@ -10,6 +10,8 @@
 
 @interface SetPopTextView()<UITextFieldDelegate>
 @property (nonatomic, copy) SetText setText;
+@property (nonatomic, copy) ClosePop closePop;
+
 //标题显示:
 @property (nonatomic, strong) UILabel *titleLabel;
 
@@ -30,12 +32,13 @@
 @implementation SetPopTextView
 @synthesize titleLabel,saveBtn,fileTextView,closeBtn;
 @synthesize backView,showView;
-- (void)show:(UIView *)view setTitle:(NSString *)title fileName:(NSString *)fileName setSetText:(SetText )setText
+- (void)show:(UIView *)view setTitle:(NSString *)title fileName:(NSString *)fileName setSetText:(SetText )setText close:(ClosePop)closePop
 {
     self.frame = view.frame;
     self.alpha = 0.0f;
     self.title = title;
     self.setText = setText;
+    self.closePop = closePop;
     self.fileName = fileName;
     [self createView];
     [view addSubview:self];
@@ -153,7 +156,7 @@
     closeBtn.clipsToBounds = YES;
     closeBtn.layer.cornerRadius = 3;
     [closeBtn setBackgroundImage:[self imageWithColor:UIColorHex(0xffffff) size:closeBtn.bounds.size] forState:UIControlStateNormal];
-    [closeBtn addTarget:self action:@selector(closeView) forControlEvents:UIControlEventTouchUpInside];
+    [closeBtn addTarget:self action:@selector(clickCloseView) forControlEvents:UIControlEventTouchUpInside];
     [self.showView addSubview:closeBtn];
 }
 - (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size {
@@ -166,6 +169,15 @@
     UIGraphicsEndImageContext();
     return image;
 }
+
+- (void)clickCloseView
+{
+    if (self.closePop) {
+        self.closePop();
+    }
+    [self closeView];
+}
+
 - (void)closeView
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];

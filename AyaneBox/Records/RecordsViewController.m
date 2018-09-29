@@ -7,14 +7,12 @@
 //
 
 #import "RecordsViewController.h"
-#import <SciChart/SciChart.h>
 #import "AyaneBox-Swift.h"
 #import <Accelerate/Accelerate.h>
 #import "LEEAlert.h"
-//#import "AudioWaveformSurfaceView.h"
-//#import "SpectrogramSurfaceView.h"
 #import "SetPopTextView.h"
 #import "EYAudio.h"
+#define audioPlayLength 4096
 
 @interface RecordsViewController ()
 
@@ -25,20 +23,23 @@
 @property (nonatomic, strong) EYAudio *playAudioDataManager;
 // 录制Pcm控件对象
 @property (nonatomic, strong) AudioRecorder *audioRecorderDataManager;
+// 播放录音文件Timer
+@property (nonatomic, strong) NSTimer *playTimer;
+//@property (nonatomic, strong) dispatch_source_t playTimer;
+
+@property (nonatomic) NSUInteger curLocation;
+
 
 // 文件名部分
 @property (nonatomic, strong) NSString *filename;
 @property (nonatomic, assign) NSUInteger inputChannel;
 
+// 图形绘图部分
 @property (nonatomic, strong) IBOutlet UISegmentedControl *displaySegmentControl;
 @property (nonatomic, assign) NSUInteger changeGraph;
 
-// 绘图部分
-//@property (nonatomic, strong) AudioWaveformSurfaceView *audioWaveformSurfaceView;
-//@property (nonatomic, strong) SpectrogramSurfaceView *spectrogramSurfaceView;
-@property (nonatomic, strong) IBOutlet SCIChartSurface *audioWaveView;
-@property (nonatomic, strong) IBOutlet SCIChartSurface *spectogramView;
-@property (nonatomic, strong) CADisplayLink *displaylink;
+@property (nonatomic, weak) IBOutlet SCIChartSurface *audioWaveView;
+@property (nonatomic, weak) IBOutlet SCIChartSurface *spectogramView;
 @property (nonatomic, strong) AudioWaveformSurfaceController *audioWaveformSurfaceController;
 @property (nonatomic, strong) SpectogramSurfaceController *spectogramSurfaceController;
 
@@ -49,9 +50,6 @@
 
 @implementation RecordsViewController
 @synthesize audioRecorderDataManager;
-//@synthesize audioWaveformSurfaceView;
-//,spectrogramSurfaceView;
-//@synthesize audioWaveformSurfaceController,spectrogramSurfaceController;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -64,76 +62,28 @@
 - (void)viewDidLoad {
     self.title = @"录音";
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getInput01Data:) name:@"INPUT01DATA" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getInput02Data:) name:@"INPUT02DATA" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getInput03Data:) name:@"INPUT03DATA" object:nil];
     
     // 默认是输出3端口
     self.inputChannel = 3;
     [self.inputSegmentControl setSelectedSegmentIndex:self.inputChannel-1];
     
-    //    默认是2d图形
-    self.changeGraph = 1;
+    //    默认是3d图形
+    self.changeGraph = 0;
     [self.displaySegmentControl  setSelectedSegmentIndex:self.changeGraph];
 
     // 初始化2D图 swift
     self.audioWaveformSurfaceController = [[AudioWaveformSurfaceController alloc] init:self.audioWaveView];
-    //    self.audioWaveView
-    //    self.sampleToEngineDelegate = self.audioWaveformSurfaceController.updateDataSeries;
-    
     
     // 初始化3D图
-    
     self.spectogramSurfaceController = [[SpectogramSurfaceController alloc] init:self.spectogramView];
-    //    self.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
-    //
     
-    self.audioWaveView.hidden = YES;
-    self.spectogramView.hidden = NO;
-}
-- (void)createView
-{
-//    self.audioRecorderDataManager = [[AudioRecorder alloc] init];
-    
-    
-    //    self.audioWaveformSurfaceView = [[AudioWaveformSurfaceView alloc] initWithFrame:CGRectMake(0, APPNavStateBar+80, APPMainViewWidth, APPMainViewHeight-APPNavStateBar-50-80)];
-    
-    
-    //    [self.view addSubview:self.audioWaveformSurfaceView];
-    //    [self.view insertSubview:self.audioWaveformSurfaceView atIndex:1];
-    //    NSLog(@"%@",[self.view subviews]);
-    //    [self.view sendSubviewToBack:self.audioWaveformSurfaceView];
-    //    [self.view addSubview:spectrogramSurfaceView];
-    //    self.audioWaveformSurfaceController = [[AudioWaveformSurfaceController alloc] init:self.audioWaveformSurface];
-    
-    //    self.spectrogramSurfaceController = [[SpectogramSurfaceController alloc] init:self.spectrogramSurface];
-    
-    
-    //    self.audioRecorderDataManager.sampleToEngineDelegate = self.audioWaveformSurfaceController.updateDataSeries;
-    //    self.audioRecorderDataManager.spectrogramSamplesDelegate = self.spectrogramSurfaceController.updateDataSeries;
-    //    [self.audioRecorderDataManager startRecording];
-    
-    //    self.displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateData:)];
-    //    [self.displaylink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    //    DashedLineChartView *dashedLineChartView = [[DashedLineChartView alloc] initWithFrame:CGRectMake(0, 50, APPMainViewWidth, APPMainViewHeight-APPNavStateBar-50)];
-    //    [self.view addSubview:dashedLineChartView];
-    //    self.audioWaveformSurface.frame = CGRectMake(0, 0, APPMainViewWidth, APPMainViewHeight);
-    //    [self.view addSubview:self.audioWaveformSurface];
-    
+    self.audioWaveView.hidden = NO;
+    self.spectogramView.hidden = YES;
 }
 
 #pragma mark - 切换2d3d图形
 - (IBAction)change2D3DDisplay:(UISegmentedControl *)sender
 {
-    //    if ([PCMDataSource sharedData].isPlay) { // 如果当前正在播放时
-    //        [LEEAlert alert].config
-    //        .LeeTitle(@"注意")
-    //        .LeeContent(@"当前正在播放声音无法切换图形显示.")
-    //        .LeeAction(@"确定", ^{
-    //        })
-    //        .LeeShow(); // 设置完成后 别忘记调用Show来显示
-    //        [sender setSelectedSegmentIndex:self.changeGraph];
-    //    }else {
     switch (sender.selectedSegmentIndex) {
         case 0:
         {
@@ -152,52 +102,86 @@
             break;
     }
     self.changeGraph = sender.selectedSegmentIndex;
-    //    }
-    
-    
 }
 
-#pragma mark - 输入数据
-- (void)getInput01Data:(NSNotification *)object
+#pragma mark - 播放音频
+- (void)playAudioTimer{
+    switch (self.inputChannel) {
+        case 1:
+        {
+            NSInteger wavLength = [PCMDataSource sharedData].outputDevice01.length - self.curLocation;
+            if (wavLength >= audioPlayLength) {
+                NSData *data = [[PCMDataSource sharedData].outputDevice01 subdataWithRange:NSMakeRange(self.curLocation, audioPlayLength)];
+                //        处理数据
+                [self processAudioData:data];
+                self.curLocation = self.curLocation + audioPlayLength;
+            }else {
+                NSData *data = [NSMutableData dataWithLength:audioPlayLength];
+                [self processAudioData:data];
+            }
+        }
+            break;
+        case 2:
+        {
+            NSInteger wavLength = [PCMDataSource sharedData].outputDevice02.length - self.curLocation;
+            if (wavLength >= audioPlayLength) {
+                NSData *data = [[PCMDataSource sharedData].outputDevice01 subdataWithRange:NSMakeRange(self.curLocation, audioPlayLength)];
+                //        处理数据
+                [self processAudioData:data];
+                self.curLocation = self.curLocation + audioPlayLength;
+            }else {
+                NSData *data = [NSMutableData dataWithLength:audioPlayLength];
+                [self processAudioData:data];
+            }
+        }
+            break;
+        case 3:
+        {
+            NSInteger wavLength = [PCMDataSource sharedData].outputPhone03.length - self.curLocation;
+            if (wavLength >= audioPlayLength) {
+                NSData *data = [[PCMDataSource sharedData].outputPhone03 subdataWithRange:NSMakeRange(self.curLocation, audioPlayLength)];
+                //        处理数据
+                [self processAudioData:data];
+                self.curLocation = self.curLocation + audioPlayLength;
+            }else {
+                NSData *data = [NSMutableData dataWithLength:audioPlayLength];
+                [self processAudioData:data];
+            }
+        }
+            break;
+        default:
+            break;
+    }
+    
+}
+- (void)processAudioData:(NSData *)data
 {
     if (self.inputChannel == 1) {
         if ([PCMDataSource sharedData].channelInput01 > 0) {
-            if ([PCMDataSource sharedData].channelOutput03 == 1) {
-                NSData *data = [object object];
-                [self.playAudioDataManager playWithData:data];
-            }
+            [self playWithDataAnd2d3dDisplay:data];
         }
     }
     
-}
-
-- (void)getInput02Data:(NSNotification *)object
-{
     if (self.inputChannel == 2) {
         if ([PCMDataSource sharedData].channelInput02 > 0) {
-            if ([PCMDataSource sharedData].channelOutput03 == 2) {
-                NSData *data = [object object];
-                [self.playAudioDataManager playWithData:data];
-            }
+            [self playWithDataAnd2d3dDisplay:data];
         }
     }
     
-
-}
-
-- (void)getInput03Data:(NSNotification *)object
-{
     if (self.inputChannel == 3) {
         if ([PCMDataSource sharedData].channelInput03 > 0) {
-            if ([PCMDataSource sharedData].channelOutput03 == 3) {
-                NSData *data = [object object];
-                [self.playAudioDataManager playWithData:data];
-            }
+            [self playWithDataAnd2d3dDisplay:data];
         }
     }
-//    NSLog(@"%@",data);
-//    [self.audioWaveformSurfaceView updateDataSeries:data];
 }
+
+- (void)playWithDataAnd2d3dDisplay:(NSData *)data
+{
+    [self.playAudioDataManager playWithData:data];
+    [self.audioWaveformSurfaceController updateDataXY];
+    [self.spectogramSurfaceController updateDataXY];
+}
+
 #pragma mark - 切换输出信道
 - (IBAction)changeintputChannel:(UISegmentedControl *)sender
 {
@@ -216,37 +200,65 @@
 #pragma mark 点击录制按钮
 - (IBAction)recordAudio:(UIButton *)btn
 {
+    if (!([PCMDataSource sharedData].channelInput01 > 0 || [PCMDataSource sharedData].channelInput02 > 0 || [PCMDataSource sharedData].channelInput03 > 0)) { // 如果当前正在播放时
+        [LEEAlert alert].config
+        .LeeTitle(@"注意")
+        .LeeContent(@"需要在设置中开启输入信道才可录音.")
+        .LeeAction(@"确定", ^{
+        })
+        .LeeShow(); // 设置完成后 别忘记调用Show来显示
+        return;
+    }
+    
     // 录音
     if (![PCMDataSource sharedData].isRecord) {
+        [self.audioWaveformSurfaceController clearChartSurface];
+        [self.spectogramSurfaceController clearChartSurface];
+//      开始录制
+        self.curLocation = 0;
         self.recordBtn.selected = YES;
-        self.playAudioDataManager = [[EYAudio alloc] init];
-        self.audioRecorderDataManager = [[AudioRecorder alloc] init];
+//      初始化播放和录音 以及相关数据
+//        self.playAudioDataManager = [[EYAudio alloc] init];
         [[PCMDataSource sharedData] startRecord];
+        [PCMDataSource sharedData].isRecord = YES;
+//       判断是否输出声音
+        if ([PCMDataSource sharedData].channelOutput01 == 3) {
+            self.playAudioDataManager = [[EYAudio alloc] init];
+        }else if ([PCMDataSource sharedData].channelOutput02 == 3) {
+            self.playAudioDataManager = [[EYAudio alloc] init];
+        }else if ([PCMDataSource sharedData].channelOutput03 == 3){
+            self.playAudioDataManager = [[EYAudio alloc] init];
+        }else {
+            self.playAudioDataManager = [[EYAudio alloc] initWithVolume:0];
+        }
         
+//      录音管理
+        self.audioRecorderDataManager = [[AudioRecorder alloc] init];
+        
+        self.playAudioDataManager.sampleToEngineDelegate = self.audioWaveformSurfaceController.updateDataSeries;
+        self.playAudioDataManager.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
         if ([PCMDataSource sharedData].channelInput03 > 0) { // 输入3 开启
             self.audioRecorderDataManager.samplesToEngineDataDelegate = ^(NSData *data){
                 [[PCMDataSource sharedData] appendByPhoneInput:data];
             };
-            if (self.inputChannel == 3) {
-//                self.audioRecorderDataManager.sampleToEngineDelegate = self.audioWaveformSurfaceController.updateDataSeries;
-                self.audioRecorderDataManager.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
-            }
+            [self.audioRecorderDataManager startRecording];
         }
-        if ([PCMDataSource sharedData].channelInput02 > 0 || [PCMDataSource sharedData].channelInput01 > 0 ) {
-            self.playAudioDataManager.spectrogramSamplesDelegate = self.spectogramSurfaceController.updateDataSeries;
-        }
-        [PCMDataSource sharedData].isRecord = YES;
-        [self.audioRecorderDataManager startRecording];
         
-        self.displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateData:)];
-        [self.displaylink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        
+//        dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(0, 0));
+//        dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, (44100/2048/1000) * NSEC_PER_SEC, 0 * NSEC_PER_SEC);
+//        dispatch_source_set_event_handler(timer, ^{
+//           [self playAudioTimer];
+//        });
+//        dispatch_resume(timer);
+//        self.playTimer = timer; //一定要用强指针引着
+        self.playTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/2048/1000) target:self selector:@selector(playAudioTimer) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSRunLoopCommonModes];
+
     }else {
 // 关闭录音
         [PCMDataSource sharedData].isRecord = NO;
         self.recordBtn.selected = NO;
         [self.audioRecorderDataManager stopRecording];
-        self.playAudioDataManager.spectrogramSamplesDelegate = nil;
         [self.playAudioDataManager stop];
         self.playAudioDataManager = nil;
         self.audioRecorderDataManager = nil;
@@ -255,13 +267,16 @@
         SetPopTextView *setPopTextView = [[SetPopTextView alloc] init];
         [setPopTextView show:self.view.window setTitle:@"存储语音文件" fileName:[PCMDataSource sharedData].defaultFileName setSetText:^(NSString *notice) {
             [[PCMDataSource sharedData] saveWavFile:notice];
+        }  close:^{
+            [[PCMDataSource sharedData] cancleSaveWavFile];
         }];
+        self.curLocation = 0;
+        [self.playTimer invalidate];
+//        dispatch_cancel(self.playTimer);
+        self.playTimer = nil;
 //      弹出保存文件框框
-//        停止播放 和录音
-//        保存文件 对应的文件
-        [self.displaylink invalidate];
-        self.displaylink = nil;
-        
+//      停止播放 和录音
+//      保存文件 对应的文件
     }
 }
 
@@ -270,28 +285,11 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-#pragma mark - 显示更新
-- (void)updateData:(CADisplayLink *)displayLink
-{
-//    if (self.changeGraph == 0) {
-        [self.audioWaveformSurfaceController updateDataWithDisplayLink:displayLink];
-        
-//    }else {
-        [self.spectogramSurfaceController updateDataWithDisplayLink:displayLink];
-        
-//    }
-    //    oc
-    //    [self.audioWaveformSurfaceView updateData:displayLink];
-    //    swift
-}
 
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-//    [self.audioRecorderDataManager stopRecording];
-//    [self.displaylink invalidate];
-//    self.displaylink = nil;
 }
 /*
 #pragma mark - Navigation

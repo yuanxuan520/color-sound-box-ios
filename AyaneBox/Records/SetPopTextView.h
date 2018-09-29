@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 typedef void(^SetText)(NSString *notice);
-
+typedef void(^ClosePop)();
 @interface SetPopTextView : UIScrollView
-- (void)show:(UIView *)view setTitle:(NSString *)title fileName:(NSString *)fileName setSetText:(SetText )setText;
+- (void)show:(UIView *)view setTitle:(NSString *)title fileName:(NSString *)fileName setSetText:(SetText )setText close:(ClosePop)closePop;
 @end

@@ -43,7 +43,6 @@ static BOOL isRecording = NO;
         _recordFormat.mBytesPerPacket = _recordFormat.mBytesPerFrame = (_recordFormat.mBitsPerChannel / 8) * _recordFormat.mChannelsPerFrame;
         _recordFormat.mFramesPerPacket = 1;
         
-        [PCMDataSource sharedData].phoneOutFile04 = [NSMutableData dataWithCapacity:0];
         //初始化音频输入队列
         AudioQueueNewInput(&_recordFormat, inputBufferHandler, (__bridge void *)(self), NULL, NULL, 0, &_audioQueue);
         
@@ -92,7 +91,6 @@ void inputBufferHandler(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRe
             [dataM appendData:zeroData];
         }
     }
-    [[PCMDataSource sharedData].phoneOutFile04 appendData:dataM];
     // NSLog(@"实时录音的数据--%@", dataM);
     //此处是发通知将dataM 传递出去
     [[NSNotificationCenter defaultCenter] postNotificationName:@"EYRecordNotifacation" object:@{@"data" : dataM}];
@@ -103,15 +101,12 @@ void inputBufferHandler(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRe
     if (isRecording)
     {
         isRecording = NO;
-        PPFileOperate *ppfileop = [[PPFileOperate alloc] init];
-        NSString *filePath = [ppfileop getDirName:@"wavFile" fileName:@"ceshiwenjian.pcm"];
-        NSString *newfilePath = [ppfileop getDirName:@"wavFile" fileName:@"ceshiwenjian.wav"];
-        char *cFilePath = (char *)[filePath UTF8String];
-        char *cNewfilePath = (char *)[newfilePath UTF8String];
-        NSLog(@"%@",[PCMDataSource sharedData].phoneOutFile04);
-        NSLog(@"%@",newfilePath);
-        [[PCMDataSource sharedData].phoneOutFile04 writeToFile:filePath atomically:NO];
-        convertPcm2Wav(cFilePath,cNewfilePath,1,44100);
+//        PPFileOperate *ppfileop = [[PPFileOperate alloc] init];
+//        NSString *filePath = [ppfileop getDirName:@"wavFile" fileName:@"ceshiwenjian.pcm"];
+//        NSString *newfilePath = [ppfileop getDirName:@"wavFile" fileName:@"ceshiwenjian.wav"];
+//        char *cFilePath = (char *)[filePath UTF8String];
+//        char *cNewfilePath = (char *)[newfilePath UTF8String];
+//        convertPcm2Wav(cFilePath,cNewfilePath,1,44100);
         //停止录音队列和移除缓冲区,以及关闭session，这里无需考虑成功与否
         AudioQueueStop(_audioQueue, true);
         //移除缓冲区,true代表立即结束录制，false代表将缓冲区处理完再结束

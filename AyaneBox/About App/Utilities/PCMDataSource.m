@@ -286,7 +286,7 @@
     
     NSMutableData *deviceOutput = [NSMutableData dataWithLength:size*2];
     
-    for (int i = 0; i<512; i++) {
+    for (int i = 0; i<(size/2); i++) {
         // 输出1相关计算
         // --------------------------------------------------------
         // 输出1 关闭时

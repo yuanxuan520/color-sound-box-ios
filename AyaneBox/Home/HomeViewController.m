@@ -50,12 +50,12 @@
 
 //    [self.socketServer startUDP];
     //    重复发送广播
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
-        [self.timer fire];
-    }
+//    if (self.timer) {
+//        [self.timer invalidate];
+//        self.timer = nil;
+//        self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
+//        [self.timer fire];
+//    }
 }
 - (IBAction)showTip:(id)sender
 {
@@ -74,10 +74,10 @@
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
-    }
+//    if (self.timer) {
+//        [self.timer invalidate];
+//        self.timer = nil;
+//    }
 }
 - (void)viewDidLoad {
     [super viewDidLoad];

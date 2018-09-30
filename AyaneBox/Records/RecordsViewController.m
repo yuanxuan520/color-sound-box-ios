@@ -200,15 +200,31 @@
 #pragma mark 点击录制按钮
 - (IBAction)recordAudio:(UIButton *)btn
 {
-    if (!([PCMDataSource sharedData].channelInput01 > 0 || [PCMDataSource sharedData].channelInput02 > 0 || [PCMDataSource sharedData].channelInput03 > 0)) { // 如果当前正在播放时
-        [LEEAlert alert].config
-        .LeeTitle(@"注意")
-        .LeeContent(@"需要在设置中开启输入信道才可录音.")
-        .LeeAction(@"确定", ^{
-        })
-        .LeeShow(); // 设置完成后 别忘记调用Show来显示
-        return;
-    }
+//    if (self.inputChannel == 1 && [PCMDataSource sharedData].channelInput01 == 0) {
+//        [LEEAlert alert].config
+//        .LeeTitle(@"注意")
+//        .LeeContent(@"需要在设置中开启输入信道1才可录音.")
+//        .LeeAction(@"确定", ^{
+//        })
+//        .LeeShow(); // 设置完成后 别忘记调用Show来显示
+//        return;
+//    }else if(self.inputChannel == 2 && [PCMDataSource sharedData].channelInput02 == 0) {
+//        [LEEAlert alert].config
+//        .LeeTitle(@"注意")
+//        .LeeContent(@"需要在设置中开启输入信道2才可录音.")
+//        .LeeAction(@"确定", ^{
+//        })
+//        .LeeShow(); // 设置完成后 别忘记调用Show来显示
+//        return;
+//    }else if(self.inputChannel == 3 && [PCMDataSource sharedData].channelInput03 == 0){
+//        [LEEAlert alert].config
+//        .LeeTitle(@"注意")
+//        .LeeContent(@"需要在设置中开启输入信道3才可录音.")
+//        .LeeAction(@"确定", ^{
+//        })
+//        .LeeShow(); // 设置完成后 别忘记调用Show来显示
+//        return;
+//    }
     
     // 录音
     if (![PCMDataSource sharedData].isRecord) {

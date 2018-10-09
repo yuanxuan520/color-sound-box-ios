@@ -17,7 +17,7 @@
 
 #define audioPlayLength 4096
 
-#define audioDeviceLength 512
+#define audioDeviceLength 4096
 
 @interface PlayControlViewController ()
 @property (nonatomic, strong) IBOutlet UISegmentedControl *outputSegmentControl;
@@ -292,7 +292,7 @@
 //        dispatch_resume(_playTimer);
         
         if (self.outputChannel == 1 || self.outputChannel == 2) {
-            self.playDeviceTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/1024/1000) target:self selector:@selector(playDeviceAudioTimer) userInfo:nil repeats:YES];
+            self.playDeviceTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/2048/1000) target:self selector:@selector(playDeviceAudioTimer) userInfo:nil repeats:YES];
             [[NSRunLoop currentRunLoop] addTimer:self.playDeviceTimer forMode:NSRunLoopCommonModes];
             
         }

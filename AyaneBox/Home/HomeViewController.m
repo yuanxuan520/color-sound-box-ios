@@ -25,7 +25,7 @@
 // 绑定6002 端口
 @property (strong, nonatomic) ABSocketServer *socketServer6002;
 @property (strong, nonatomic) SocketObject *socketObject6002;
-@property (nonatomic, assign) NSInteger curNetState;
+@property (nonatomic, assign) NetworkStatus curNetState;
 @property (nonatomic, strong) NSTimer *timer;
 - (IBAction)showTip:(id)sender;
 @end
@@ -46,16 +46,19 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 //    [self udpBroadcast];
     // Allocate a reachability objec
-    self.ipAddressLabel.text = [IPDetector getIPAddress];
+//    self.ipAddressLabel.text = [IPDetector getIPAddress];
 
 //    [self.socketServer startUDP];
     //    重复发送广播
-//    if (self.timer) {
-//        [self.timer invalidate];
-//        self.timer = nil;
-//        self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
-//        [self.timer fire];
-//    }
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
+        [self.timer fire];
+    }else {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
+        [self.timer fire];
+    }
 }
 - (IBAction)showTip:(id)sender
 {
@@ -74,18 +77,23 @@
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-//    if (self.timer) {
-//        [self.timer invalidate];
-//        self.timer = nil;
-//    }
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSString *ipAddress = [USERDEFAULTS objectForKey:@"IPAddress"];
+    NSString *ipAddress = [kUserDefaults objectForKey:@"IPAddress"];
     if (ipAddress) {
         [PCMDataSource sharedData].ipAddress = ipAddress;
     }
-    
+    NSArray *deviceList = [kUserDefaults objectForKey:@"deviceList"];
+    NSDictionary *deviceDict = [kUserDefaults objectForKey:@"deviceDict"];
+    if (deviceList) {
+        [DeviceData sharedData].deviceList = [DeviceObject mj_objectArrayWithKeyValuesArray:deviceList];
+        [DeviceData sharedData].deviceDict = [NSMutableDictionary dictionaryWithDictionary:deviceDict];
+    }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceList:) name:@"DEVICEUPDATE" object:nil];
 //    self.eyAudio = [[EYAudio alloc] init];
     
@@ -113,68 +121,103 @@
     }
     deviceTableView.separatorColor = UIColorHex(0xf0f0f0);
     // Do any additional setup after loading the view.
-    MJRefreshNormalHeader *reloadheader = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(udpBroadcast)];//@selector(loadMylogList)
+    MJRefreshNormalHeader *reloadheader = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(resetDevice)];//@selector(loadMylogList)
+    [reloadheader setTitle:@"下拉重置设备.." forState:MJRefreshStateIdle];
+    [reloadheader setTitle:@"放开重置设备.." forState:MJRefreshStatePulling];
+    [reloadheader setTitle:@"重置中.." forState:MJRefreshStateRefreshing];
     reloadheader.lastUpdatedTimeLabel.hidden = YES;
     deviceTableView.mj_header = reloadheader;
     [self netStateListen];
+    [self showTip:nil];
+}
+
+- (void)resetDevice
+{
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+    [self.socketServer5001 stopUDP];
+    [self.socketServer6002 stopUDP];
+    [[PCMDataSource sharedData].udpSocketServer stopUDP];
     
+    [self.socketServer5001 startUDP:5001];
+    [self.socketServer6002 startUDP:6002];
+    [[PCMDataSource sharedData].udpSocketServer startUDP];
+//    [PCMDataSource sharedData].ipAddress = nil;
+//    [USERDEFAULTS removeObjectForKey:@"IPAddress"];
+//    [USERDEFAULTS synchronize];
+//    [[DeviceData sharedData].deviceList removeAllObjects];
+//    [[DeviceData sharedData].deviceDict removeAllObjects];
+    [deviceTableView reloadData];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
+        [self.timer fire];
+        [deviceTableView.mj_header endRefreshing];
+    });
 }
 
 #pragma mark 网络监听
 - (void)netStateListen{
-    Reachability* reach = [Reachability reachabilityWithHostname:@"www.google.com"];
+    Reachability* reach = [Reachability reachabilityWithHostname:@"www.baidu.com"];
     
     // Set the blocks
     reach.reachableBlock = ^(Reachability*reach)
     {
+        self.ipAddressLabel.text = [IPDetector getIPAddress];
         // keep in mind this is called on a background thread
         // and if you are updating the UI it needs to happen
         // on the main thread, like this:
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+//        dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"REACHABLE!");
-            if (self.curNetState == 0) {
+//            if (self.curNetState == NotReachable) {
 //                启动监听
+//                [self.socketServer5001 stopUDP];
+//                [self.socketServer6002 stopUDP];
+//                [[PCMDataSource sharedData].udpSocketServer stopUDP];
+//
 //                [self.socketServer5001 startUDP:5001];
 //                [self.socketServer6002 startUDP:6002];
-                
+//                [[PCMDataSource sharedData].udpSocketServer startUDP];
                 //    重复发送广播
 //                self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
 //                [self.timer fire];
                 
-            }
+//            }
             self.curNetState = [reach currentReachabilityStatus];
             
             switch (self.curNetState) {
-                case 1:
+                case ReachableViaWWAN:
                 {
                     self.ipAddressLabel.text = @"4G";
                 }
                     break;
-                case 2:
+                case ReachableViaWiFi:
                 {
                     self.ipAddressLabel.text = [IPDetector getIPAddress];
                 }
                     break;
-                    
                 default:
+                    self.ipAddressLabel.text = [IPDetector getIPAddress];
                     break;
             }
-        });
+//        });
     };
     
     reach.unreachableBlock = ^(Reachability*reach)
     {
-        if (self.curNetState != 0) {
+        if (self.curNetState != NotReachable) {
 //            [self.socketServer5001 stopUDP];
 //            [self.socketServer6002 stopUDP];
             
 //            //    重复发送广播
 //            [self.timer invalidate];
 //            self.timer = nil;
+            self.ipAddressLabel.text = [IPDetector getIPAddress];
         }
         self.curNetState = [reach currentReachabilityStatus];
-        self.ipAddressLabel.text = @"无网络";
+//        self.ipAddressLabel.text = @"无网络";
         NSLog(@"UNREACHABLE!");
     };
     
@@ -208,6 +251,8 @@
     byte[3]=[[ipA objectWithIndex:2] intValue];
     byte[4]=[[ipA objectWithIndex:3] intValue];
     
+    NSString *sendIP = [NSString stringWithFormat:@"%d.%d.%d.255",[[ipA objectWithIndex:0] intValue],[[ipA objectWithIndex:1] intValue],[[ipA objectWithIndex:2] intValue]];
+    
     for (DeviceObject *object in [DeviceData sharedData].deviceList) {
         if (object.isMatching) {
             NSArray * macAddresArray = [self extracted:object];
@@ -221,17 +266,14 @@
         }
     }
     NSData *data = [NSData dataWithBytes:&byte length:sizeof(byte)];
+    NSLog(@"发送UDP:%@",data);
 //    NSString *path=[[NSBundle mainBundle] pathForResource:@"simple-drum-beat" ofType:@"wav"];
 //    NSData *data = [NSData dataWithContentsOfFile:path];
-    SLog(@"发送UDP广播--%@",data);
     if ([PCMDataSource sharedData].ipAddress) {
         [self.socketServer6002 sendUDPData:data toHost:[PCMDataSource sharedData].ipAddress Port:6001 Tag:1];
     }else {
-        [self.socketServer6002 sendUDPData:data toHost:@"255.255.255.255" Port:6001 Tag:1];
+        [self.socketServer6002 sendUDPData:data toHost:sendIP Port:6001 Tag:1];
     }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [deviceTableView.mj_header endRefreshing];
-    });
 //    }
 }
 

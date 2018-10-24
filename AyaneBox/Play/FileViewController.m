@@ -24,6 +24,7 @@
 @property (nonatomic, strong) UIButton *uploadBtn;
 @property (nonatomic, strong) UIButton *cancelBtn;
 
+@property (nonatomic, assign) NSUInteger uploadWavCount;
 
 @end
 
@@ -99,6 +100,7 @@
     self.uploadBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [self.uploadBtn setTitle:@"上传" forState:UIControlStateNormal];
     [self.uploadBtn addTarget:self action:@selector(uploadSelectFile:) forControlEvents:UIControlEventTouchUpInside];
+    self.uploadBtn.enabled = NO;
     [self.uploadBtn setCenter:CGPointMake(APPMainViewWidth/5*3, 50/2)];
     [self.toolsView addSubview:self.uploadBtn];
     
@@ -115,7 +117,50 @@
 #pragma mark 上传
 - (void)uploadSelectFile:(UIButton *)btn
 {
-    
+    if (self.selectedList.count > 0) {
+        [WSProgressHUD showWithStatus:nil maskType:WSProgressHUDMaskTypeBlack];
+        [self requestUploadWav];
+    }
+}
+
+/**
+ 上传wav
+ */
+- (void)requestUploadWav
+{
+    kSelfWeak;
+    NSString *dJson = [NSString stringWithFormat:@"{\"BIZ_FORM_ID\":\"%@\"}",[USERDEFAULTS objectForKey:@"userId"]];
+    RequestPostData *requestData = [[RequestPostData alloc] init];
+    NSString *fileName = [self.selectedList objectAtIndex:self.uploadWavCount];
+    NSString *filePath = [SandboxFile GetPathForDocuments:fileName inDir:@"wavFile"];
+    NSString *uploadMsg = [NSString stringWithFormat:@"正在上传(%ld/%ld)",self.uploadWavCount+1,self.selectedList.count];
+    [requestData uploadFile:filePath requestdata:dJson timeOutSeconds:10 progress:^(CGFloat progress) {
+        [WSProgressHUD showProgress:progress status:uploadMsg maskType:WSProgressHUDMaskTypeBlack];
+    } completionBlock:^(NSDictionary *json) {
+        NSUInteger code = [json[@"result"] integerValue];
+        switch (code) {
+            case 0:
+            {
+                self.uploadWavCount++;
+                if (self.uploadWavCount < self.selectedList.count) {
+                    [weakSelf requestUploadWav];
+                }else {
+                    [WSProgressHUD showShimmeringString:@"音频文件,上传完成" maskType:WSProgressHUDMaskTypeBlack];
+                    [WSProgressHUD autoDismiss:2];
+                }
+            }
+                break;
+            default:
+            {
+                [WSProgressHUD showShimmeringString:json[@"msg"] maskType:WSProgressHUDMaskTypeDefault];
+                [WSProgressHUD autoDismiss:2];
+            }
+                break;
+        }
+    } failedBlock:^(NSError *error) {
+        [WSProgressHUD showShimmeringString:@"网络有问题,请检查网络!" maskType:WSProgressHUDMaskTypeBlack];
+        [WSProgressHUD autoDismiss:1.5];
+    }];
 }
 
 #pragma mark 取消
@@ -328,7 +373,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 60;
+    return 70;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -344,8 +389,10 @@
         }
         if (self.selectedList.count > 0) {
             self.deleteBtn.enabled = YES;
+            self.uploadBtn.enabled = YES;
         }else {
             self.deleteBtn.enabled = NO;
+            self.uploadBtn.enabled = NO;
         }
         [self.tableView reloadData];
     }else{

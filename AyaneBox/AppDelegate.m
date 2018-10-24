@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <SciChart/SciChart.h>
+#import "LoginViewController.h"
 @interface AppDelegate ()
 
 @end
@@ -17,12 +18,23 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    NSString *licencing = @"<LicenseContract><Customer>yuanxuan@topflames.com</Customer><OrderId>Trial</OrderId><LicenseCount>1</LicenseCount><IsTrialLicense>true</IsTrialLicense><SupportExpires>10/20/2018 00:00:00</SupportExpires><ProductCode>SC-IOS-2D-ENTERPRISE-SRC</ProductCode><KeyCode>ff43f7b854a4c1b8a4edfedd4ec957fdfa78752f8d9a82ba84caf0eb5fe0cc2dcdfec9c765538eb4c4dc9c43a0c1d72df68827fbfda9ede80571d2e1640e7dce4d39c115b36a3a335ed26e06a338506018b89469db836e910424dc3acbf1d4fa94e5729bfbfff1c56386fe94f9fff664015db3b4dd488a110545c412f6dab941ead6435858c0af9c7cea7b4bf8b15c15f9ffcd7b67e2ed356b6821a306177a35f352a1a6a1f7a681819f6279</KeyCode></LicenseContract>";
+    NSString *licencing = @"<LicenseContract><Customer>yuanxuan1@foxmail.com</Customer><OrderId>Trial</OrderId><LicenseCount>1</LicenseCount><IsTrialLicense>true</IsTrialLicense><SupportExpires>11/15/2018 00:00:00</SupportExpires><ProductCode>SC-IOS-2D-ENTERPRISE-SRC</ProductCode><KeyCode>f52704afc7c80dd67d8153dd7d428722daa5a12fe344637bc2c0943227bed66652c792cb7d71ea963fcaf1fa6443489bb045a7fa7174c6d3e487ccfabe580702fd6422a8980bb12f16a097b7b00738a47516f3df1905ea07a0fd623196bef4fba2cf909fd5f0372a17ab5710c4b10bfb40f41fdf898664a57362d3f1f2e5d71e4c8b59ae055370b914ba7fb4c2a1141949d2387dc9b697df7979becaad7635d5ec0fb8704d8ccdfe4bfea3</KeyCode></LicenseContract>";
     [SCIChartSurface setRuntimeLicenseKey:licencing];
     [SCIChartSurface setDisplayLinkRunLoopMode:NSRunLoopCommonModes];
     
 
-    
+    BOOL isLogin = [USERDEFAULTS objectForKey:@"isLogin"];
+    if (isLogin) {
+        UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UITabBarController *tabbarVc = [sboard instantiateViewControllerWithIdentifier:@"home"];
+        AppDelegate* appDelagete = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        appDelagete.window.rootViewController = tabbarVc;
+    }else {
+        UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        LoginViewController *loginViewControl = [sboard instantiateViewControllerWithIdentifier:@"login"];
+        AppDelegate* appDelagete = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        appDelagete.window.rootViewController = loginViewControl;
+    }
     return YES;
 }
 

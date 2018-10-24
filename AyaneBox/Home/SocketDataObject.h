@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ABSocketServer.h"
-
+// 未使用
 @interface SocketDataObject : NSObject<ABSocketServerDelegate>
 
 @end

@@ -98,12 +98,12 @@ class AudioWaveformSurfaceController: BaseChartSurfaceController {
             delocBuffer.initialize(to: 0)
             delocBuffer.moveAssign(from: buffer.advanced(by: sizeOfBlock), count: newSizeBuffer)
             newBuffer = delocBuffer
-            buffer.deallocate() //capacity: sizeOfBuffer
+            buffer.deallocate(capacity: sizeOfBuffer) //capacity: sizeOfBuffer
             sizeOfBuffer = newSizeBuffer
         }
         
         xValues.deinitialize(count: sizeOfBlock)
-        xValues.deallocate() //capacity: sizeOfBlock
+        xValues.deallocate(capacity: sizeOfBlock) //capacity: sizeOfBlock
         
 //        lastTimestamp = displayLink.timestamp
         chartSurface.zoomExtentsX()

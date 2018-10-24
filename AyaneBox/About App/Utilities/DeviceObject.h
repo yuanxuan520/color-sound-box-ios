@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MJExtension/MJExtension.h>
 
 @interface DeviceObject : NSObject
 @property (nonatomic, strong) NSString *macAddresName;

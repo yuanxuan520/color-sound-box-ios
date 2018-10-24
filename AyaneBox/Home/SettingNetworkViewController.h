@@ -13,4 +13,5 @@
 @property (nonatomic, strong) IBOutlet UITextField *passwordTextField;
 
 - (IBAction)configureNetWork:(id)sender;
+- (IBAction)tapBack:(id)sender;
 @end

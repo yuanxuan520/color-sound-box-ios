@@ -22,14 +22,38 @@
     deviceObject.ipAddresName = host;
     deviceObject.ipAddres = host;
     deviceObject.isMatching = NO;
-    NSString *deviceDict = [deviceData.deviceDict objectForKey:macAddressName];
-    if (deviceDict == nil) {
-        [deviceData.deviceDict setObject:macAddressName forKey:macAddressName];
+    NSString *deviceHost = [deviceData.deviceDict objectForKey:macAddressName];
+    if (deviceHost == nil) {
+        [deviceData.deviceDict setObject:host forKey:macAddressName];
         [deviceData.deviceList addObject:deviceObject];
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSMutableArray *deviceList = [NSObject mj_keyValuesArrayWithObjectArray:deviceData.deviceList];
+            [kUserDefaults setObject:deviceList forKey:@"deviceList"];
+            [kUserDefaults setObject:deviceData.deviceDict forKey:@"deviceDict"];
+            [kUserDefaults synchronize];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"DEVICEUPDATE" object:nil];
         });
+    }else {
+        if (![host isEqualToString:deviceHost]) {
+            [deviceData.deviceDict removeObjectForKey:macAddressName];
+            for (DeviceObject *object in deviceData.deviceList) {
+                if ([object.macAddresName isEqualToString:macAddressName]) {
+                    [deviceData.deviceList removeObject:object];
+                    break;
+                }
+            }
+            [deviceData.deviceDict setObject:host forKey:macAddressName];
+            [deviceData.deviceList addObject:deviceObject];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSMutableArray *deviceList = [NSObject mj_keyValuesArrayWithObjectArray:deviceData.deviceList];
+                [kUserDefaults setObject:deviceList forKey:@"deviceList"];
+                [kUserDefaults setObject:deviceData.deviceDict forKey:@"deviceDict"];
+                [kUserDefaults synchronize];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"DEVICEUPDATE" object:nil];
+            });
+        }
     }
 }
+
 
 @end

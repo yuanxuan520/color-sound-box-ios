@@ -12,9 +12,13 @@
 #import "LEEAlert.h"
 #import "SetPopTextView.h"
 #import "EYAudio.h"
+#import <CoreLocation/CoreLocation.h>
+
 #define audioPlayLength 4096
 
-@interface RecordsViewController ()
+@interface RecordsViewController ()<CLLocationManagerDelegate>
+
+@property (nonatomic,strong ) CLLocationManager *locationManager;//定位服务
 
 @property (nonatomic, strong) IBOutlet UIButton *recordBtn;
 @property (nonatomic, strong) IBOutlet UIView *mainView;
@@ -62,9 +66,10 @@
 - (void)viewDidLoad {
     self.title = @"录音";
     [super viewDidLoad];
+    [self locatemap];
     
     // 默认是输出3端口
-    self.inputChannel = 3;
+    self.inputChannel = 1;
     [self.inputSegmentControl setSelectedSegmentIndex:self.inputChannel-1];
     
     //    默认是3d图形
@@ -79,6 +84,79 @@
     
     self.audioWaveView.hidden = NO;
     self.spectogramView.hidden = YES;
+}
+#pragma mark - 定位服务部分
+- (void)locatemap{
+    
+    if ([CLLocationManager locationServicesEnabled]) {
+        _locationManager = [[CLLocationManager alloc]init];
+        _locationManager.delegate = self;
+        [_locationManager requestAlwaysAuthorization];
+        [_locationManager requestWhenInUseAuthorization];
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        _locationManager.distanceFilter = 5.0;
+        [_locationManager startUpdatingLocation];
+    }
+}
+
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请在设置中打开定位" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"打开定位" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSURL *settingURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        [[UIApplication sharedApplication]openURL:settingURL];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    [alert addAction:cancel];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+#pragma mark - 定位成功
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations{
+    
+    [_locationManager stopUpdatingLocation];
+    CLLocation *currentLocation = [locations lastObject];
+//    CLGeocoder *geoCoder = [[CLGeocoder alloc]init];
+    //当前的经纬度
+    NSLog(@"当前的经纬度 %f,%f",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude);
+    //这里的代码是为了判断didUpdateLocations调用了几次 有可能会出现多次调用 为了避免不必要的麻烦 在这里加个if判断 如果大于1.0就return
+    [PCMDataSource sharedData].longitudeStr = [NSString stringWithFormat:@"%f",currentLocation.coordinate.longitude];
+    [PCMDataSource sharedData].latitudeStr = [NSString stringWithFormat:@"%f",currentLocation.coordinate.latitude];
+
+//    longitude 经度
+//    latitude 纬度
+    NSTimeInterval locationAge = -[currentLocation.timestamp timeIntervalSinceNow];
+    if (locationAge > 1.0){//如果调用已经一次，不再执行
+        return;
+    }
+//    //地理反编码 可以根据坐标(经纬度)确定位置信息(街道 门牌等)
+//    [geoCoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+//        if (placemarks.count >0) {
+//            CLPlacemark *placeMark = placemarks[0];
+//            _currentCity = placeMark.locality;
+//            if (!_currentCity) {
+//                _currentCity = @"无法定位当前城市";
+//            }
+//            //看需求定义一个全局变量来接收赋值
+//            NSLog(@"当前国家 - %@",placeMark.country);//当前国家
+//            NSLog(@"当前城市 - %@",_currentCity);//当前城市
+//            NSLog(@"当前位置 - %@",placeMark.subLocality);//当前位置
+//            NSLog(@"当前街道 - %@",placeMark.thoroughfare);//当前街道
+//            NSLog(@"具体地址 - %@",placeMark.name);//具体地址
+//            NSString *message = [NSString stringWithFormat:@"%@,%@,%@,%@,%@",placeMark.country,_currentCity,placeMark.subLocality,placeMark.thoroughfare,placeMark.name];
+//
+//            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:message delegate:self cancelButtonTitle:nil otherButtonTitles:@"好", nil];
+//            [alert show];
+//        }else if (error == nil && placemarks.count){
+//
+//            NSLog(@"NO location and error return");
+//        }else if (error){
+//
+//            NSLog(@"loction error:%@",error);
+//        }
+//    }];
 }
 
 #pragma mark - 切换2d3d图形
@@ -104,7 +182,7 @@
     self.changeGraph = sender.selectedSegmentIndex;
 }
 
-#pragma mark - 播放音频
+#pragma mark - 输出3播放音频
 - (void)playAudioTimer{
     switch (self.inputChannel) {
         case 1:
@@ -125,7 +203,7 @@
         {
             NSInteger wavLength = [PCMDataSource sharedData].outputDevice02.length - self.curLocation;
             if (wavLength >= audioPlayLength) {
-                NSData *data = [[PCMDataSource sharedData].outputDevice01 subdataWithRange:NSMakeRange(self.curLocation, audioPlayLength)];
+                NSData *data = [[PCMDataSource sharedData].outputDevice02 subdataWithRange:NSMakeRange(self.curLocation, audioPlayLength)];
                 //        处理数据
                 [self processAudioData:data];
                 self.curLocation = self.curLocation + audioPlayLength;
@@ -238,14 +316,35 @@
         [[PCMDataSource sharedData] startRecord];
         [PCMDataSource sharedData].isRecord = YES;
 //       判断是否输出声音
-        if ([PCMDataSource sharedData].channelOutput01 == 3) {
-            self.playAudioDataManager = [[EYAudio alloc] init];
-        }else if ([PCMDataSource sharedData].channelOutput02 == 3) {
-            self.playAudioDataManager = [[EYAudio alloc] init];
-        }else if ([PCMDataSource sharedData].channelOutput03 == 3){
-            self.playAudioDataManager = [[EYAudio alloc] init];
-        }else {
-            self.playAudioDataManager = [[EYAudio alloc] initWithVolume:0];
+        
+        switch (self.inputChannel) {
+            case 1:
+            {
+                if ([PCMDataSource sharedData].channelOutput03 == 1) {
+                    self.playAudioDataManager = [[EYAudio alloc] init];
+                } else {
+                    self.playAudioDataManager = [[EYAudio alloc] initWithVolume:0];
+                }
+            }
+                break;
+            case 2:{
+                if ([PCMDataSource sharedData].channelOutput03 == 2) {
+                    self.playAudioDataManager = [[EYAudio alloc] init];
+                } else {
+                    self.playAudioDataManager = [[EYAudio alloc] initWithVolume:0];
+                }
+            }
+                break;
+            case 3:{
+                if ([PCMDataSource sharedData].channelOutput03 == 3) {
+                    self.playAudioDataManager = [[EYAudio alloc] init];
+                } else {
+                    self.playAudioDataManager = [[EYAudio alloc] initWithVolume:0];
+                }
+            }
+                break;
+            default:
+                break;
         }
         
 //      录音管理

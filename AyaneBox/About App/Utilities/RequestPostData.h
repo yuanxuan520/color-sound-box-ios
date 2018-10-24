@@ -24,4 +24,6 @@
 
 //更加完善的post请求
 - (void)startAFRequest:(NSString *)intefacePath requestPOSTdata:(NSDictionary *)postDict parameters:(NSString *)jsondata timeOutSeconds:(NSTimeInterval)timeOutSeconds completionBlock:(void (^)(NSDictionary *))completionBlock failedBlock:(void (^)(NSError *))failedBlock;
+
+- (void)uploadFile:(NSString *)filepath requestdata:(NSString *)jsondata timeOutSeconds:(NSTimeInterval)timeOutSeconds progress:(void (^)(CGFloat ))progressFloat completionBlock:(void (^)(NSDictionary *))completionBlock failedBlock:(void (^)(NSError *))failedBlock;
 @end

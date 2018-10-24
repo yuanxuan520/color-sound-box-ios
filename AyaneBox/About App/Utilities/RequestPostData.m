@@ -425,6 +425,87 @@
 }
 
 
+- (void)uploadFile:(NSString *)filepath requestdata:(NSString *)jsondata timeOutSeconds:(NSTimeInterval)timeOutSeconds progress:(void (^)(CGFloat ))progressFloat completionBlock:(void (^)(NSDictionary *))completionBlock failedBlock:(void (^)(NSError *))failedBlock
+{
+    dispatch_group_t group_request = dispatch_group_create();
+    dispatch_group_enter(group_request);
+    
+    NSDictionary *parameters = nil;
+    if (jsondata != nil) {
+        parameters = @{@"params":jsondata};
+    }
+    
+    AFHTTPSessionManager *manage = [RequestPostData shareRequestPostData].httpManager;
+    manage.requestSerializer.stringEncoding = NSUTF8StringEncoding;
+    manage.responseSerializer.stringEncoding = NSUTF8StringEncoding;
+    manage.requestSerializer = [AFHTTPRequestSerializer serializer];
+    manage.responseSerializer = [AFHTTPResponseSerializer serializer];
+    //        [httphmanager.requestSerializer setHTTPShouldHandleCookies:YES];
+    //    multipart/form-data
+    manage.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/plain",@"text/html",nil];
+    //https 支持
+    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy defaultPolicy];
+    //allowInvalidCertificates 是否允许无效证书（也就是自建的证书），默认为NO//如果是需要验证自建证书，需要设置为YES
+    //    securityPolicy.allowInvalidCertificates = YES;
+    //validatesDomainName 是否需要验证域名，默认为YES；
+    //    NSString *cerPath = [[NSBundle mainBundle] pathForResource:@"https" ofType:@"cer"];
+    //    NSData * certData =[NSData dataWithContentsOfFile:cerPath];
+    //    NSSet * certSet = [[NSSet alloc] initWithObjects:certData, nil];
+    //    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+    //    // 是否允许,NO-- 不允许无效的证书
+    //    [securityPolicy setAllowInvalidCertificates:YES];
+    //    [securityPolicy setValidatesDomainName:NO];
+    //    // 设置证书
+    //    [securityPolicy setPinnedCertificates:certSet];
+    //申明返回的结果是json类
+    
+    
+    securityPolicy.validatesDomainName = YES;
+    manage.securityPolicy  = securityPolicy;
+    NSString *uploadURL = [[NSString stringWithFormat:@"%@storage/putObject",SEVERURL] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    id cookieStr = [USERDEFAULTS objectForKey:kUserDefaultsCookie];
+    if (cookieStr && [cookieStr isKindOfClass:[NSString class]]) {
+        [manage.requestSerializer setValue:cookieStr forHTTPHeaderField:@"Cookie"];
+    }
+    [manage POST:uploadURL parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        [formData appendPartWithFileURL:[NSURL fileURLWithPath:filepath] name:@"Filedata" error:nil];
+    } progress:^(NSProgress * _Nonnull uploadProgress) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //Update the progress view
+            if (progressFloat) {
+                progressFloat(uploadProgress.fractionCompleted);
+            }
+        });
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSError *error = nil;
+        NSData *jsonData = responseObject;
+        //        NSLog(@"json:%@",jsonData);
+        NSString *datastr = [[[NSString alloc] initWithBytes:[jsonData bytes] length:[jsonData length] encoding:NSUTF8StringEncoding] stringByRemovingPercentEncoding];
+        if (datastr == nil) {
+            datastr = [[NSString alloc] initWithBytes:[jsonData bytes] length:[jsonData length] encoding:NSUTF8StringEncoding];
+        }
+        NSData *data = [datastr dataUsingEncoding:NSUTF8StringEncoding];
+        if(jsonData==nil){//接口请求发生异常，直接返回
+            return;
+        }
+        //
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (completionBlock) {
+            completionBlock(json);
+        }
+        dispatch_group_leave(group_request);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failedBlock) {
+            failedBlock(error);
+        }
+        dispatch_group_leave(group_request);
+    }];
+    
+    dispatch_group_notify(group_request, dispatch_get_main_queue(), ^{
+        
+    });
+}
+
 
 - (NSString *)md5:(NSString *)str
 {

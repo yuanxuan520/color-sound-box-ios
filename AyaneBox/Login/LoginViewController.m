@@ -168,13 +168,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    BOOL isLogin = [USERDEFAULTS objectForKey:@"isLogin"];
-    if (isLogin) {
-        UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UITabBarController *tabbarVc = [sboard instantiateViewControllerWithIdentifier:@"home"];
-        AppDelegate* appDelagete = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        appDelagete.window.rootViewController = tabbarVc;
-    }
 }
 
 /*
@@ -331,6 +324,10 @@
         NSLog(@"失败");
         [WSProgressHUD showShimmeringString:@"网络不通畅，请检查网络后重试." maskType:WSProgressHUDMaskTypeClear maskWithout:WSProgressHUDMaskWithoutDefault];
         [WSProgressHUD autoDismiss:1.5];
+        UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UITabBarController *tabbarVc = [sboard instantiateViewControllerWithIdentifier:@"home"];
+        AppDelegate* appDelagete = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        appDelagete.window.rootViewController = tabbarVc;
         //弹出提示框   是否是重新登录还是咋地
     }];
     

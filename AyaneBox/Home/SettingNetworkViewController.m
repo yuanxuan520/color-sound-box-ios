@@ -26,8 +26,8 @@
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     self.view.backgroundColor = UIColorHex(0xebebeb);
-    
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"设备配外网";
@@ -43,7 +43,11 @@
 //    });
     // Do any additional setup after loading the view.
 }
-
+- (IBAction)tapBack:(id)sender
+{
+    [ssidTextField resignFirstResponder];
+    [passwordTextField resignFirstResponder];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

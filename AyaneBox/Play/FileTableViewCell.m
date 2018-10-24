@@ -21,8 +21,9 @@
         fileSizeLabel = [[UILabel alloc] init];
        
         fileNameLabel.textColor = UIColorHex(0x0a0a0a);
-        fileNameLabel.font = SystemFont(16);
-        fileNameLabel.numberOfLines = 1;//多行显示，计算高度
+        fileNameLabel.font = SystemFont(14);
+        fileNameLabel.numberOfLines = 2;//多行显示，计算高度
+        fileNameLabel.textAlignment = NSTextAlignmentLeft;
         [self.contentView addSubview:fileNameLabel];
         
         fileSizeLabel.textColor = UIColorHex(0xadadad);
@@ -44,8 +45,8 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    fileNameLabel.frame = CGRectMake(20, 5, APPMainViewWidth-100, 30);
-    fileSizeLabel.frame = CGRectMake(20, 35, 100, 20);
-    createTimeLabel.frame = CGRectMake(160, 35, 120, 20);
+    fileNameLabel.frame = CGRectMake(20, 5, APPMainViewWidth-60, 40);
+    fileSizeLabel.frame = CGRectMake(20, 45, 100, 20);
+    createTimeLabel.frame = CGRectMake(120, 45, 120, 20);
 }
 @end

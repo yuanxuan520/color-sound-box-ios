@@ -219,6 +219,8 @@
         
     }];
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [USERDEFAULTS removeObjectForKey:@"isLogin"];
+        [USERDEFAULTS synchronize];
         UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         LoginViewController *loginViewControl = [sboard instantiateViewControllerWithIdentifier:@"login"];
         AppDelegate* appDelagete = (AppDelegate *)[UIApplication sharedApplication].delegate;

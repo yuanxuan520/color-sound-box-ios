@@ -42,11 +42,17 @@
 @property (nonatomic, strong) NSString *defaultFileName; // 默认文件名
 
 // 输出设备对象保存
-@property (nonatomic) NSUInteger curLocation;
+@property (nonatomic) NSUInteger curLocationDevice01;
+@property (nonatomic) NSUInteger curLocationDevice02;
+@property (nonatomic) NSUInteger curLocationPhone;
 @property (nonatomic, strong) NSTimer *outputTimer;
 @property (nonatomic, strong) NSMutableData *outputDevice01; // 设备输出1
 @property (nonatomic, strong) NSMutableData *outputDevice02; // 设备输出2
 @property (nonatomic, strong) NSMutableData *outputPhone03;  // 输出对象3
+
+@property (nonatomic, strong) NSString *longitudeStr;
+@property (nonatomic, strong) NSString *latitudeStr;
+
 //// 音频片段数据
 //@property (nonatomic, strong) AudioData *audioData; // 每个包 (FramePerPacket = 1024帧)
 

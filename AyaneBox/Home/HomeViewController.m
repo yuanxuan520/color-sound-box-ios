@@ -21,7 +21,6 @@
 @property (nonatomic, strong) NSMutableArray *deviceDataDict;
 // 绑定5001 端口
 @property (strong, nonatomic) ABSocketServer *socketServer5001;
-@property (strong, nonatomic) SocketDataObject *socketObject5001;
 // 绑定6002 端口
 @property (strong, nonatomic) ABSocketServer *socketServer6002;
 @property (strong, nonatomic) SocketObject *socketObject6002;
@@ -32,7 +31,7 @@
 
 @implementation HomeViewController
 @synthesize deviceTableView,ipAddressLabel;
-@synthesize socketServer5001,socketObject5001;
+@synthesize socketServer5001;
 @synthesize socketServer6002,socketObject6002;
 @synthesize timer;
 @synthesize curNetState;
@@ -46,7 +45,7 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 //    [self udpBroadcast];
     // Allocate a reachability objec
-//    self.ipAddressLabel.text = [IPDetector getIPAddress];
+    self.ipAddressLabel.text = [IPDetector getIPAddress];
 
 //    [self.socketServer startUDP];
     //    重复发送广播
@@ -97,15 +96,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDeviceList:) name:@"DEVICEUPDATE" object:nil];
 //    self.eyAudio = [[EYAudio alloc] init];
     
-    self.socketServer5001 = [[ABSocketServer alloc] init];
-    self.socketObject5001 = [[SocketDataObject alloc] init];
-    self.socketServer5001.delegate = self;
-    
+
     
     self.socketServer6002 = [[ABSocketServer alloc] init];
     self.socketObject6002 = [[SocketObject alloc] init];
     self.socketServer6002.delegate = self.socketObject6002;
-    [self.socketServer5001 startUDP:5001];
     [self.socketServer6002 startUDP:6002];
     
     deviceTableView.tableFooterView = [[UIView alloc] init];
@@ -137,13 +132,11 @@
         [self.timer invalidate];
         self.timer = nil;
     }
-    [self.socketServer5001 stopUDP];
+//    [self.socketServer5001 stopUDP];
     [self.socketServer6002 stopUDP];
     [[PCMDataSource sharedData].udpSocketServer stopUDP];
     
-    [self.socketServer5001 startUDP:5001];
-    [self.socketServer6002 startUDP:6002];
-    [[PCMDataSource sharedData].udpSocketServer startUDP];
+    
 //    [PCMDataSource sharedData].ipAddress = nil;
 //    [USERDEFAULTS removeObjectForKey:@"IPAddress"];
 //    [USERDEFAULTS synchronize];
@@ -151,6 +144,9 @@
 //    [[DeviceData sharedData].deviceDict removeAllObjects];
     [deviceTableView reloadData];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self.socketServer5001 startUDP:5001];
+        [self.socketServer6002 startUDP:6002];
+        [[PCMDataSource sharedData].udpSocketServer startUDP:5001];
         self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
         [self.timer fire];
         [deviceTableView.mj_header endRefreshing];
@@ -415,17 +411,6 @@
 }
 
 
-#pragma mark 接收5001 端口设备的数据
-- (void)udpSocket:(GCDAsyncUdpSocket *)sock host:(NSString *)host didReceiveData:(NSData *)data fromAddress:(NSData *)address
-{
-//    NSLog(@"%@",data);
-//    [self.eyAudio playWithData:data];
-    if ([PCMDataSource sharedData].isRecord) { // 一旦点击开始录音后,开始接收数据
-        if ([PCMDataSource sharedData].channelInput01 > 0 || [PCMDataSource sharedData].channelInput02 > 0 ) { // 输入3 开启
-            [[PCMDataSource sharedData] appendByDeviceInput:data];
-        }
-    }
-}
 //- (void)socket:(GCDAsyncSocket *)sock didAcceptAudioNewSocket:(GCDAsyncSocket *)newSocket
 //{
 //    if (self.dataClientSocket) {

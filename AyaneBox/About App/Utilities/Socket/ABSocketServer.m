@@ -96,6 +96,22 @@
             SLog(@"Error starting server (recv): %@", error);
             return;
         }
+    }else {
+        if(![self.udpServer enableBroadcast:YES error:&error]){
+            SLog(@"Error enableBroadcast (bind): %@", error);
+            return;
+        }
+        
+        //        if (![self.udpServer joinMulticastGroup:@"224.0.0.1"  error:&error]) {
+        //            NSLog(@"Error joinMulticastGroup (bind): %@", error);
+        //            return;
+        //        }
+        
+        if (![self.udpServer beginReceiving:&error]) {
+            [self.udpServer close];
+            SLog(@"Error starting server (recv): %@", error);
+            return;
+        }
     }
 }
 

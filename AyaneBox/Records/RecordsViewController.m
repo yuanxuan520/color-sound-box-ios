@@ -230,7 +230,6 @@
         default:
             break;
     }
-    
 }
 - (void)processAudioData:(NSData *)data
 {
@@ -314,7 +313,6 @@
 //      初始化播放和录音 以及相关数据
 //        self.playAudioDataManager = [[EYAudio alloc] init];
         [[PCMDataSource sharedData] startRecord];
-        [PCMDataSource sharedData].isRecord = YES;
 //       判断是否输出声音
         
         switch (self.inputChannel) {
@@ -368,7 +366,7 @@
 //        self.playTimer = timer; //一定要用强指针引着
         self.playTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/2048/1000) target:self selector:@selector(playAudioTimer) userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSRunLoopCommonModes];
-
+        [PCMDataSource sharedData].isRecord = YES;
     }else {
 // 关闭录音
         [PCMDataSource sharedData].isRecord = NO;

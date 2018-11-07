@@ -76,5 +76,12 @@
 - (void)writeNetworkDevice:(NSData *)outputData;
 // 输出设备
 - (void)writePlayNetworkDevice:(NSData *)outputData;
-
+// 处理输入输出数据
+- (void)processOutDeviceData;
+// 开启udp服务
+- (void)startUDPserve;
+// 开启udp服务5001端口
+- (void)startUDPserve5001;
+// 关闭udp服务
+- (void)stopUDPserve;
 @end

@@ -161,16 +161,21 @@
         self.playTimer = nil;
         self.playWavFileData = nil;
         self.curLocation = 0;
-        if (self.outputChannel == 1 || self.outputChannel == 2) {
-            [self.playDeviceTimer invalidate];
-            self.playDeviceTimer = nil;
-        }
+//        if (self.outputChannel == 1 || self.outputChannel == 2) {
+//            [self.playDeviceTimer invalidate];
+//            self.playDeviceTimer = nil;
+//        }
     }else {
         NSData *data = [self.playWavFileData subdataWithRange:NSMakeRange(self.curLocation, audioPlayLength)];
         //        处理数据
         [self processAudioData:data];
         self.curLocation = self.curLocation + audioPlayLength;
+        if (self.outputChannel == 1 || self.outputChannel == 2) {
+            [self playDeviceAudioTimer];
+        }
     }
+    
+    
 }
 #pragma mark - 处理音频数据
 - (void)processAudioData:(NSData *)data
@@ -226,6 +231,7 @@
     }
     
     if (![PCMDataSource sharedData].isPlay) {
+        [[PCMDataSource sharedData] startUDPserve];
         [self.audioWaveformSurfaceController clearChartSurface];
         [self.spectogramSurfaceController clearChartSurface];
         if (self.outAudioPlayer) {
@@ -271,31 +277,6 @@
         
         self.playTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/2048/1000) target:self selector:@selector(playAudioTimer) userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSRunLoopCommonModes];
-//        [self.playTimer ]
-        //创建一个GCD定时器
-//        dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
-//        self.playTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-        
-        //3秒后启动定时器,   马上启动：DISPATCH_TIME_NOW
-//        dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(NSEC_PER_SEC));
-//        44100/1024/1000
-//        uint64_t interval = (uint64_t)(44100/1024/1000);
-//        //设置启动时间和间隔
-//        dispatch_source_set_timer(_playTimer, 0,  interval, 0);
-//        //设置回调
-//        dispatch_source_set_event_handler(_playTimer, ^{
-//            //这里添加定时器事件
-//            [self playAudioTimer];
-//
-//        });
-//        //默认暂停的，开启定时器
-//        dispatch_resume(_playTimer);
-        
-        if (self.outputChannel == 1 || self.outputChannel == 2) {
-            self.playDeviceTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/2048/1000) target:self selector:@selector(playDeviceAudioTimer) userInfo:nil repeats:YES];
-            [[NSRunLoop currentRunLoop] addTimer:self.playDeviceTimer forMode:NSRunLoopCommonModes];
-            
-        }
     }else {
 //      回归初始状态
         [PCMDataSource sharedData].isPlay = NO;
@@ -307,13 +288,7 @@
         self.playWavFileData = nil;
         self.curLocation = 0;
         self.curOutDeviceLocation = 0;
-//       输出定时器
-        if (self.outputChannel == 1 || self.outputChannel == 2) {
-            [self.playDeviceTimer invalidate];
-            self.playDeviceTimer = nil;
-        }
-        
-        
+        [[PCMDataSource sharedData] stopUDPserve];
     }
 }
 

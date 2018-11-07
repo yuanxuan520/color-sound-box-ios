@@ -114,8 +114,25 @@
 
     _udpSocketServer = [[ABSocketServer alloc] init];
     _udpSocketServer.delegate = self;
+    
+}
+
+// 开启udp服务
+- (void)startUDPserve
+{
     [_udpSocketServer startUDP];
 }
+// 开启udp服务5001端口
+- (void)startUDPserve5001
+{
+    [_udpSocketServer startUDP:5001];
+}
+// 关闭udp服务
+- (void)stopUDPserve
+{
+    [_udpSocketServer stopUDP];
+}
+
 
 // 开始时创建数据
 - (void)resetOutFileData {
@@ -142,6 +159,7 @@
 //   开始录制的时候清空 数据
     [self resetOutFileData];
     [self startOutPutDevice];
+    [self startUDPserve5001];
 }
 
 // 停止录音
@@ -160,6 +178,7 @@
 //    NSLog(@"%@",newfilePath);
 //    [_phoneOutFile03 writeToFile:filePath atomically:NO];
 //    convertPcm2Wav(cFilePath,cNewfilePath,1,44100);
+    [self stopUDPserve];
 }
 
 - (void)saveDefaultFile{
@@ -253,7 +272,7 @@
         _outputTimer = nil;
     }
     if (_channelOutput01 > 0 || _channelOutput02 > 0) {
-        _outputTimer = [NSTimer scheduledTimerWithTimeInterval:44100/512/1000 target:self selector:@selector(processOutDeviceData) userInfo:nil repeats:YES];
+        _outputTimer = [NSTimer scheduledTimerWithTimeInterval:44100/2048/1000 target:self selector:@selector(processOutDeviceData) userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] addTimer:_outputTimer forMode:NSRunLoopCommonModes];
 
 //        [outputTimer addru]
@@ -346,58 +365,9 @@
     } @catch (NSException *exception) {
         
     } @finally {
-        int size = 4096;
-        NSData *in01 = [NSMutableData dataWithLength:size];
-        NSData *in02 = [NSMutableData dataWithLength:size];
-        NSData *in03 = [NSMutableData dataWithLength:size];
-        Byte *deviceInput01 = (Byte *)[in01 bytes];
-        Byte *deviceInput02 = (Byte *)[in02 bytes];
-        Byte *phoneInput03 = (Byte *)[in03 bytes];
-        
-        NSMutableData *deviceOutput = [NSMutableData dataWithLength:size*2];
-        
-        for (int i = 0; i<(size/2); i++) {
-            // 输出1相关计算
-            // --------------------------------------------------------
-            // 输出1 关闭时
-            if (_channelOutput01 == 0) {
-                
-            }
-            // 输出1 指向输入1 时
-            else if (_channelOutput01 == 1) {
-                [deviceOutput replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&deviceInput01[i*2]];
-            }
-            // 输出1 指向输入2 时
-            else if (_channelOutput01 == 2) {
-                [deviceOutput replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&deviceInput02[i*2]];
-            }
-            // 输出1 指向输入3 时
-            else if (_channelOutput01 == 3) {
-                [deviceOutput replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&phoneInput03[i*2]];
-            }
-            
-            // 输出2相关计算
-            // --------------------------------------------------------
-            // 输出2 关闭时
-            if (_channelOutput02 == 0) {
-                
-            }
-            // 输出2 指向输入1 时
-            else if (_channelOutput02 == 1) {
-                [deviceOutput replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&deviceInput01[i*2]];
-            }
-            // 输出2 指向输入2 时
-            else if (_channelOutput02 == 2) {
-                [deviceOutput replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&deviceInput02[i*2]];
-            }
-            // 输出2 指向输入3 时
-            else if (_channelOutput02 == 3) {
-                [deviceOutput replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&phoneInput03[i*2]];
-            }
-        }
-        [self writeNetworkDevice:deviceOutput];
+
     }
-    
+
 }
 
 
@@ -409,10 +379,10 @@
     [_deviceInput appendData:data];
     
     //    构造audioData 对象
-    if (_deviceInput.length < BytePerDeviceInput) {
-        //        如果没有到 1024 * 8 这个长度的数据 就等待
-        return;
-    }
+//    if (_deviceInput.length < BytePerDeviceInput) {
+//        //        如果没有到 1024 * 8 这个长度的数据 就等待
+//        return;
+//    }
     [self processDeviceData];
 }
 - (void)processDeviceData
@@ -420,11 +390,11 @@
     // 读取数据并处理数据
     NSData *deviceInputData = [NSData dataWithData:_deviceInput];
     Byte *deviceInput = (Byte *)[deviceInputData bytes];
-    NSMutableData *in01 = [NSMutableData dataWithLength:(FramePerPacket * 4)];
-    NSMutableData *in02 = [NSMutableData dataWithLength:(FramePerPacket * 4)];
+    NSMutableData *in01 = [NSMutableData dataWithLength:FramePerPacket];
+    NSMutableData *in02 = [NSMutableData dataWithLength:FramePerPacket];
     
     // 直接处理设备的数据
-    for (int i = 0, j = 0; i<BytePerDeviceInput; i= i+4) {
+    for (int i = 0, j = 0; i<FramePerPacket; i= i+4) {
         if (i % 4 == 0) {
             if (_channelInput01 != 0) {
                 [in01 replaceBytesInRange:NSMakeRange(j, 2) withBytes:&deviceInput[i]];
@@ -456,10 +426,11 @@
 - (void)appendByPhoneInput:(NSData *)data
 {
     [_phoneInput appendData:data];
-    if (_phoneInput.length < BytePerPhoneInput) {
-        // 如果没有到 1024 * 4 这个长度的数据 就等待 不过一般不可能会出现这种情况 因为录音默认就给了值不会变
-        return;
-    }
+//    if (_phoneInput.length < BytePerPhoneInput) {
+//        // 如果没有到 1024 * 4 这个长度的数据 就等待 不过一般不可能会出现这种情况 因为录音默认就给了值不会变
+//        return;
+//    }
+
     [self processPhoneData];
 }
 
@@ -495,6 +466,10 @@
 
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock host:(NSString *)host didReceiveData:(NSData *)data fromAddress:(NSData *)address
 {
-    
+    if (_isRecord) { // 一旦点击开始录音后,开始接收数据
+        if (_channelInput01 > 0 || _channelInput02 > 0 ) { // 输入3 开启
+            [self appendByDeviceInput:data];
+        }
+    }
 }
 @end

@@ -24,6 +24,7 @@
 @property (nonatomic, strong) UIButton *uploadBtn;
 @property (nonatomic, strong) UIButton *cancelBtn;
 
+
 @property (nonatomic, assign) NSUInteger uploadWavCount;
 
 @end
@@ -129,7 +130,7 @@
 - (void)requestUploadWav
 {
     kSelfWeak;
-    NSString *dJson = [NSString stringWithFormat:@"{\"BIZ_FORM_ID\":\"%@\"}",[USERDEFAULTS objectForKey:@"userId"]];
+    NSString *dJson = [NSString stringWithFormat:@"{\"BIZ_FORM_ID\":\"%@\",\"OBJECT_PATH_KEY\":\"audioWav\"}",[USERDEFAULTS objectForKey:@"userId"]];
     RequestPostData *requestData = [[RequestPostData alloc] init];
     NSString *fileName = [self.selectedList objectAtIndex:self.uploadWavCount];
     NSString *filePath = [SandboxFile GetPathForDocuments:fileName inDir:@"wavFile"];
@@ -218,6 +219,7 @@
 {
     self.toolsView.hidden = NO;
     self.isEdit = YES;
+    [self.tableView reloadData];
 //  显示工具栏
     
 //    CGPoint location = [longGesture locationInView:self.tableView];
@@ -304,12 +306,12 @@
 
     if (self.isEdit == YES) {
         if ([self.selectedList containsObject:fileName]) {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            cell.imgView.image = [UIImage imageNamed:@"selected"];
         }else {
-            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.imgView.image = [UIImage imageNamed:@"select"];
         }
     }else{
-        cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.imgView.image = nil;
     }
     
     

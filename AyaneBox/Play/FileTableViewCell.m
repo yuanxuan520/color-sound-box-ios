@@ -9,7 +9,7 @@
 #import "FileTableViewCell.h"
 
 @implementation FileTableViewCell
-@synthesize fileNameLabel,fileSizeLabel,createTimeLabel;
+@synthesize fileNameLabel,fileSizeLabel,createTimeLabel,imgView;
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -36,7 +36,9 @@
         createTimeLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:createTimeLabel];
 
-        
+        imgView = [[UIImageView alloc] init];
+        imgView.contentMode = UIViewContentModeScaleAspectFit;
+        [self.contentView addSubview:imgView];
 
     }
     return self;
@@ -48,5 +50,6 @@
     fileNameLabel.frame = CGRectMake(20, 5, APPMainViewWidth-60, 40);
     fileSizeLabel.frame = CGRectMake(20, 45, 100, 20);
     createTimeLabel.frame = CGRectMake(120, 45, 120, 20);
+    imgView.frame = CGRectMake(APPMainViewWidth-60, 15, 40, 40);
 }
 @end

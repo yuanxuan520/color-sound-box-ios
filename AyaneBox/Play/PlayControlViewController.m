@@ -143,6 +143,9 @@
     
 //  保证上传的是WAV 文件
 //  播放是PCM文件
+//    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ch01" ofType:@"wav"];
+
+    
     NSString *filePath = [SandboxFile GetPathForDocuments:self.fileName inDir:@"wavFile"];
     NSData *data = [NSData dataWithContentsOfFile:filePath];
     self.curSelectFileData = data;
@@ -275,7 +278,7 @@
         [self.playWavFileData replaceBytesInRange:NSMakeRange(0, 44) withBytes:NULL length:0];
         
         
-        self.playTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/2048/1000) target:self selector:@selector(playAudioTimer) userInfo:nil repeats:YES];
+        self.playTimer = [NSTimer scheduledTimerWithTimeInterval:(44100/8192/1000) target:self selector:@selector(playAudioTimer) userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSRunLoopCommonModes];
     }else {
 //      回归初始状态

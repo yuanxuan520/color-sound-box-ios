@@ -164,7 +164,7 @@
 
 // 停止录音
 - (void)stopRecord{
-    _defaultFileName = [NSString stringWithFormat:@"新文件_%@",[NSDate currentDateStringWithFormat:@"yyMMddHHmmss"]];
+    _defaultFileName = [NSString stringWithFormat:@"新录音-%@",[NSDate currentDateStringWithFormat:@"yyMMddHHmmss"]];
     [self saveDefaultFile];
     [self stopOutPutDevice];
     // 保存文件
@@ -184,19 +184,19 @@
 - (void)saveDefaultFile{
     PPFileOperate *ppfileop = [[PPFileOperate alloc] init];
     if (_channelInput01 > 0) {
-        NSString *filename = [NSString stringWithFormat:@"%@_ch01",_defaultFileName];
+        NSString *filename = [NSString stringWithFormat:@"%@-ch01",_defaultFileName];
         NSString *filePath = [ppfileop getDirName:@"wavFilePcm" fileName:filename];
         [_outputDevice01 writeToFile:filePath atomically:NO];
     }
     
     if (_channelInput02 > 0) {
-        NSString *filename = [NSString stringWithFormat:@"%@_ch02",_defaultFileName];
+        NSString *filename = [NSString stringWithFormat:@"%@-ch02",_defaultFileName];
         NSString *filePath = [ppfileop getDirName:@"wavFilePcm" fileName:filename];
         [_outputDevice02 writeToFile:filePath atomically:NO];
     }
     
     if (_channelInput03 > 0) {
-        NSString *filename = [NSString stringWithFormat:@"%@_ch03",_defaultFileName];
+        NSString *filename = [NSString stringWithFormat:@"%@-ch03",_defaultFileName];
         NSString *filePath = [ppfileop getDirName:@"wavFilePcm" fileName:filename];
         [_outputPhone03 writeToFile:filePath atomically:NO];
     }
@@ -206,8 +206,8 @@
 {
     PPFileOperate *fileOP = [[PPFileOperate alloc] init];
     if (_channelInput01 > 0) {
-        NSString *pcmFileName = [NSString stringWithFormat:@"%@_ch01",_defaultFileName];
-        NSString *wavFileName = [NSString stringWithFormat:@"%@_ch01_\ngps(%@_%@).wav",fileName,_longitudeStr,_latitudeStr];
+        NSString *pcmFileName = [NSString stringWithFormat:@"%@-ch01",_defaultFileName];
+        NSString *wavFileName = [NSString stringWithFormat:@"%@-ch01-gps(%@_%@).wav",fileName,_longitudeStr,_latitudeStr];
         NSString *filePath = [fileOP getDirName:@"wavFilePcm" fileName:pcmFileName];
         NSString *newfilePath = [fileOP getDirName:@"wavFile" fileName:wavFileName];
         char *cFilePath = (char *)[filePath UTF8String];
@@ -217,8 +217,8 @@
     }
     
     if (_channelInput02 > 0) {
-        NSString *pcmFileName = [NSString stringWithFormat:@"%@_ch02",_defaultFileName];
-        NSString *wavFileName = [NSString stringWithFormat:@"%@_ch02_\ngps(%@_%@).wav",fileName,_longitudeStr,_latitudeStr];
+        NSString *pcmFileName = [NSString stringWithFormat:@"%@-ch02",_defaultFileName];
+        NSString *wavFileName = [NSString stringWithFormat:@"%@-ch02-gps(%@_%@).wav",fileName,_longitudeStr,_latitudeStr];
         NSString *filePath = [fileOP getDirName:@"wavFilePcm" fileName:pcmFileName];
         NSString *newfilePath = [fileOP getDirName:@"wavFile" fileName:wavFileName];
         char *cFilePath = (char *)[filePath UTF8String];
@@ -228,8 +228,8 @@
     }
     
     if (_channelInput03 > 0) {
-        NSString *pcmFileName = [NSString stringWithFormat:@"%@_ch03",_defaultFileName];
-        NSString *wavFileName = [NSString stringWithFormat:@"%@_ch03_\ngps(%@_%@).wav",fileName,_longitudeStr,_latitudeStr];
+        NSString *pcmFileName = [NSString stringWithFormat:@"%@-ch03",_defaultFileName];
+        NSString *wavFileName = [NSString stringWithFormat:@"%@-ch03-gps(%@_%@).wav",fileName,_longitudeStr,_latitudeStr];
         NSString *filePath = [fileOP getDirName:@"wavFilePcm" fileName:pcmFileName];
         NSString *newfilePath = [fileOP getDirName:@"wavFile" fileName:wavFileName];
         char *cFilePath = (char *)[filePath UTF8String];
@@ -243,17 +243,17 @@
 {
     PPFileOperate *fileOP = [[PPFileOperate alloc] init];
     if (_channelInput01 > 0) {
-        NSString *pcmFileName = [NSString stringWithFormat:@"%@_1",_defaultFileName];
+        NSString *pcmFileName = [NSString stringWithFormat:@"%@-ch01",_defaultFileName];
         [fileOP deleteFile:pcmFileName];
     }
     
     if (_channelInput02 > 0) {
-        NSString *pcmFileName = [NSString stringWithFormat:@"%@_2",_defaultFileName];
+        NSString *pcmFileName = [NSString stringWithFormat:@"%@-ch02",_defaultFileName];
         [fileOP deleteFile:pcmFileName];
     }
     
     if (_channelInput03 > 0) {
-        NSString *pcmFileName = [NSString stringWithFormat:@"%@_3",_defaultFileName];
+        NSString *pcmFileName = [NSString stringWithFormat:@"%@-ch03",_defaultFileName];
         [fileOP deleteFile:pcmFileName];
     }
 }
@@ -267,25 +267,23 @@
 // 将数据输出到设备中
 - (void)startOutPutDevice
 {
-    if (_outputTimer) {
-        [_outputTimer invalidate];
-        _outputTimer = nil;
-    }
-    if (_channelOutput01 > 0 || _channelOutput02 > 0) {
-        _outputTimer = [NSTimer scheduledTimerWithTimeInterval:44100/2048/1000 target:self selector:@selector(processOutDeviceData) userInfo:nil repeats:YES];
-        [[NSRunLoop currentRunLoop] addTimer:_outputTimer forMode:NSRunLoopCommonModes];
-
-//        [outputTimer addru]
-    }
+//    if (_outputTimer) {
+//        [_outputTimer invalidate];
+//        _outputTimer = nil;
+//    }
+//    if (_channelOutput01 > 0 || _channelOutput02 > 0) {
+//        _outputTimer = [NSTimer scheduledTimerWithTimeInterval:44100/2048/1000 target:self selector:@selector(processOutDeviceData) userInfo:nil repeats:YES];
+//        [[NSRunLoop currentRunLoop] addTimer:_outputTimer forMode:NSRunLoopCommonModes];
+//    }
 }
 
 // 停止输入到设备中
 - (void)stopOutPutDevice
 {
-    if (_outputTimer) {
-        [_outputTimer invalidate];
-        _outputTimer = nil;
-    }
+//    if (_outputTimer) {
+//        [_outputTimer invalidate];
+//        _outputTimer = nil;
+//    }
 }
 
 - (void)processOutDeviceData
@@ -394,7 +392,7 @@
     NSMutableData *in02 = [NSMutableData dataWithLength:FramePerPacket];
     
     // 直接处理设备的数据
-    for (int i = 0, j = 0; i<FramePerPacket; i= i+4) {
+    for (int i = 0, j = 0; i<(FramePerPacket*2); i= i+4) {
         if (i % 4 == 0) {
             if (_channelInput01 != 0) {
                 [in01 replaceBytesInRange:NSMakeRange(j, 2) withBytes:&deviceInput[i]];

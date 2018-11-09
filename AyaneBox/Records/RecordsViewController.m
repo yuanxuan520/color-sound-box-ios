@@ -230,6 +230,7 @@
         default:
             break;
     }
+    [[PCMDataSource sharedData] processOutDeviceData];
 }
 - (void)processAudioData:(NSData *)data
 {

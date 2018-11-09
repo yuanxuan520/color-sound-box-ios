@@ -13,7 +13,7 @@
 #import "AudioRecorder.h"
 
 // 音频片段的帧数
-#define FramePerPacket 1024
+#define FramePerPacket 512
 // 音频片段的设备输入字节数
 #define BytePerDeviceInput (FramePerPacket * 8)
 // 音频片段的手机输入字节数

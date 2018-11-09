@@ -111,7 +111,7 @@
 
 - (void)updateIMGinfo
 {
-    self.iconImgLabel.text = @"测试用户1";
+    self.iconImgLabel.text = [USERDEFAULTS objectForKey:@"userName"];;
     [self.iconImgView setImage:[UIImage imageNamed:@"ic_logo"] forState:UIControlStateNormal];
     self.headImgView.image = [UIImage imageNamed:@"bg_login"];
 }
@@ -182,6 +182,7 @@
     [editbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [editbtn setTitleColor:[UIColor colorWithWhite:0.300 alpha:1.000] forState:UIControlStateHighlighted];
     [editbtn addTarget:self action:@selector(editUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+    editbtn.hidden = YES;
     [self.headImgView addSubview:editbtn];
     
 //    UIView *logoutView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, APPMainViewWidth, 100)];
@@ -220,6 +221,8 @@
     }];
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         [USERDEFAULTS removeObjectForKey:@"isLogin"];
+        [USERDEFAULTS removeObjectForKey:kUserDefaultsCookie];
+        [self clearCookies];
         [USERDEFAULTS synchronize];
         UIStoryboard * sboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         LoginViewController *loginViewControl = [sboard instantiateViewControllerWithIdentifier:@"login"];
@@ -232,8 +235,18 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-
-
+- (void)clearCookies{
+    
+    //获取所有cookies
+    
+    NSArray *array = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:SEVERURL]];
+    // NSDictionary *dict = [NSHTTPCookie requestHeaderFieldsWithCookies:array];
+    for(NSHTTPCookie *cookie in array)
+    {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+    }
+    
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     

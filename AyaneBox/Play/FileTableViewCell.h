@@ -12,4 +12,6 @@
 @property(nonatomic,strong) UILabel *fileNameLabel;     // 文件名
 @property(nonatomic,strong) UILabel *fileSizeLabel;    // 文件大小
 @property(nonatomic,strong) UILabel *createTimeLabel;   // 创建时间
+@property(nonatomic,strong) UIImageView *imgView;
+
 @end

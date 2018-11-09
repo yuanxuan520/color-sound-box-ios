@@ -155,59 +155,57 @@
     [self.view addSubview:regiester];
 }
 
-//- (void)modifypassword:(UIButton *)btn
-//{
-//    if (![originalPassword.text isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"password"]]) {
-//        [WSProgressHUD showShimmeringString:@"原密码不正确" maskType:WSProgressHUDMaskTypeDefault];
-//        [WSProgressHUD autoDismiss:1];
-//        return;
-//    }
-//
-//    if ([password.text length] < 6) {
-//        [WSProgressHUD showShimmeringString:@"新密码必须为6位数以上" maskType:WSProgressHUDMaskTypeDefault];
-//        [WSProgressHUD autoDismiss:1];
-//        return;
-//    }
-//
-//    if (![password.text isEqualToString:againPassword.text]) {
-//        [WSProgressHUD showShimmeringString:@"确认新密码不一致" maskType:WSProgressHUDMaskTypeDefault];
-//        [WSProgressHUD autoDismiss:1];
-//        return;
-//    }
-//
-//
-//    [WSProgressHUD showWithStatus:@"正在修改密码.." maskType:WSProgressHUDMaskTypeClear];
-//    //得到自己当前的下属
-//    NSString *dJson = [NSString stringWithFormat:@"{\"userPassword\":\"%@\"}",password.text];
-//
-//    PPRDData *pprddata = [[PPRDData alloc] init];
-//    [pprddata startAFRequest:@"wap/user/updatePwd"
-//                 requestdata:dJson
-//              timeOutSeconds:30
-//             completionBlock:^(NSDictionary *json) {
-//                 NSLog(@"%@",json);
-//
-//                 if (![[json objectForKey:@"result"] integerValue]) {
-//                     [WSProgressHUD showShimmeringString:@"修改成功,请重新登录" maskType:WSProgressHUDMaskTypeDefault];
-//                     [WSProgressHUD autoDismiss:1];
-//                     //修改成功后返回 退出登录
-//                     [self.navigationController popViewControllerAnimated:NO];
+- (void)modifypassword:(UIButton *)btn
+{
+    if (![originalPassword.text isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"password"]]) {
+        [WSProgressHUD showShimmeringString:@"原密码不正确" maskType:WSProgressHUDMaskTypeDefault];
+        [WSProgressHUD autoDismiss:1];
+        return;
+    }
+
+    if ([password.text length] < 6) {
+        [WSProgressHUD showShimmeringString:@"新密码必须为6位数以上" maskType:WSProgressHUDMaskTypeDefault];
+        [WSProgressHUD autoDismiss:1];
+        return;
+    }
+
+    if (![password.text isEqualToString:againPassword.text]) {
+        [WSProgressHUD showShimmeringString:@"确认新密码不一致" maskType:WSProgressHUDMaskTypeDefault];
+        [WSProgressHUD autoDismiss:1];
+        return;
+    }
+
+
+    [WSProgressHUD showWithStatus:nil maskType:WSProgressHUDMaskTypeClear];
+    //得到自己当前的下属
+    NSString *dJson = [NSString stringWithFormat:@"{\"userPassword\":\"%@\"}",password.text];
+
+    RequestPostData *pprddata = [[RequestPostData alloc] init];
+    [pprddata startAFRequest:UpdatePwd
+                 requestdata:dJson
+              timeOutSeconds:30
+             completionBlock:^(NSDictionary *json) {
+                 if (![[json objectForKey:@"result"] integerValue]) {
+                     [WSProgressHUD showShimmeringString:@"修改密码成功!" maskType:WSProgressHUDMaskTypeDefault];
+                     [WSProgressHUD autoDismiss:2];
+                     //修改成功后返回 退出登录
+                     [self.navigationController popViewControllerAnimated:NO];
 //                     [self performSelector:@selector(relogin) withObject:nil afterDelay:1];
-//                 }else{
-//
-//                     [WSProgressHUD showShimmeringString:[json objectForKey:@"msg"] maskType:WSProgressHUDMaskTypeDefault];
-//                     [WSProgressHUD autoDismiss:1];
-//                 }
-//
-//             }
-//                 failedBlock:^(NSError *error) {
-//                     [WSProgressHUD showShimmeringString:@"修改失败" maskType:WSProgressHUDMaskTypeDefault];
-//                     [WSProgressHUD autoDismiss:1];
-//
-//                     //显示暂无数据图
-//                 }];
-//
-//}
+                 }else{
+
+                     [WSProgressHUD showShimmeringString:[json objectForKey:@"msg"] maskType:WSProgressHUDMaskTypeDefault];
+                     [WSProgressHUD autoDismiss:1];
+                 }
+
+             }
+                 failedBlock:^(NSError *error) {
+                     [WSProgressHUD showShimmeringString:@"修改失败" maskType:WSProgressHUDMaskTypeDefault];
+                     [WSProgressHUD autoDismiss:1];
+
+                     //显示暂无数据图
+                 }];
+
+}
 
 - (void)relogin
 {

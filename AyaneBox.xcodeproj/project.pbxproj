@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		020338932E16B01AE0ACD205 /* Pods_AyaneBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C28A8DCA3BD380381D3CC8D /* Pods_AyaneBox.framework */; };
-		2D03D0B6211B55C7002DF77A /* ch03.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2D03D0B5211B55C7002DF77A /* ch03.wav */; };
 		2D03D0B9211B58A2002DF77A /* EYRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D03D0B8211B58A2002DF77A /* EYRecord.m */; };
 		2D0D370221136B1E002DD181 /* SetPopTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0D370121136B1E002DD181 /* SetPopTextView.m */; };
 		2D0D370521143EE6002DD181 /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D0D370421143EE6002DD181 /* FileViewController.m */; };
@@ -209,7 +208,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2D03D0B5211B55C7002DF77A /* ch03.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ch03.wav; sourceTree = "<group>"; };
 		2D03D0B7211B58A2002DF77A /* EYRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EYRecord.h; sourceTree = "<group>"; };
 		2D03D0B8211B58A2002DF77A /* EYRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EYRecord.m; sourceTree = "<group>"; };
 		2D0D370021136B1E002DD181 /* SetPopTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetPopTextView.h; sourceTree = "<group>"; };
@@ -1335,7 +1333,6 @@
 			children = (
 				2D52839D211CAB290014823A /* swift */,
 				2DBFA1952103A34700BB0697 /* simple-drum-beat.wav */,
-				2D03D0B5211B55C7002DF77A /* ch03.wav */,
 				7D56F08F207C9B39006C04DD /* About App */,
 				2DD567AE20E28AE60001666E /* Login */,
 				2DD5679920E289B90001666E /* Home */,
@@ -1511,7 +1508,6 @@
 				7D31743F20832D8400AFDF64 /* AudioPlayerPrevTrack.png in Resources */,
 				7D31744220832D8400AFDF64 /* AudioPlayerScrubberLeft.png in Resources */,
 				2DA5A19320ED214200D8D377 /* SettingOutTableViewCell.xib in Resources */,
-				2D03D0B6211B55C7002DF77A /* ch03.wav in Resources */,
 				2DBFA1962103A34800BB0697 /* simple-drum-beat.wav in Resources */,
 				7D31744020832D8400AFDF64 /* AudioPlayerNextTrack.png in Resources */,
 				7D31744120832D8400AFDF64 /* AudioPlayerTableBackground.png in Resources */,

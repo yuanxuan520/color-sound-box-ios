@@ -213,7 +213,7 @@
         char *cFilePath = (char *)[filePath UTF8String];
         char *cNewfilePath = (char *)[newfilePath UTF8String];
         convertPcm2Wav(cFilePath,cNewfilePath,1,44100);
-        [fileOP deleteFile:pcmFileName];
+        [fileOP deleteFilePath:filePath];
     }
     
     if (_channelInput02 > 0) {
@@ -224,7 +224,7 @@
         char *cFilePath = (char *)[filePath UTF8String];
         char *cNewfilePath = (char *)[newfilePath UTF8String];
         convertPcm2Wav(cFilePath,cNewfilePath,1,44100);
-        [fileOP deleteFile:pcmFileName];
+        [fileOP deleteFilePath:filePath];
     }
     
     if (_channelInput03 > 0) {
@@ -235,7 +235,7 @@
         char *cFilePath = (char *)[filePath UTF8String];
         char *cNewfilePath = (char *)[newfilePath UTF8String];
         convertPcm2Wav(cFilePath,cNewfilePath,1,44100);
-        [fileOP deleteFile:pcmFileName];
+        [fileOP deleteFilePath:filePath];
     }
 }
 
@@ -244,17 +244,20 @@
     PPFileOperate *fileOP = [[PPFileOperate alloc] init];
     if (_channelInput01 > 0) {
         NSString *pcmFileName = [NSString stringWithFormat:@"%@-ch01",_defaultFileName];
-        [fileOP deleteFile:pcmFileName];
+        NSString *filePath = [fileOP getDirName:@"wavFilePcm" fileName:pcmFileName];
+        [fileOP deleteFilePath:filePath];
     }
     
     if (_channelInput02 > 0) {
         NSString *pcmFileName = [NSString stringWithFormat:@"%@-ch02",_defaultFileName];
-        [fileOP deleteFile:pcmFileName];
+        NSString *filePath = [fileOP getDirName:@"wavFilePcm" fileName:pcmFileName];
+        [fileOP deleteFilePath:filePath];
     }
     
     if (_channelInput03 > 0) {
         NSString *pcmFileName = [NSString stringWithFormat:@"%@-ch03",_defaultFileName];
-        [fileOP deleteFile:pcmFileName];
+        NSString *filePath = [fileOP getDirName:@"wavFilePcm" fileName:pcmFileName];
+        [fileOP deleteFilePath:filePath];
     }
 }
 
@@ -464,6 +467,11 @@
 
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock host:(NSString *)host didReceiveData:(NSData *)data fromAddress:(NSData *)address
 {
+    
+    if (_bindState == kBinding) {
+        _bindState = kBindingSuccess;
+    }
+    
     if (_isRecord) { // 一旦点击开始录音后,开始接收数据
         if (_channelInput01 > 0 || _channelInput02 > 0 ) { // 输入3 开启
             [self appendByDeviceInput:data];

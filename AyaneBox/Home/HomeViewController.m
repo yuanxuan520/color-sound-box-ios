@@ -10,7 +10,6 @@
 #import "ABSocketServer.h"
 #import "IPDetector.h"
 #import "SocketObject.h"
-#import "SocketDataObject.h"
 #import "LEEAlert.h"
 #import "EYAudio.h"
 #import "Reachability.h"
@@ -19,19 +18,17 @@
 @interface HomeViewController ()<UITableViewDelegate,UITableViewDataSource,ABSocketServerDelegate>
 @property (nonatomic, strong) NSMutableArray *deviceDataList;
 @property (nonatomic, strong) NSMutableArray *deviceDataDict;
-// 绑定5001 端口
-@property (strong, nonatomic) ABSocketServer *socketServer5001;
 // 绑定6002 端口
 @property (strong, nonatomic) ABSocketServer *socketServer6002;
 @property (strong, nonatomic) SocketObject *socketObject6002;
 @property (nonatomic, assign) NetworkStatus curNetState;
 @property (nonatomic, strong) NSTimer *timer;
+
 - (IBAction)showTip:(id)sender;
 @end
 
 @implementation HomeViewController
 @synthesize deviceTableView,ipAddressLabel;
-@synthesize socketServer5001;
 @synthesize socketServer6002,socketObject6002;
 @synthesize timer;
 @synthesize curNetState;
@@ -115,10 +112,14 @@
         [deviceTableView setLayoutMargins:UIEdgeInsetsZero];
     }
     deviceTableView.separatorColor = UIColorHex(0xf0f0f0);
+    
+    UILongPressGestureRecognizer *longGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGesture:)];
+    [self.deviceTableView addGestureRecognizer:longGesture];
+    
     // Do any additional setup after loading the view.
     MJRefreshNormalHeader *reloadheader = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(resetDevice)];//@selector(loadMylogList)
-    [reloadheader setTitle:@"下拉重置设备.." forState:MJRefreshStateIdle];
-    [reloadheader setTitle:@"放开重置设备.." forState:MJRefreshStatePulling];
+    [reloadheader setTitle:@"下拉刷新设备.." forState:MJRefreshStateIdle];
+    [reloadheader setTitle:@"放开刷新设备.." forState:MJRefreshStatePulling];
     [reloadheader setTitle:@"重置中.." forState:MJRefreshStateRefreshing];
     reloadheader.lastUpdatedTimeLabel.hidden = YES;
     deviceTableView.mj_header = reloadheader;
@@ -132,19 +133,18 @@
         [self.timer invalidate];
         self.timer = nil;
     }
-//    [self.socketServer5001 stopUDP];
     [self.socketServer6002 stopUDP];
     [[PCMDataSource sharedData].udpSocketServer stopUDP];
-    
-    
-//    [PCMDataSource sharedData].ipAddress = nil;
+    [PCMDataSource sharedData].bindState = kUnbound;
+    [[PCMDataSource sharedData].bindBtn setUserInteractionEnabled:YES];
+    [PCMDataSource sharedData].bindBtn = nil;
+    [PCMDataSource sharedData].ipAddress = nil;
 //    [USERDEFAULTS removeObjectForKey:@"IPAddress"];
 //    [USERDEFAULTS synchronize];
 //    [[DeviceData sharedData].deviceList removeAllObjects];
 //    [[DeviceData sharedData].deviceDict removeAllObjects];
     [deviceTableView reloadData];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.socketServer5001 startUDP:5001];
         [self.socketServer6002 startUDP:6002];
         [[PCMDataSource sharedData].udpSocketServer startUDP:5001];
         self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(udpBroadcast) userInfo:nil repeats:YES];
@@ -169,7 +169,6 @@
             NSLog(@"REACHABLE!");
 //            if (self.curNetState == NotReachable) {
 //                启动监听
-//                [self.socketServer5001 stopUDP];
 //                [self.socketServer6002 stopUDP];
 //                [[PCMDataSource sharedData].udpSocketServer stopUDP];
 //
@@ -233,6 +232,14 @@
 }
 
 - (void)udpBroadcast{
+    if ([PCMDataSource sharedData].bindState == kBindingSuccess) {
+        [PCMDataSource sharedData].bindState = kBind;
+        [[PCMDataSource sharedData].bindBtn setTitle:@"已配对" forState:UIControlStateNormal];
+        [[PCMDataSource sharedData].bindBtn setUserInteractionEnabled:NO];
+    }
+    
+    
+    
     Byte byte[1024];
     for (int i = 0; i<1024; i++) {
         byte[i]=0x00;
@@ -382,14 +389,45 @@
 }
 
 -(void)matching:(UIButton *)btn {
+    if ([PCMDataSource sharedData].bindState == kUnbound && [PCMDataSource sharedData].bindBtn == nil) {
+        [PCMDataSource sharedData].bindState = kBinding;
+        [PCMDataSource sharedData].bindBtn = btn;
+        DeviceObject *object = [[DeviceData sharedData].deviceList objectAtIndex:btn.tag];
+        object.isMatching = YES;
+        [PCMDataSource sharedData].ipAddress = object.ipAddres;
+        [USERDEFAULTS setObject:object.ipAddres forKey:@"IPAddress"];
+        [USERDEFAULTS synchronize];
+        [btn setTitle:@"配对中" forState:UIControlStateNormal];
+        [btn setUserInteractionEnabled:NO];
+    }else {
+        [PCMDataSource sharedData].bindBtn = nil;
+        [PCMDataSource sharedData].bindState = kUnbound;
+    }
+}
+
+- (void)longPressGesture:(UILongPressGestureRecognizer *)longGesture
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"是否删除当前选中的设备?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        CGPoint location = [longGesture locationInView:self.deviceTableView];
+        NSIndexPath *indexPath = [self.deviceTableView indexPathForRowAtPoint:location];
+        DeviceObject *object = [[DeviceData sharedData].deviceList objectAtIndex:indexPath.row];
+
+        [[DeviceData sharedData].deviceDict removeObjectForKey:object.macAddresName];
+        [[DeviceData sharedData].deviceList removeObjectAtIndex:indexPath.row];
+        NSMutableArray *deviceList = [NSObject mj_keyValuesArrayWithObjectArray:[DeviceData sharedData].deviceList];
+        [kUserDefaults setObject:deviceList forKey:@"deviceList"];
+        [kUserDefaults setObject:[DeviceData sharedData].deviceDict forKey:@"deviceDict"];
+        [kUserDefaults synchronize];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DEVICEUPDATE" object:nil];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    [alert addAction:cancel];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
     
-    DeviceObject *object = [[DeviceData sharedData].deviceList objectAtIndex:btn.tag];
-    object.isMatching = YES;
-    [PCMDataSource sharedData].ipAddress = object.ipAddres;
-    [USERDEFAULTS setObject:object.ipAddres forKey:@"IPAddress"];
-    [USERDEFAULTS synchronize];
-    [btn setTitle:@"已配对" forState:UIControlStateNormal];
-    [btn setUserInteractionEnabled:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

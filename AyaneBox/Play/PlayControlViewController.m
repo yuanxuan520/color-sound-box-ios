@@ -143,19 +143,21 @@
     
 //  保证上传的是WAV 文件
 //  播放是PCM文件
-//    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"ch01" ofType:@"wav"];
+//    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"wav"];
 
     
     NSString *filePath = [SandboxFile GetPathForDocuments:self.fileName inDir:@"wavFile"];
     NSData *data = [NSData dataWithContentsOfFile:filePath];
+    NSLog(@"%ld",[data length]);
     self.curSelectFileData = data;
 }
 
 #pragma mark - 播放音频
 - (void)playAudioTimer{
     NSInteger wavLength = self.playWavFileData.length - self.curLocation;
+    NSLog(@"self.curLocation:%ld",self.curLocation);
     if (wavLength <= audioPlayLength) {
-        NSData *data = [self.playWavFileData subdataWithRange:NSMakeRange(self.curLocation, audioPlayLength)];
+        NSData *data = [self.playWavFileData subdataWithRange:NSMakeRange(self.curLocation, wavLength)];
         [self processAudioData:data];
         [PCMDataSource sharedData].isPlay = NO;
         [self.outAudioPlayer stop];
@@ -164,10 +166,9 @@
         self.playTimer = nil;
         self.playWavFileData = nil;
         self.curLocation = 0;
-//        if (self.outputChannel == 1 || self.outputChannel == 2) {
-//            [self.playDeviceTimer invalidate];
-//            self.playDeviceTimer = nil;
-//        }
+        if (self.outputChannel == 1 || self.outputChannel == 2) {
+            [self playDeviceAudioTimer];
+        }
     }else {
         NSData *data = [self.playWavFileData subdataWithRange:NSMakeRange(self.curLocation, audioPlayLength)];
         //        处理数据
@@ -210,7 +211,7 @@
 {
     NSInteger wavLength = self.playWavFileData.length - self.curOutDeviceLocation;
     if (wavLength <= audioDeviceLength) {
-        NSData *data = [self.playWavFileData subdataWithRange:NSMakeRange(self.curOutDeviceLocation, audioDeviceLength)];
+        NSData *data = [self.playWavFileData subdataWithRange:NSMakeRange(self.curOutDeviceLocation, wavLength)];
         [self processOutput:data];
         self.curOutDeviceLocation = 0;
         
@@ -313,15 +314,18 @@
 {
     if (self.outputChannel == 1) {
         [self processingOutput01:data];
-    }else {
+    }else if(self.outputChannel == 2) {
         [self processingOutput02:data];
+    }else {
+        
     }
 }
 - (void)processingOutput01:(NSData *)data
 {
-    NSMutableData *output = [NSMutableData dataWithLength:audioDeviceLength*2];
+    NSUInteger length = data.length;
+    NSMutableData *output = [NSMutableData dataWithLength:length*2];
     Byte *fileOut = (Byte *)[data bytes];
-    for (int i = 0; i < audioDeviceLength/2; i++) {
+    for (int i = 0; i < length/2; i++) {
         [output replaceBytesInRange:NSMakeRange(i*4, 2) withBytes:&fileOut[i*2]];
     }
     [[PCMDataSource sharedData] writePlayNetworkDevice:output];
@@ -329,9 +333,10 @@
 
 - (void)processingOutput02:(NSData *)data
 {
-    NSMutableData *output = [NSMutableData dataWithLength:audioDeviceLength*2];
+    NSUInteger length = data.length;
+    NSMutableData *output = [NSMutableData dataWithLength:length*2];
     Byte *fileOut = (Byte *)[data bytes];
-    for (int i = 0; i < audioDeviceLength/2; i++) {
+    for (int i = 0; i < length/2; i++) {
         [output replaceBytesInRange:NSMakeRange(i*4+2, 2) withBytes:&fileOut[i*2]];
     }
     [[PCMDataSource sharedData] writePlayNetworkDevice:output];

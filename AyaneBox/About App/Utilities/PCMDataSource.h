@@ -19,8 +19,17 @@
 // 音频片段的手机输入字节数
 #define BytePerPhoneInput (FramePerPacket * 4)
 
+typedef enum : NSUInteger { //当数据为
+    kUnbound,        // 未开始绑定
+    kBinding,        // 绑定中
+    kBindingSuccess, // 绑定成功
+    kBind            // 已绑定
+} BindDeviceState;
+
 @interface PCMDataSource : NSObject
 @property (nonatomic, strong) NSString *ipAddress; // 绑定的地址
+@property (nonatomic, assign) BindDeviceState bindState; // 是否正在绑定
+@property (nonatomic, strong) UIButton *bindBtn;   // 正在绑定按钮
 
 @property (nonatomic, assign) int channelInput01; // 设备输入01
 @property (nonatomic, assign) int channelInput02; // 设备输入02

@@ -186,6 +186,8 @@
               timeOutSeconds:30
              completionBlock:^(NSDictionary *json) {
                  if (![[json objectForKey:@"result"] integerValue]) {
+                     [kUserDefaults setObject:password.text forKey:@"password"];
+                     [kUserDefaults synchronize];
                      [WSProgressHUD showShimmeringString:@"修改密码成功!" maskType:WSProgressHUDMaskTypeDefault];
                      [WSProgressHUD autoDismiss:2];
                      //修改成功后返回 退出登录

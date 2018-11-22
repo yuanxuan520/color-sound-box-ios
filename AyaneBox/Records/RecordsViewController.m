@@ -62,13 +62,30 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBar.barTintColor = UIColorHex(0x303f4a);
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    [self initInputChannel];
 }
+
+- (void)initInputChannel
+{
+    if ([PCMDataSource sharedData].channelInput01 > 0) {
+        // 默认是输出3端口
+        self.inputChannel = 1;
+        [self.inputSegmentControl setSelectedSegmentIndex:self.inputChannel-1];
+    }else if([PCMDataSource sharedData].channelInput02 > 0){
+        self.inputChannel = 2;
+        [self.inputSegmentControl setSelectedSegmentIndex:self.inputChannel-1];
+    }else {
+        self.inputChannel = 3;
+        [self.inputSegmentControl setSelectedSegmentIndex:self.inputChannel-1];
+    }
+}
+
 - (void)viewDidLoad {
     self.title = @"录音";
     [super viewDidLoad];
     [self locatemap];
     
-    // 默认是输出3端口
+    // 默认是输出1端口
     self.inputChannel = 1;
     [self.inputSegmentControl setSelectedSegmentIndex:self.inputChannel-1];
     

@@ -24,7 +24,6 @@
 		2D781A33210DEF3B00E5A5D6 /* SocketObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D781A32210DEF3B00E5A5D6 /* SocketObject.m */; };
 		2D781A36210DF11700E5A5D6 /* DeviceData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D781A35210DF11700E5A5D6 /* DeviceData.m */; };
 		2D781A39210DF51200E5A5D6 /* DeviceObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D781A38210DF51200E5A5D6 /* DeviceObject.m */; };
-		2D781A3C210DFAED00E5A5D6 /* SocketDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D781A3B210DFAED00E5A5D6 /* SocketDataObject.m */; };
 		2D8D69CD210C9CC50090FEDE /* RequestPostData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D69CB210C9CC40090FEDE /* RequestPostData.m */; };
 		2DA5A18820ED0E3900D8D377 /* DeviceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5A18720ED0E3800D8D377 /* DeviceTableViewCell.m */; };
 		2DA5A18B20ED178600D8D377 /* SettingNetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5A18A20ED178600D8D377 /* SettingNetworkViewController.m */; };
@@ -237,8 +236,6 @@
 		2D781A35210DF11700E5A5D6 /* DeviceData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceData.m; sourceTree = "<group>"; };
 		2D781A37210DF51200E5A5D6 /* DeviceObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceObject.h; sourceTree = "<group>"; };
 		2D781A38210DF51200E5A5D6 /* DeviceObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceObject.m; sourceTree = "<group>"; };
-		2D781A3A210DFAED00E5A5D6 /* SocketDataObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocketDataObject.h; sourceTree = "<group>"; };
-		2D781A3B210DFAED00E5A5D6 /* SocketDataObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SocketDataObject.m; sourceTree = "<group>"; };
 		2D8D69CB210C9CC40090FEDE /* RequestPostData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestPostData.m; sourceTree = "<group>"; };
 		2D8D69CC210C9CC50090FEDE /* RequestPostData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestPostData.h; sourceTree = "<group>"; };
 		2DA5A18620ED0E3800D8D377 /* DeviceTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceTableViewCell.h; sourceTree = "<group>"; };
@@ -627,8 +624,6 @@
 			children = (
 				2D781A31210DEF3B00E5A5D6 /* SocketObject.h */,
 				2D781A32210DEF3B00E5A5D6 /* SocketObject.m */,
-				2D781A3A210DFAED00E5A5D6 /* SocketDataObject.h */,
-				2D781A3B210DFAED00E5A5D6 /* SocketDataObject.m */,
 				2DD5679F20E28A8F0001666E /* HomeViewController.h */,
 				2DD567A020E28A8F0001666E /* HomeViewController.m */,
 				2DA5A18620ED0E3800D8D377 /* DeviceTableViewCell.h */,
@@ -1656,7 +1651,6 @@
 				7D55F5D3207E4546001E3D19 /* UIView+GestureCallback.m in Sources */,
 				7D55F5E6207E4546001E3D19 /* UITextField+Blocks.m in Sources */,
 				7D55F5B6207E4546001E3D19 /* UIImage+BlurImage.m in Sources */,
-				2D781A3C210DFAED00E5A5D6 /* SocketDataObject.m in Sources */,
 				7D55F5C4207E4546001E3D19 /* UIButton+LXMImagePosition.m in Sources */,
 				7D55F5CF207E4546001E3D19 /* UIColor+Random.m in Sources */,
 				2D781A36210DF11700E5A5D6 /* DeviceData.m in Sources */,
@@ -1909,7 +1903,7 @@
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/AyaneBox/AyaneBox-Prefix.pch";
 				INFOPLIST_FILE = AyaneBox/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1945,7 +1939,7 @@
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/AyaneBox/AyaneBox-Prefix.pch";
 				INFOPLIST_FILE = AyaneBox/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
